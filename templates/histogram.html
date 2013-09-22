@@ -1,0 +1,331 @@
+<!DOCTYPE html><meta charset="utf-8">
+<style>
+    body {
+        background: #f2f2f2;
+        margin: 30px;
+    }
+    #histogram {
+        font: 11px sans-serif;
+        font-family: 'Lucida Grande','Calibri',Helvetica,Arial,sans-serif;
+    }
+    #histogram .bar rect {
+        fill: steelblue;
+        shape-rendering: crispEdges;
+    }
+    #histogram .bar rect:hover {
+        fill: rgb(62, 104, 146);
+    }
+    #histogram .axis path, .axis line {
+        fill: none;
+        stroke: #aaa;
+        shape-rendering: crispEdges;
+    }
+</style>
+<head><title></title></head>
+<body>
+<span id="histogram"></span>
+<script src="d3.v3.min.js"></script>
+<script>
+    const rawData = /*data_placeholder*/"metric\n\
+1\n\
+4\n\
+3\n\
+0\n\
+2\n\
+1\n\
+1\n\
+3\n\
+2\n\
+1\n\
+1\n\
+3\n\
+1\n\
+1\n\
+1\n\
+0\n\
+0\n\
+1\n\
+1\n\
+2\n\
+1\n\
+1\n\
+2\n\
+1\n\
+0\n\
+0\n\
+0\n\
+1\n\
+0\n\
+2\n\
+1\n\
+0\n\
+0\n\
+0\n\
+0\n\
+0\n\
+0\n\
+0\n\
+0\n\
+0\n\
+1\n\
+0\n\
+1\n\
+1\n\
+0\n\
+0\n\
+3\n\
+2\n\
+2\n\
+3\n\
+2\n\
+2\n\
+0\n\
+1\n\
+1\n\
+2\n\
+1\n\
+1\n\
+1\n\
+0\n\
+1\n\
+0\n\
+1\n\
+0\n\
+2\n\
+1\n\
+2\n\
+1\n\
+1\n\
+1\n\
+1\n\
+1\n\
+1\n\
+1\n\
+0\n\
+0\n\
+0\n\
+0\n\
+0\n\
+0\n\
+0\n\
+1\n\
+1\n\
+2\n\
+2\n\
+1\n\
+1\n\
+2\n\
+1\n\
+1\n\
+0\n\
+1\n\
+1\n\
+4\n\
+4\n\
+4\n\
+2\n\
+2\n\
+2\n\
+2\n\
+2\n\
+1\n\
+1\n\
+1\n\
+2\n\
+1\n\
+0\n\
+1\n\
+1\n\
+1\n\
+2\n\
+1\n\
+3\n\
+0\n\
+1\n\
+1\n\
+1\n\
+1\n\
+2\n\
+1\n\
+4\n\
+1\n\
+1\n\
+2\n\
+2\n\
+1\n\
+4\n\
+5\n\
+1\n\
+2\n\
+1\n\
+4\n\
+1\n\
+3\n\
+2\n\
+1\n\
+2\n\
+2\n\
+2\n\
+3\n\
+2\n\
+2\n\
+2\n\
+2\n\
+1\n\
+1\n\
+1\n\
+2\n\
+2\n\
+0\n\
+1\n\
+1\n\
+0\n\
+1\n\
+2\n\
+1\n\
+1\n\
+3\n\
+0\n\
+1\n\
+0\n\
+2\n\
+1\n\
+0\n\
+1\n\
+1\n\
+1\n\
+1\n\
+0\n\
+1\n\
+2\n\
+1\n\
+0\n\
+0\n\
+0\n\
+0\n\
+0\n\
+1\n\
+0\n\
+0\n\
+0\n\
+0\n\
+0\n\
+1\n\
+0\n\
+1\n\
+0\n\
+0\n\
+0\n\
+0\n\
+0\n\
+0\n\
+0\n\
+0\n\
+1\n\
+3\n\
+2\n\
+0\n\
+0\n\
+1\n\
+1\n\
+1\n\
+1\n\
+1\n\
+1\n\
+1\n\
+1\n\
+1\n\
+"/*data_placeholder*/;
+    createHistogram("histogram", rawData);
+
+    function createHistogram(elementId, rawData) {
+        var data = d3.csv.parse(rawData).map(function (d) { return parseInt(d.metric); });
+
+        var margin = {top: 20, right: 20, bottom: 40, left: 40},
+            width = 960 - margin.left - margin.right,
+            height = 500 - margin.top - margin.bottom;
+
+        var rootElement = d3.select("#" + elementId);
+        removeChildrenOf(elementId);
+
+        var headerSpan = appendBlockElementTo(rootElement, width);
+        headerSpan.append("h2").text("Amount of parameters per method").style({"text-align": "center"});
+
+        var svg = rootElement.append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        updateHistogram();
+
+        var footerSpan = appendBlockElementTo(rootElement, width).append("span").style({float: "right"});
+        footerSpan.append("label").html("Percentile: ");
+        var groupByDropDown = footerSpan.append("select");
+        for (var i = 100; i > 0; i -= 10) {
+            groupByDropDown.append("option").attr("value", i).html(i);
+        }
+        groupByDropDown.on("change", function() {
+            data = d3.csv.parse(rawData).map(function (d) { return parseInt(d.metric); });
+            var sortedData = data.sort(function (a, b) { return a - b; });
+
+            var percentile = +this.value / 100;
+            var i = Math.round((data.length - 1) * percentile);
+            var n = sortedData[i];
+            while (sortedData[i] == n && i < sortedData.length) i++;
+
+            data = data.filter(function(d) { return d <= n; });
+
+            updateHistogram();
+        });
+
+        function updateHistogram() {
+            var x = d3.scale.linear().domain([0, Math.round(d3.max(data) / 10) * 10]).range([0, width]);
+            var binnedData = d3.layout.histogram().bins(x.ticks(200))(data);
+            var y = d3.scale.log().domain([1, d3.max(binnedData, function(d){ return d.y; })]).range([height, 0]).nice(); // TODO fix range
+            var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat);
+            var yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(numberFormat);
+
+            svg.selectAll(".bar").remove();
+            var bar = svg.selectAll(".bar")
+                    .data(binnedData)
+                    .enter().append("g")
+                    .attr("class", "bar")
+                    .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+
+            bar.append("rect")
+                    .attr("x", 1)
+                    .attr("width", x(binnedData.length == 0 ? 0 : binnedData[0].dx) - 1)
+                    .attr("height", function(d) {
+                        return height - y(d.y);
+                    })
+                    .append("title")
+                    .text(function(d) { return "amount: " + d.length });
+            svg.select((".x.axis")).remove();
+            svg.select((".y.axis")).remove();
+            svg.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(xAxis);
+            svg.append("g")
+                    .attr("class", "y axis")
+                    .call(yAxis);
+        }
+
+        function removeChildrenOf(elementId) {
+            var element = document.getElementById(elementId);
+            for (var i = 0; i < element.children.length; i++) {
+                parent.removeChild(element.children.item(i));
+            }
+        }
+    }
+
+    function numberFormat(n) {
+        var s = d3.format(",")(n);
+        return s.length < 6 ? s : d3.format("s")(n);
+    }
+
+    function appendBlockElementTo(element, width) {
+        return element.append("span").style({display: "block", width: width + "px"});
+    }
+</script>
