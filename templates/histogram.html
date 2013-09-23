@@ -4,18 +4,18 @@
         background: #f2f2f2;
         margin: 30px;
     }
-    #histogram {
+    .histogram {
         font: 11px sans-serif;
         font-family: 'Lucida Grande','Calibri',Helvetica,Arial,sans-serif;
     }
-    #histogram .bar rect {
+    .histogram .bar rect {
         fill: steelblue;
         shape-rendering: crispEdges;
     }
-    #histogram .bar rect:hover {
+    .histogram .bar rect:hover {
         fill: rgb(62, 104, 146);
     }
-    #histogram .axis path, .axis line {
+    .histogram .axis path, .axis line {
         fill: none;
         stroke: #aaa;
         shape-rendering: crispEdges;
@@ -23,233 +23,30 @@
 </style>
 <head><title></title></head>
 <body>
-<span id="histogram"></span>
-<script src="d3.v3.min.js"></script>
+<span id="parameters-per-method-histogram"></span>
+<br/><br/><br/>
+<span id="fields-per-class-histogram"></span>
+<br/><br/><br/>
+<span id="methods-per-class-histogram"></span>
+<script src="d3.js"></script>
 <script>
-    const rawData = /*data_placeholder*/"metric\n\
-1\n\
-4\n\
-3\n\
-0\n\
-2\n\
-1\n\
-1\n\
-3\n\
-2\n\
-1\n\
-1\n\
-3\n\
-1\n\
-1\n\
-1\n\
-0\n\
-0\n\
-1\n\
-1\n\
-2\n\
-1\n\
-1\n\
-2\n\
-1\n\
-0\n\
-0\n\
-0\n\
-1\n\
-0\n\
-2\n\
-1\n\
-0\n\
-0\n\
-0\n\
-0\n\
-0\n\
-0\n\
-0\n\
-0\n\
-0\n\
-1\n\
-0\n\
-1\n\
-1\n\
-0\n\
-0\n\
-3\n\
-2\n\
-2\n\
-3\n\
-2\n\
-2\n\
-0\n\
-1\n\
-1\n\
-2\n\
-1\n\
-1\n\
-1\n\
-0\n\
-1\n\
-0\n\
-1\n\
-0\n\
-2\n\
-1\n\
-2\n\
-1\n\
-1\n\
-1\n\
-1\n\
-1\n\
-1\n\
-1\n\
-0\n\
-0\n\
-0\n\
-0\n\
-0\n\
-0\n\
-0\n\
-1\n\
-1\n\
-2\n\
-2\n\
-1\n\
-1\n\
-2\n\
-1\n\
-1\n\
-0\n\
-1\n\
-1\n\
-4\n\
-4\n\
-4\n\
-2\n\
-2\n\
-2\n\
-2\n\
-2\n\
-1\n\
-1\n\
-1\n\
-2\n\
-1\n\
-0\n\
-1\n\
-1\n\
-1\n\
-2\n\
-1\n\
-3\n\
-0\n\
-1\n\
-1\n\
-1\n\
-1\n\
-2\n\
-1\n\
-4\n\
-1\n\
-1\n\
-2\n\
-2\n\
-1\n\
-4\n\
-5\n\
-1\n\
-2\n\
-1\n\
-4\n\
-1\n\
-3\n\
-2\n\
-1\n\
-2\n\
-2\n\
-2\n\
-3\n\
-2\n\
-2\n\
-2\n\
-2\n\
-1\n\
-1\n\
-1\n\
-2\n\
-2\n\
-0\n\
-1\n\
-1\n\
-0\n\
-1\n\
-2\n\
-1\n\
-1\n\
-3\n\
-0\n\
-1\n\
-0\n\
-2\n\
-1\n\
-0\n\
-1\n\
-1\n\
-1\n\
-1\n\
-0\n\
-1\n\
-2\n\
-1\n\
-0\n\
-0\n\
-0\n\
-0\n\
-0\n\
-1\n\
-0\n\
-0\n\
-0\n\
-0\n\
-0\n\
-1\n\
-0\n\
-1\n\
-0\n\
-0\n\
-0\n\
-0\n\
-0\n\
-0\n\
-0\n\
-0\n\
-1\n\
-3\n\
-2\n\
-0\n\
-0\n\
-1\n\
-1\n\
-1\n\
-1\n\
-1\n\
-1\n\
-1\n\
-1\n\
-1\n\
-"/*data_placeholder*/;
-    createHistogram("histogram", rawData);
+    const parametersPerMethod = /*parameters_per_method_data*/[1,1,2,2,0,3,4]/*parameters_per_method_data*/;
+    createHistogram("parameters-per-method-histogram", "Amount of parameters per method", parametersPerMethod);
+    createHistogram("fields-per-class-histogram", "Amount of fields per class", parametersPerMethod);
+    createHistogram("methods-per-class-histogram", "Amount of methods per class", parametersPerMethod);
 
-    function createHistogram(elementId, rawData) {
-        var data = d3.csv.parse(rawData).map(function (d) { return parseInt(d.metric); });
+    function createHistogram(elementId, histogramTitle, rawData) {
+        var data = shallowCopyOf(rawData);
 
         var margin = {top: 20, right: 20, bottom: 40, left: 40},
             width = 960 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
 
-        var rootElement = d3.select("#" + elementId);
+        var rootElement = d3.select("#" + elementId).attr("class", "histogram");
         removeChildrenOf(elementId);
 
         var headerSpan = appendBlockElementTo(rootElement, width);
-        headerSpan.append("h2").text("Amount of parameters per method").style({"text-align": "center"});
+        headerSpan.append("h2").text(histogramTitle).style({"text-align": "center"});
 
         var svg = rootElement.append("svg")
                 .attr("width", width + margin.left + margin.right)
@@ -266,7 +63,7 @@
             groupByDropDown.append("option").attr("value", i).html(i);
         }
         groupByDropDown.on("change", function() {
-            data = d3.csv.parse(rawData).map(function (d) { return parseInt(d.metric); });
+            data = shallowCopyOf(rawData);
             var sortedData = data.sort(function (a, b) { return a - b; });
 
             var percentile = +this.value / 100;
@@ -280,27 +77,31 @@
         });
 
         function updateHistogram() {
-            var x = d3.scale.linear().domain([0, Math.round(d3.max(data) / 10) * 10]).range([0, width]);
-            var binnedData = d3.layout.histogram().bins(x.ticks(200))(data);
-            var y = d3.scale.log().domain([1, d3.max(binnedData, function(d){ return d.y; })]).range([height, 0]).nice(); // TODO fix range
-            var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat);
-            var yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(numberFormat);
+            var maxValue = d3.max(data) + 1;
+            var binnedData = d3.layout.histogram().bins(maxValue)(data);
+            var maxAmount = d3.max(binnedData, function(d){ return d.y; });
+
+            var x = d3.scale.linear().domain([0, d3.max(data)]).range([0, width]);
+            var almostZero = 0.001; // this is kind of hack because d3.scale.log() doesn't work if domain starts with zero (try example from https://github.com/mbostock/d3/issues/1420)
+            var y = d3.scale.log().domain([almostZero, maxAmount]).range([height, 0]);
+            var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat).tickValues(d3.range(0, maxValue, 1));
+            var yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(numberFormat).tickValues(power10TicksUpTo(maxAmount));
 
             svg.selectAll(".bar").remove();
             var bar = svg.selectAll(".bar")
                     .data(binnedData)
                     .enter().append("g")
                     .attr("class", "bar")
-                    .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+                    .attr("transform", function(d) {
+                        return "translate(" + x(d.x) + "," + finiteOr(height, y(d.y)) + ")";
+                    });
 
             bar.append("rect")
                     .attr("x", 1)
-                    .attr("width", x(binnedData.length == 0 ? 0 : binnedData[0].dx) - 1)
-                    .attr("height", function(d) {
-                        return height - y(d.y);
-                    })
+                    .attr("width", 20)
+                    .attr("height", function(d) { return finiteOr(0, height - y(d.y)); })
                     .append("title")
-                    .text(function(d) { return "amount: " + d.length });
+                    .text(function(d) { return "Amount: " + d.length });
             svg.select((".x.axis")).remove();
             svg.select((".y.axis")).remove();
             svg.append("g")
@@ -320,7 +121,27 @@
         }
     }
 
+    function shallowCopyOf(array) {
+        return array.slice(0);
+    }
+
+    function finiteOr(defaultValue, value) {
+        return isFinite(value) ? value : defaultValue;
+    }
+
+    function power10TicksUpTo(n) {
+        var result = [];
+        var i = 1;
+        while (i < n) {
+            result.push(i);
+            i = i * 10;
+        }
+        result.push(n);
+        return result;
+    }
+
     function numberFormat(n) {
+        if (!isFinite(n)) return "";
         var s = d3.format(",")(n);
         return s.length < 6 ? s : d3.format("s")(n);
     }

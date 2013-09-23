@@ -4,9 +4,10 @@ import com.intellij.psi.PsiFileSystemItem
 import com.intellij.psi.PsiJavaFile
 import com.intellij.psi.PsiMethod
 
+import java.text.SimpleDateFormat
 import java.util.regex.Matcher
 
-import static HttpUtil.asJsString
+import static HttpUtil.asJsArray
 import static HttpUtil.createFromTemplate
 import static liveplugin.PluginUtil.*
 
@@ -37,11 +38,12 @@ static TreeMap makeHistogram(List values) {
 }
 
 class HttpUtil {
-	static void createFromTemplate(String templateFolder, String template, String projectName, String jsValue) {
+	static void createFromTemplate(String templateFolder, String template, String projectName, Map placeHoldersMapping) {
 		def templateText = new File("$templateFolder/$template").readLines().join("\n")
 		def text = inlineJSLibraries(templateText) { fileName -> new File("$templateFolder/$fileName").readLines().join("\n") }
-		text = fillDataPlaceholder(text, jsValue)
-		text = fillProjectNamePlaceholder(text, "\"$projectName\"")
+		text = placeHoldersMapping.inject(text) { result, entry ->
+			fillPlaceholder(text, entry.value(), entry.key)
+		}
 		new File("${templateFolder}/${projectName}_${template}").write(text)
 	}
 
@@ -55,20 +57,12 @@ class HttpUtil {
 		}
 	}
 
-	static String fillProjectNamePlaceholder(String templateText, String projectName) {
-		templateText.replaceFirst(/(?s)\/\*project_name_placeholder\*\/.*\/\*project_name_placeholder\*\//, Matcher.quoteReplacement(projectName))
+	static String fillPlaceholder(String templateText, String jsValue, String placeHolder) {
+		templateText.replaceFirst(/(?s)\/\*${placeHolder}\*\/.*\/\*${placeHolder}\*\//, Matcher.quoteReplacement(jsValue))
 	}
 
-	static String fillDataPlaceholder(String templateText, String jsValue) {
-		templateText.replaceFirst(/(?s)\/\*data_placeholder\*\/.*\/\*data_placeholder\*\//, Matcher.quoteReplacement(jsValue))
-	}
-
-	static String asJsString(List list) {
-		String newLine = "\\n\\\n"
-		def result = "\""
-		result += "metric" + newLine
-		result += list.join(newLine)
-		result + newLine + "\""
+	static String asJsArray(List<Integer> list) {
+		"[" + list.join(",") + "]"
 	}
 }
 
@@ -93,7 +87,12 @@ registerAction("miscProjectHistograms", "ctrl shift H") { event ->
 	      }
       }
 
-	    createFromTemplate("${pluginPath}/templates", "histogram.html", project.name, asJsString(amountOfParametersInMethod))
+	    createFromTemplate("${pluginPath}/templates", "histogram.html", project.name, [
+			    "project_name_placeholder" : { project.name },
+			    "parameters_per_method_data": { asJsArray(amountOfParametersInMethod) },
+			    "fields_per_class_data": { asJsArray(amountOfFieldsInClass) },
+			    "methods_per_class_data": { asJsArray(amountOfMethodsInClass) },
+	    ])
       show(amountOfFieldsInClass.size())
       show(amountOfMethodsInClass.size())
       show(amountOfParametersInMethod.size())
