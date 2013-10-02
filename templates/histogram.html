@@ -82,7 +82,7 @@
 
             var x = d3.scale.linear().domain([0, maxAmount]).range([0, width]);
             var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat).tickValues(d3.range(0, maxAmount, 1))
-                    .with(xLabel("Amount of parameters per method"));
+                    .with(xLabel(histogramTitle));
 
             var y = d3.scale.log().domain([1, maxFrequency]).range([height, 0]);
             var yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(numberFormat).with(yLabel("Frequency"));
@@ -109,7 +109,10 @@
             svg.append("g")
                     .attr("class", "x axis")
                     .attr("transform", "translate(0," + height + ")")
-                    .call(xAxis);
+                    .call(xAxis)
+                    .selectAll(".tick").attr("transform", function (d) {
+                        return "translate(" + (x(d) + barWidth / 2) + "," + 0 + ")";
+                    });
             svg.append("g")
                     .attr("class", "y axis")
                     .call(yAxis);
