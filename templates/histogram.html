@@ -30,10 +30,13 @@
 <span id="methods-per-class-histogram"></span>
 <script src="d3.js"></script>
 <script>
-    const parametersPerMethod = /*parameters_per_method_data*/[1,1,2,2,0,3,4]/*parameters_per_method_data*/;
+    const parametersPerMethod = /*parameters_per_method_data*/[1,1,2,2,3,0,4,5,5,5,5,5]/*parameters_per_method_data*/;
+    const fieldsPerClass = /*fields_per_class_data*/[1,1,2,2,3,0,4,5,5,5,5,5]/*fields_per_class_data*/;
+    const methodsPerClass = /*methods_per_class_data*/[1,1,2,2,3,0,4,5,5,5,5,5]/*methods_per_class_data*/;
+
     createHistogram("parameters-per-method-histogram", "Amount of parameters per method", parametersPerMethod);
-    createHistogram("fields-per-class-histogram", "Amount of fields per class", parametersPerMethod);
-    createHistogram("methods-per-class-histogram", "Amount of methods per class", parametersPerMethod);
+    createHistogram("fields-per-class-histogram", "Amount of fields per class", fieldsPerClass);
+    createHistogram("methods-per-class-histogram", "Amount of methods per class", methodsPerClass);
 
     function createHistogram(elementId, histogramTitle, rawData) {
         var data = shallowCopyOf(rawData);
@@ -56,6 +59,7 @@
 
         updateHistogram();
 
+        /* TODO
         var footerSpan = appendBlockElementTo(rootElement, width).append("span").style({float: "right"});
         footerSpan.append("label").html("Percentile: ");
         var groupByDropDown = footerSpan.append("select");
@@ -74,14 +78,15 @@
             data = data.filter(function(d) { return d <= n; });
 
             updateHistogram();
-        });
+        });*/
 
         function updateHistogram() {
             var maxValue = d3.max(data) + 1;
-            var binnedData = d3.layout.histogram().bins(maxValue)(data);
+            var x = d3.scale.linear().domain([0, maxValue]).range([0, width]);
+
+            var binnedData = d3.layout.histogram().bins(x.ticks(maxValue))(data);
             var maxAmount = d3.max(binnedData, function(d){ return d.y; });
 
-            var x = d3.scale.linear().domain([0, d3.max(data)]).range([0, width]);
             var almostZero = 0.001; // this is kind of hack because d3.scale.log() doesn't work if domain starts with zero (try example from https://github.com/mbostock/d3/issues/1420)
             var y = d3.scale.log().domain([almostZero, maxAmount]).range([height, 0]);
             var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat).tickValues(d3.range(0, maxValue, 1));
@@ -96,9 +101,10 @@
                         return "translate(" + x(d.x) + "," + finiteOr(height, y(d.y)) + ")";
                     });
 
+            var barWidth = (width / maxValue) -1;
             bar.append("rect")
                     .attr("x", 1)
-                    .attr("width", 20)
+                    .attr("width", barWidth)
                     .attr("height", function(d) { return finiteOr(0, height - y(d.y)); })
                     .append("title")
                     .text(function(d) { return "Amount: " + d.length });
@@ -107,10 +113,19 @@
             svg.append("g")
                     .attr("class", "x axis")
                     .attr("transform", "translate(0," + height + ")")
-                    .call(xAxis);
+                    .call(xAxis)
+                    .append("text")
+                    .attr("transform", "translate(" + (width/2) + ",40)") // TODO
+                    .text("Amount of parameters");
             svg.append("g")
                     .attr("class", "y axis")
-                    .call(yAxis);
+                    .call(yAxis)
+                    .append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 6) // TODO
+                    .attr("dy", ".71em")
+                    .style("text-anchor", "end")
+                    .text("Frequency");
         }
 
         function removeChildrenOf(elementId) {
