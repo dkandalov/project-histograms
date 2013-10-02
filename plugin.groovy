@@ -4,11 +4,8 @@ import com.intellij.psi.PsiFileSystemItem
 import com.intellij.psi.PsiJavaFile
 import com.intellij.psi.PsiMethod
 
-import java.text.SimpleDateFormat
-import java.util.regex.Matcher
-
-import static HttpUtil.asJsArray
-import static HttpUtil.createFromTemplate
+import static templates.HtmlUtil.asJsArray
+import static templates.HtmlUtil.createFromTemplate
 import static liveplugin.PluginUtil.*
 
 static List<PsiMethod> allMethodsIn(PsiJavaFile javaFile) {
@@ -70,9 +67,9 @@ registerAction("miscProjectHistograms", "ctrl shift H") { event ->
 
 	    createFromTemplate("${pluginPath}/templates", "histogram.html", project.name, [
 			    "project_name_placeholder" : { project.name },
-//			    "parameters_per_method_data": { asJsArray(amountOfParametersInMethods) },
-//			    "fields_per_class_data": { asJsArray(amountOfFieldsInClasses) },
-//			    "methods_per_class_data": { asJsArray(amountOfMethodsInClasses) },
+			    "parameters_per_method_data": { asJsArray(amountOfParametersInMethods.map) },
+			    "fields_per_class_data": { asJsArray(amountOfFieldsInClasses.map) },
+			    "methods_per_class_data": { asJsArray(amountOfMethodsInClasses.map) },
 	    ])
 	    show(amountOfParametersInMethods.size())
 	    show(amountOfFieldsInClasses.size())

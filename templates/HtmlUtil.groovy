@@ -1,6 +1,8 @@
+package templates
+
 import java.util.regex.Matcher
 
-class HttpUtil {
+class HtmlUtil {
 	static void createFromTemplate(String templateFolder, String template, String projectName, Map placeHoldersMapping) {
 		def templateText = new File("$templateFolder/$template").readLines().join("\n")
 		def text = inlineJSLibraries(templateText) { fileName -> new File("$templateFolder/$fileName").readLines().join("\n") }
@@ -24,7 +26,7 @@ class HttpUtil {
 		templateText.replaceFirst(/(?s)\/\*${placeHolder}\*\/.*\/\*${placeHolder}\*\//, Matcher.quoteReplacement(jsValue))
 	}
 
-	static String asJsArray(List<Integer> list) {
-		"[" + list.join(",") + "]"
+	static String asJsArray(Map map) {
+		"[" + map.entrySet().collect{"[${it.key},${it.value}]"}.join(",") + "]"
 	}
 }
