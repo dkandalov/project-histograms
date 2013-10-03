@@ -28,15 +28,6 @@
 <span id="fields-per-class-histogram"></span>
 <br/><br/><br/>
 <span id="methods-per-class-histogram"></span>
-<script>
-    Function.prototype.with = function(f) {
-        var g = this;
-        return function() {
-            g.apply(this, arguments);
-            return f(this);
-        };
-    };
-</script>
 <script src="d3.js"></script>
 <script>
     const parametersPerMethod = /*parameters_per_method_data*/
@@ -58,7 +49,7 @@
             return {amount: d[0], frequency: d[1]};
         });
 
-        var margin = {top: 20, right: 20, bottom: 50, left: 40},
+        var margin = {top: 20, right: 20, bottom: 50, left: 50},
             width = 960 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
 
@@ -81,11 +72,10 @@
             var maxAmount = d3.max(data, function(d){ return d.amount; }) + 1;
 
             var x = d3.scale.linear().domain([0, maxAmount]).range([0, width]);
-            var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat).tickValues(d3.range(0, maxAmount, Math.ceil(maxAmount/10)))
-                    .with(xLabel(histogramTitle));
+            var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat).tickValues(d3.range(0, maxAmount, Math.ceil(maxAmount/10)));
 
             var y = d3.scale.log().domain([1, maxFrequency]).range([height, 0]);
-            var yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(numberFormat).with(yLabel("Frequency"));
+            var yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(numberFormat);
 
             svg.selectAll(".bar").remove();
             var bar = svg.selectAll(".bar")
@@ -110,15 +100,17 @@
                     .attr("class", "x axis")
                     .attr("transform", "translate(0," + height + ")")
                     .call(xAxis)
+                    .call(xAxisLabel(histogramTitle))
                     .selectAll(".tick").attr("transform", function (d) {
                         return "translate(" + (x(d) + barWidth / 2) + "," + 0 + ")";
                     });
             svg.append("g")
                     .attr("class", "y axis")
-                    .call(yAxis);
+                    .call(yAxis)
+                    .call(yAxisLabel("Frequency"));
         }
 
-        function xLabel(labelText) {
+        function xAxisLabel(labelText) {
             return function(axis) {
                 return axis.append("text")
                     .text(labelText)
@@ -128,13 +120,13 @@
             }
         }
 
-        function yLabel(labelText) {
+        function yAxisLabel(labelText) {
             return function(axis) {
                 return axis.append("text")
                         .text(labelText)
                         .attr("transform", "rotate(-90)")
                         .style("text-anchor", "end")
-                        .attr("y", -30)
+                        .attr("y", -40)
                         .attr("x", function () {
                             return -((height / 2) - (this.clientHeight / 2)) + margin.top;
                         });
@@ -153,21 +145,10 @@
         return value < minValue ? minValue : value;
     }
 
-    function power10TicksUpTo(n) { // TODO remove?
-        var result = [];
-        var i = 1;
-        while (i < n) {
-            result.push(i);
-            i = i * 10;
-        }
-        result.push(n);
-        return result;
-    }
-
     function numberFormat(n) {
         if (!isFinite(n)) return "";
         var s = d3.format(",")(n);
-        return s.length < 6 ? s : d3.format("s")(n);
+        return s.length < 4 ? s : d3.format("s")(n);
     }
 
     function appendBlockElementTo(element, width) {
