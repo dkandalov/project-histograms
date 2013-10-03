@@ -31,10 +31,16 @@
 <script src="d3.js"></script>
 <script>
     const parametersPerMethod = /*parameters_per_method_data*/
-            [[0, 5], [1, 4], [2, 2], [3, 3], [4, 1], [5, 2]]
+            function() {
+                var size = 987;
+                return d3.range(0, size).reduce(function (acc, i) { acc.push([i, Math.pow(size - i, 2)]); return acc; }, []);
+            }()
     /*parameters_per_method_data*/;
     const fieldsPerClass = /*fields_per_class_data*/
-            [[0, 1], [1, 2], [2, 2], [3, 1], [4, 1], [5, 5]]
+            function() {
+                var size = 163;
+                return d3.range(0, size).reduce(function (acc, i) { acc.push([i, Math.pow(size - i, 1.4)]); return acc; }, []);
+            }()
     /*fields_per_class_data*/;
     const methodsPerClass = /*methods_per_class_data*/
             [[0, 1], [1, 2], [2, 2], [3, 1], [4, 1], [5, 5]]
@@ -72,7 +78,7 @@
             var maxAmount = d3.max(data, function(d){ return d.amount; }) + 1;
 
             var x = d3.scale.linear().domain([0, maxAmount]).range([0, width]);
-            var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat).tickValues(d3.range(0, maxAmount, Math.ceil(maxAmount/10)));
+            var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat).tickValues(range(0, maxAmount, 10));
 
             var y = d3.scale.log().domain([1, maxFrequency]).range([height, 0]);
             var yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(numberFormat);
@@ -92,7 +98,7 @@
                     .attr("width", barWidth)
                     .attr("height", function(d){ return height - y(d.frequency); })
                     .append("title")
-                    .text(function(d){ return "Frequency: " + d.frequency });
+                    .text(function(d){ return "Amount:" + d.amount + "\nFrequency: " + d.frequency});
 
             svg.select((".x.axis")).remove();
             svg.select((".y.axis")).remove();
@@ -139,6 +145,26 @@
                 parent.removeChild(element.children.item(i));
             }
         }
+    }
+
+    function range(from, to, steps) {
+        var stepSize = (to - from) / steps;
+        var result = d3.range(from, to, rounded(stepSize));
+
+        var last = result[result.length - 1];
+        if (last != to) {
+            // don't add value before last one if they are close (otherwise they might overlap in UI)
+            if ((to - last) < stepSize / 2) result = result.splice(0, result.length - 1);
+            result.push(to); // always add last value
+        }
+
+        return  result;
+    }
+
+    function rounded(value) {
+        var values = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000];
+        var diffs = values.map(function(i){ return Math.abs(i - value); });
+        return values[diffs.indexOf(d3.min(diffs))];
     }
 
     function atLeast(minValue, value) {
