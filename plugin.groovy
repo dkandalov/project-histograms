@@ -9,10 +9,15 @@ import static templates.HtmlUtil.createFromTemplate
 import static liveplugin.PluginUtil.*
 
 static List<PsiMethod> allMethodsIn(PsiJavaFile javaFile) {
-	// TODO exclude interfaces?
   def result = []
   javaFile.acceptChildren(new JavaRecursiveElementVisitor() {
-    @Override void visitMethod(PsiMethod method) { result << method }
+    @Override void visitMethod(PsiMethod method) {
+	    // ignore interfaces assuming that everything will be counted in their implementations
+	    // or if there are not implementations, then it probably can be ignored
+	    if (method.containingClass.interface) return
+
+	    result << method
+    }
   })
   result
 }
@@ -26,7 +31,6 @@ static List<PsiField> allFieldsIn(PsiJavaFile javaFile) {
 }
 
 static int amountOfParametersIn(PsiMethod method) {
-	// TODO exclude interfaces?
   method.parameterList.parametersCount
 }
 
