@@ -81,7 +81,7 @@
             var maxAmount = d3.max(data, function(d){ return d.amount; }) + 1;
 
             var x = d3.scale.linear().domain([0, maxAmount]).range([0, width]);
-            var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat).tickValues(d3.range(0, maxAmount, 1))
+            var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat).tickValues(d3.range(0, maxAmount, Math.ceil(maxAmount/10)))
                     .with(xLabel(histogramTitle));
 
             var y = d3.scale.log().domain([1, maxFrequency]).range([height, 0]);
@@ -96,7 +96,7 @@
                         return "translate(" + x(d.amount) + "," + y(d.frequency) + ")";
                     });
 
-            var barWidth = (width / maxAmount) - 1;
+            var barWidth = atLeast(1, (width / maxAmount) - 1); // -1 to have gap if bars are big, but at least width of 1 if bars are small
             bar.append("rect")
                     .attr("x", 1) // "1" to not overlap x axis
                     .attr("width", barWidth)
@@ -149,7 +149,11 @@
         }
     }
 
-    function power10TicksUpTo(n) {
+    function atLeast(minValue, value) {
+        return value < minValue ? minValue : value;
+    }
+
+    function power10TicksUpTo(n) { // TODO remove?
         var result = [];
         var i = 1;
         while (i < n) {
