@@ -33,7 +33,12 @@
     const parametersPerMethod = /*parameters_per_method_data*/
             function() {
                 var size = 987;
-                return d3.range(0, size).reduce(function (acc, i) { acc.push([i, Math.round(Math.pow(size - i, 2))]); return acc; }, []);
+                var result = d3.range(0, size).reduce(function(acc, i) {
+                    acc.push([i, Math.round(Math.pow(size - i, 2))]);
+                    return acc;
+                }, []);
+                result.push([2000, 1]);
+                return result;
             }()
     /*parameters_per_method_data*/;
     const fieldsPerClass = /*fields_per_class_data*/
@@ -160,7 +165,7 @@
         var last = result[result.length - 1];
         if (last != to) {
             // don't add value before last one if they are close (otherwise they might overlap in UI)
-            if ((to - last) < stepSize / 2) result.splice(0, result.length - 1);
+            if ((to - last) < stepSize / 2) result = result.splice(0, result.length - 1);
             result.push(to); // always add last value
         }
 
@@ -183,9 +188,8 @@
             var last = result[result.length - 1];
             var nextToLast = result[result.length - 2];
             if (nextToLast / last <= 0.1) {
-                result.splice(result.length - 2, 2);
+                result.splice(result.length - 2, 1);
             }
-
         }
         return result;
     }
