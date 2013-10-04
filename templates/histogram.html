@@ -33,13 +33,13 @@
     const parametersPerMethod = /*parameters_per_method_data*/
             function() {
                 var size = 987;
-                return d3.range(0, size).reduce(function (acc, i) { acc.push([i, Math.pow(size - i, 2)]); return acc; }, []);
+                return d3.range(0, size).reduce(function (acc, i) { acc.push([i, Math.round(Math.pow(size - i, 2))]); return acc; }, []);
             }()
     /*parameters_per_method_data*/;
     const fieldsPerClass = /*fields_per_class_data*/
             function() {
-                var size = 163;
-                return d3.range(0, size).reduce(function (acc, i) { acc.push([i, Math.pow(size - i, 1.4)]); return acc; }, []);
+                var size = 44;
+                return d3.range(0, size).reduce(function (acc, i) { acc.push([i, Math.round(Math.pow(size - i, 1.4))]); return acc; }, []);
             }()
     /*fields_per_class_data*/;
     const methodsPerClass = /*methods_per_class_data*/
@@ -75,13 +75,13 @@
 
         function updateHistogram() {
             var maxFrequency = d3.max(data, function(d){return d.frequency;});
-            var maxAmount = d3.max(data, function(d){ return d.amount; }) + 1;
+            var maxAmount = d3.max(data, function(d){ return d.amount; }) + 1; // +1 to include first "0" in range
 
             var x = d3.scale.linear().domain([0, maxAmount]).range([0, width]);
             var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat).tickValues(range(0, maxAmount, 10));
 
             var y = d3.scale.log().domain([1, maxFrequency]).range([height, 0]);
-            var yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(numberFormat);
+            var yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(numberFormat).tickValues(logRange(maxFrequency, 10));
 
             svg.selectAll(".bar").remove();
             var bar = svg.selectAll(".bar")
@@ -147,24 +147,47 @@
         }
     }
 
-    function range(from, to, steps) {
-        var stepSize = (to - from) / steps;
+    function range(from, to, amountOfSteps) {
+        function rounded(stepSize) {
+            var values = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000];
+            var diffs = values.map(function(i){ return Math.abs(i - stepSize); });
+            return values[diffs.indexOf(d3.min(diffs))];
+        }
+
+        var stepSize = (to - from) / amountOfSteps;
         var result = d3.range(from, to, rounded(stepSize));
 
         var last = result[result.length - 1];
         if (last != to) {
             // don't add value before last one if they are close (otherwise they might overlap in UI)
-            if ((to - last) < stepSize / 2) result = result.splice(0, result.length - 1);
+            if ((to - last) < stepSize / 2) result.splice(0, result.length - 1);
             result.push(to); // always add last value
         }
 
-        return  result;
+        return result;
     }
 
-    function rounded(value) {
-        var values = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000];
-        var diffs = values.map(function(i){ return Math.abs(i - value); });
-        return values[diffs.indexOf(d3.min(diffs))];
+    function logRange(to, desiredAmountOfSteps) {
+        var result = [to];
+        function addMultiplesOf(n) {
+            while (n < to) {
+                result.push(n);
+                n = n * 10;
+            }
+        }
+        addMultiplesOf(1);
+        if (result.length < desiredAmountOfSteps) addMultiplesOf(5);
+        if (result.length < desiredAmountOfSteps) addMultiplesOf(2);
+
+        if (result.length >= 2) {
+            var last = result[result.length - 1];
+            var nextToLast = result[result.length - 2];
+            if (nextToLast / last <= 0.1) {
+                result.splice(result.length - 2, 2);
+            }
+
+        }
+        return result;
     }
 
     function atLeast(minValue, value) {
@@ -174,7 +197,7 @@
     function numberFormat(n) {
         if (!isFinite(n)) return "";
         var s = d3.format(",")(n);
-        return s.length < 4 ? s : d3.format("s")(n);
+        return s.length < 4 ? s : d3.format(".2s")(n); // use ".2" precision in attempt to avoid overlapping y axis label
     }
 
     function appendBlockElementTo(element, width) {
