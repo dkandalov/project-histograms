@@ -197,7 +197,21 @@
     function numberFormat(n) {
         if (!isFinite(n)) return "";
         var s = d3.format(",")(n);
-        return s.length < 4 ? s : d3.format(".2s")(n); // use ".2" precision in attempt to avoid overlapping y axis label
+
+        // use ".2" precision in attempt to avoid overlapping y axis label
+        var result = s.length < 4 ? s : d3.format(".2s")(n);
+
+        // workaround for "s" formatting because with ".0" it uses "e" notation
+        result = removeFrom(result, ".00");
+        result = removeFrom(result, ".0");
+
+        return result;
+    }
+
+    function removeFrom(string, subString) {
+        var i = string.indexOf(subString);
+        if (i == -1) return string;
+        else return string.substring(0, i) + string.substring(i + subString.length, string.length);
     }
 
     function appendBlockElementTo(element, width) {
