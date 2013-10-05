@@ -35,3 +35,18 @@ describe("logRange", function() {
 		expect(logRange(100, amountOfSteps)).toEqual([1, 10, 50, 100]);
 	});
 });
+
+describe("percentile", function() {
+	it("should leave all elements when percentile is 1", function() {
+		var percentile = 1;
+		expect(takePercentileOf([], percentile)).toEqual([]);
+		expect(takePercentileOf([42], percentile)).toEqual([42]);
+		expect(takePercentileOf([1, 2, 3, 4, 5], percentile)).toEqual([1, 2, 3, 4, 5]);
+	});
+	it("should leave half of elements when percentile is 0.5", function() {
+		var percentile = 0.5;
+		expect(takePercentileOf([], percentile)).toEqual([]);
+		expect(takePercentileOf([42], percentile)).toEqual([42]);
+		expect(takePercentileOf([1, 2, 3, 4, 5], percentile)).toEqual([1, 2, 3]);
+	});
+});

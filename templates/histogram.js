@@ -6,6 +6,7 @@ function createHistogram(elementId, histogramTitle, rawData) {
 	var margin = {top: 20, right: 20, bottom: 50, left: 50},
 		width = 960 - margin.left - margin.right,
 		height = 500 - margin.top - margin.bottom;
+	var defaultPercentile = 1;
 
 	var rootElement = d3.select("#" + elementId).attr("class", "histogram");
 	removeChildrenOf(elementId);
@@ -19,9 +20,23 @@ function createHistogram(elementId, histogramTitle, rawData) {
 		.append("g")
 		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-	updateHistogram();
+	var footerSpan = appendBlockElementTo(rootElement, width).append("span").style({float: "right"});
+	footerSpan.append("label").html("Percentile: ");
+	var groupByDropDown = footerSpan.append("select");
+	for (var i = 100; i > 0; i -= 10) {
+		var option = groupByDropDown.append("option").attr("value", i).html(i);
+		if (defaultPercentile * 100 == i) option.attr("selected", "selected");
+	}
+	groupByDropDown.on("change", function() {
+		updateHistogram(data, +this.value / 100);
+	});
 
-	function updateHistogram() {
+	updateHistogram(data, defaultPercentile);
+
+
+	function updateHistogram(data, percentile) {
+		data = takePercentileOf(data, percentile, function(d){ return d.amount; });
+
 		var maxFrequency = d3.max(data, function(d){return d.frequency;});
 		var maxAmount = d3.max(data, function(d){ return d.amount; }) + 1; // +1 to include first "0" in range
 
@@ -93,6 +108,14 @@ function createHistogram(elementId, histogramTitle, rawData) {
 			parent.removeChild(element.children.item(i));
 		}
 	}
+}
+
+function takePercentileOf(data, percentile, accessor) {
+	function valueOf(d) {
+		return accessor != null ? accessor(d) : d;
+	}
+	var i = Math.round((data.length - 1) * percentile);
+	return data.filter(function(d) { return valueOf(d) <= valueOf(data[i]); });
 }
 
 function range(to, desiredAmountOfSteps) {
