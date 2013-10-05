@@ -26,7 +26,7 @@ function createHistogram(elementId, histogramTitle, rawData) {
 		var maxAmount = d3.max(data, function(d){ return d.amount; }) + 1; // +1 to include first "0" in range
 
 		var x = d3.scale.linear().domain([0, maxAmount]).range([0, width]);
-		var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat).tickValues(range(0, maxAmount, 10));
+		var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat).tickValues(range(maxAmount, 10));
 
 		var y = d3.scale.log().domain([1, maxFrequency]).range([height, 0]);
 		var yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(numberFormat).tickValues(logRange(maxFrequency, 10));
@@ -95,15 +95,15 @@ function createHistogram(elementId, histogramTitle, rawData) {
 	}
 }
 
-function range(from, to, amountOfSteps) {
+function range(to, desiredAmountOfSteps) {
 	function rounded(stepSize) {
 		var values = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000];
 		var diffs = values.map(function(i){ return Math.abs(i - stepSize); });
 		return values[diffs.indexOf(d3.min(diffs))];
 	}
 
-	var stepSize = (to - from) / amountOfSteps;
-	var result = d3.range(from, to, rounded(stepSize));
+	var stepSize = to / desiredAmountOfSteps;
+	var result = d3.range(0, to, rounded(stepSize));
 
 	var last = result[result.length - 1];
 	if (last != to) {
@@ -134,7 +134,7 @@ function logRange(to, desiredAmountOfSteps) {
 			result.splice(result.length - 2, 1);
 		}
 	}
-	return result;
+	return result.sort(d3.ascending);
 }
 
 function atLeast(minValue, value) {
