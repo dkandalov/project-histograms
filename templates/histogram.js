@@ -21,14 +21,8 @@ function createHistogram(elementId, histogramTitle, rawData) {
 		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 	var footerSpan = appendBlockElementTo(rootElement, width).append("span").style({float: "right"});
-	footerSpan.append("label").html("Percentile: ");
-	var groupByDropDown = footerSpan.append("select");
-	for (var i = 100; i > 0; i -= 10) {
-		var option = groupByDropDown.append("option").attr("value", i).html(i);
-		if (defaultPercentile * 100 == i) option.attr("selected", "selected");
-	}
-	groupByDropDown.on("change", function() {
-		updateHistogram(data, +this.value / 100);
+	addPercentileDropDownTo(footerSpan, defaultPercentile, function(percentile) {
+		updateHistogram(data, percentile);
 	});
 
 	updateHistogram(data, defaultPercentile);
@@ -108,6 +102,24 @@ function createHistogram(elementId, histogramTitle, rawData) {
 			parent.removeChild(element.children.item(i));
 		}
 	}
+}
+
+function addPercentileDropDownTo(element, defaultPercentile, onChange) {
+	element.append("label").html("Percentile: ");
+	var groupByDropDown = element.append("select");
+
+	var choices = [100, 99, 98];
+	for (var i = 90; i > 0; i -= 10) {
+		choices.push(i);
+	}
+	choices.forEach(function(i) {
+		var option = groupByDropDown.append("option").attr("value", i).html(i);
+		if (defaultPercentile * 100 == i) option.attr("selected", "selected");
+	});
+
+	groupByDropDown.on("change", function() {
+		onChange(+this.value / 100);
+	});
 }
 
 function takePercentileOf(data, percentile, accessor) {
