@@ -6,7 +6,8 @@ function createHistogram(elementId, histogramTitle, rawData) {
 	var margin = {top: 20, right: 20, bottom: 50, left: 50},
 		width = 960 - margin.left - margin.right,
 		height = 500 - margin.top - margin.bottom;
-	var defaultPercentile = 1;
+	var percentile = 1;
+	var scaleType = "log";
 
 	var rootElement = d3.select("#" + elementId).attr("class", "histogram");
 	removeChildrenOf(elementId);
@@ -21,14 +22,21 @@ function createHistogram(elementId, histogramTitle, rawData) {
 		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 	var footerSpan = appendBlockElementTo(rootElement, width).append("span").style({float: "right"});
-	addPercentileDropDownTo(footerSpan, defaultPercentile, function(percentile) {
-		updateHistogram(data, percentile);
+
+	addScaleTypeDropDownTo(footerSpan, scaleType, function(newScaleType) {
+		scaleType = newScaleType;
+		updateHistogram(data, percentile, scaleType); // TODO animate?
+	});
+	addPaddingTo(footerSpan);
+	addPercentileDropDownTo(footerSpan, percentile, function(newPercentile) {
+		percentile = newPercentile;
+		updateHistogram(data, percentile, scaleType); // TODO animate?
 	});
 
-	updateHistogram(data, defaultPercentile);
+	updateHistogram(data, percentile, scaleType);
 
 
-	function updateHistogram(data, percentile) {
+	function updateHistogram(data, percentile, scaleType) {
 		data = takePercentileOf(data, percentile, function(d){ return d.amount; });
 
 		var maxFrequency = d3.max(data, function(d){return d.frequency;});
@@ -37,8 +45,15 @@ function createHistogram(elementId, histogramTitle, rawData) {
 		var x = d3.scale.linear().domain([0, maxAmount]).range([0, width]);
 		var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat).tickValues(range(maxAmount, 10));
 
-		var y = d3.scale.log().domain([1, maxFrequency]).range([height, 0]);
-		var yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(numberFormat).tickValues(logRange(maxFrequency, 10));
+		var y;
+		var yAxis;
+		if (scaleType == "log") {
+			y = d3.scale.log().domain([1, maxFrequency]).range([height, 0]);
+			yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(numberFormat).tickValues(logRange(maxFrequency, 10));
+		} else if (scaleType == "linear") {
+			y = d3.scale.linear().domain([1, maxFrequency]).range([height, 0]);
+			yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(numberFormat).tickValues(range(maxFrequency, 10));
+		}
 
 		svg.selectAll(".bar").remove();
 		var bar = svg.selectAll(".bar")
@@ -104,22 +119,38 @@ function createHistogram(elementId, histogramTitle, rawData) {
 	}
 }
 
+function addScaleTypeDropDownTo(element, defaultScaleType, onChange) {
+	element.append("label").html("Y axis scale: ");
+	var dropDown = element.append("select");
+	["log", "linear"].forEach(function(scaleType) {
+		var option = dropDown.append("option").attr("value", scaleType).html(scaleType);
+		if (defaultScaleType == scaleType) option.attr("selected", "selected");
+	});
+	dropDown.on("change", function() {
+		onChange(this.value);
+	});
+}
+
 function addPercentileDropDownTo(element, defaultPercentile, onChange) {
 	element.append("label").html("Percentile: ");
-	var groupByDropDown = element.append("select");
+	var dropDown = element.append("select");
 
 	var choices = [100, 99, 98];
 	for (var i = 90; i > 0; i -= 10) {
 		choices.push(i);
 	}
 	choices.forEach(function(i) {
-		var option = groupByDropDown.append("option").attr("value", i).html(i);
+		var option = dropDown.append("option").attr("value", i).html(i);
 		if (defaultPercentile * 100 == i) option.attr("selected", "selected");
 	});
 
-	groupByDropDown.on("change", function() {
+	dropDown.on("change", function() {
 		onChange(+this.value / 100);
 	});
+}
+
+function addPaddingTo(element) {
+	element.append("span").style({width: "20px", display: "inline-block"});
 }
 
 function takePercentileOf(data, percentile, accessor) {
@@ -131,8 +162,16 @@ function takePercentileOf(data, percentile, accessor) {
 }
 
 function range(to, desiredAmountOfSteps) {
+	var values = function() {
+		var multiples = d3.range(0, 9).map(function(i){ return Math.pow(10, i); });
+		return multiples.reduce(function(result, i) {
+			result.push(i);
+			result.push(2 * i);
+			result.push(5 * i);
+			return result;
+		}, []);
+	}();
 	function rounded(stepSize) {
-		var values = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000];
 		var diffs = values.map(function(i){ return Math.abs(i - stepSize); });
 		return values[diffs.indexOf(d3.min(diffs))];
 	}

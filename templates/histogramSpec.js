@@ -24,6 +24,9 @@ describe("range", function() {
 		expect(range(121, amountOfSteps)).toEqual([0, 20, 40, 60, 80, 100, 121]);
 		expect(range(15, amountOfSteps)).toEqual([0, 2, 4, 6, 8, 10, 12, 15]);
 	});
+	it("should with large numbers", function() {
+		expect(range(10 * 1000000, amountOfSteps)).toEqual([ 0, 2000000, 4000000, 6000000, 8000000, 10000000 ]);
+	});
 });
 
 describe("logRange", function() {
