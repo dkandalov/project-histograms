@@ -3,7 +3,7 @@ function createHistogram(elementId, histogramTitle, rawData) {
 		return {amount: d[0], frequency: d[1]};
 	});
 
-	var margin = {top: 20, right: 20, bottom: 50, left: 150},
+	var margin = {top: 20, right: 20, bottom: 50, left: 50},
 		width = 960 - margin.left - margin.right,
 		height = 500 - margin.top - margin.bottom;
 	var percentile = 1;
@@ -70,16 +70,14 @@ function createHistogram(elementId, histogramTitle, rawData) {
 				return "translate(" + x(d.amount) + "," + y(d.frequency) + ")";
 			})
 			.on("mouseover", function(d) {
-				console.log(tooltip)
-				console.log(tooltip[0][0])
 				tooltip.html("Amount: " + d.amount + "<br/>Frequency: " + d.frequency)
-					.style("opacity", .9)
+					.style("opacity", .85)
 					.style("position", "absolute")
-					.style("left", svgPos.offsetLeft + margin.left + x(d.amount + 1) - (barWidth / 2) - (tooltip[0][0].clientWidth / 2) + "px")
-					.style("top", svgPos.offsetTop + y(d.frequency) + ((height - y(d.frequency)) / 2) + "px");
+					.style("left", leftOffsetOf(svgPos) + margin.left + x(d.amount + 1) - halfOf(barWidth + clientWidthOf(tooltip)) + "px")
+					.style("top", topOffsetOf(svgPos) + y(d.frequency) + halfOf(height - y(d.frequency)) + "px");
 			})
 			.on("mouseout", function() {
-				tooltip.style("opacity", .0);
+				tooltip.style("opacity", 0);
 			});
 
 		bar.append("rect")
@@ -96,7 +94,7 @@ function createHistogram(elementId, histogramTitle, rawData) {
 			.call(xAxis)
 			.call(xAxisLabel(histogramTitle))
 			.selectAll(".tick").attr("transform", function (d) {
-				return "translate(" + (x(d) + barWidth / 2) + "," + 0 + ")";
+				return "translate(" + (x(d) + halfOf(barWidth)) + "," + 0 + ")";
 			});
 		svg.append("g")
 			.attr("class", "y axis")
@@ -109,7 +107,7 @@ function createHistogram(elementId, histogramTitle, rawData) {
 			return axis.append("text")
 				.text(labelText)
 				.attr("transform", function(){
-					return "translate(" + ((width / 2) - (this.clientWidth / 2)) + ",40)";
+					return "translate(" + halfOf(width - this.clientWidth) + ",40)";
 				});
 		}
 	}
@@ -122,7 +120,7 @@ function createHistogram(elementId, histogramTitle, rawData) {
 				.style("text-anchor", "end")
 				.attr("y", -40)
 				.attr("x", function () {
-					return -((height / 2) - (this.clientHeight / 2)) + margin.top;
+					return -halfOf(height - this.clientHeight) + margin.top;
 				});
 		}
 	}
@@ -164,6 +162,13 @@ function addPercentileDropDownTo(element, defaultPercentile, onChange) {
 		onChange(+this.value / 100);
 	});
 }
+
+function halfOf(n) { return n / 2; }
+function leftOffsetOf(element) { return d3Unpack(element).offsetLeft; }
+function topOffsetOf(element) { return d3Unpack(element).offsetTop; }
+function clientWidthOf(element) { return d3Unpack(element).clientWidth; }
+function clientHeightOf(element) { return d3Unpack(element).clientHeight; }
+function d3Unpack(element) { return (element instanceof Array) ? element[0][0] : element; }
 
 function addPaddingTo(element) {
 	element.append("span").style({width: "20px", display: "inline-block"});
