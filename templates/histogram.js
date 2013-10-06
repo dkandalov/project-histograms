@@ -22,26 +22,27 @@ function createHistogram(elementId, histogramTitle, rawData) {
 	var svg = rootElement.append("svg")
 		.attr("width", width + margin.left + margin.right)
 		.attr("height", height + margin.top + margin.bottom)
-	var svgPos = svg[0][0];
-	svg = svg.append("g")
-		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	var update = function() {
+		updateHistogram(svg, data, percentile, scaleType);
+	}
 
 	var footerSpan = appendBlockElementTo(rootElement, width).append("span").style({float: "right"});
 
 	addScaleTypeDropDownTo(footerSpan, scaleType, function(newScaleType) {
 		scaleType = newScaleType;
-		updateHistogram(data, percentile, scaleType); // TODO animate?
+		update(); // TODO animate?
 	});
 	addPaddingTo(footerSpan);
 	addPercentileDropDownTo(footerSpan, percentile, function(newPercentile) {
 		percentile = newPercentile;
-		updateHistogram(data, percentile, scaleType); // TODO animate?
+		update(); // TODO animate?
 	});
 
-	updateHistogram(data, percentile, scaleType);
+	update();
 
 
-	function updateHistogram(data, percentile, scaleType) {
+	function updateHistogram(svg, data, percentile, scaleType) {
 		data = takePercentileOf(data, percentile, function(d){ return d.amount; });
 
 		var maxFrequency = d3.max(data, function(d){return d.frequency;});
@@ -61,8 +62,12 @@ function createHistogram(elementId, histogramTitle, rawData) {
 		}
 		var barWidth = atLeast(1, (width / maxAmount) - 1); // -1 to have gap if bars are big, but at least width of 1 if bars are small
 
-		svg.selectAll(".bar").remove();
-		var bar = svg.selectAll(".bar")
+
+		svg.select("g").remove();
+		var svgGroup = svg.append("g")
+			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+		var bar = svgGroup.selectAll(".bar")
 			.data(data)
 			.enter().append("g")
 			.attr("class", "bar")
@@ -73,8 +78,8 @@ function createHistogram(elementId, histogramTitle, rawData) {
 				tooltip.html("Amount: " + d.amount + "<br/>Frequency: " + d.frequency)
 					.style("opacity", .85)
 					.style("position", "absolute")
-					.style("left", leftOffsetOf(svgPos) + margin.left + x(d.amount + 1) - halfOf(barWidth + clientWidthOf(tooltip)) + "px")
-					.style("top", topOffsetOf(svgPos) + y(d.frequency) + halfOf(height - y(d.frequency)) + "px");
+					.style("left", leftOffsetOf(svg) + margin.left + x(d.amount + 1) - halfOf(barWidth + clientWidthOf(tooltip)) + "px")
+					.style("top", topOffsetOf(svg) + y(d.frequency) + halfOf(height - y(d.frequency)) + "px");
 			})
 			.on("mouseout", function() {
 				tooltip.style("opacity", 0);
@@ -86,9 +91,7 @@ function createHistogram(elementId, histogramTitle, rawData) {
 			.attr("height", function(d){ return height - y(d.frequency); });
 
 
-		svg.select((".x.axis")).remove();
-		svg.select((".y.axis")).remove();
-		svg.append("g")
+		svgGroup.append("g")
 			.attr("class", "x axis")
 			.attr("transform", "translate(0," + height + ")")
 			.call(xAxis)
@@ -96,7 +99,7 @@ function createHistogram(elementId, histogramTitle, rawData) {
 			.selectAll(".tick").attr("transform", function (d) {
 				return "translate(" + (x(d) + halfOf(barWidth)) + "," + 0 + ")";
 			});
-		svg.append("g")
+		svgGroup.append("g")
 			.attr("class", "y axis")
 			.call(yAxis)
 			.call(yAxisLabel("Frequency"));
