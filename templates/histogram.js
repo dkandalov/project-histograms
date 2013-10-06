@@ -59,9 +59,7 @@ function createHistogram(elementId, histogramTitle, rawData) {
 			yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(numberFormat).tickValues(range(maxFrequency, 10));
 		}
 
-
 		var svgGroup = init();
-		addBarChart();
 		addLineChart();
 		addAxis();
 
@@ -108,28 +106,6 @@ function createHistogram(elementId, histogramTitle, rawData) {
 						y: topOffsetOf(svg) + y(d.frequency)
 					};
 				}));
-		}
-
-		function addBarChart() {
-			var bar = svgGroup.selectAll(".bar")
-				.data(data)
-				.enter().append("g")
-				.attr("class", "bar")
-				.attr("transform", function(d) {
-					return "translate(" + x(d.amount) + "," + y(d.frequency) + ")";
-				})
-				.call(tooltip.mouseOverHandler(function(d, tooltipWidth) {
-					return {
-						x: leftOffsetOf(svg) + margin.left + x(d.amount + 1) - halfOf(barWidth + tooltipWidth),
-						y: topOffsetOf(svg) + y(d.frequency) + halfOf(height - y(d.frequency))
-					};
-				}));
-			bar.append("rect")
-				.attr("x", 1) // "1" to not overlap x axis
-				.attr("width", barWidth)
-				.attr("height", function(d) {
-					return height - y(d.frequency);
-				});
 		}
 	}
 
