@@ -12,20 +12,18 @@ function createHistogram(elementId, histogramTitle, rawData) {
 	var rootElement = d3.select("#" + elementId).attr("class", "histogram");
 	removeChildrenOf(elementId);
 
-	var tooltip = rootElement.append("div")
-		.attr("class", "tooltip")
-		.style("opacity", 0);
+	var tooltip = addTooltipTo(rootElement);
 
 	var headerSpan = appendBlockElementTo(rootElement, width);
 	headerSpan.append("h2").text(histogramTitle).style({"text-align": "center"});
 
 	var svg = rootElement.append("svg")
 		.attr("width", width + margin.left + margin.right)
-		.attr("height", height + margin.top + margin.bottom)
+		.attr("height", height + margin.top + margin.bottom);
 
 	var update = function() {
-		updateHistogram(svg, data, percentile, scaleType);
-	}
+		updateHistogram(svg, data, percentile, scaleType, tooltip);
+	};
 
 	var footerSpan = appendBlockElementTo(rootElement, width).append("span").style({float: "right"});
 
@@ -42,7 +40,7 @@ function createHistogram(elementId, histogramTitle, rawData) {
 	update();
 
 
-	function updateHistogram(svg, data, percentile, scaleType) {
+	function updateHistogram(svg, data, percentile, scaleType, tooltip) {
 		data = takePercentileOf(data, percentile, function(d){ return d.amount; });
 
 		var maxFrequency = d3.max(data, function(d){return d.frequency;});
@@ -74,16 +72,12 @@ function createHistogram(elementId, histogramTitle, rawData) {
 			.attr("transform", function(d) {
 				return "translate(" + x(d.amount) + "," + y(d.frequency) + ")";
 			})
-			.on("mouseover", function(d) {
-				tooltip.html("Amount: " + d.amount + "<br/>Frequency: " + d.frequency)
-					.style("opacity", .85)
-					.style("position", "absolute")
-					.style("left", leftOffsetOf(svg) + margin.left + x(d.amount + 1) - halfOf(barWidth + clientWidthOf(tooltip)) + "px")
-					.style("top", topOffsetOf(svg) + y(d.frequency) + halfOf(height - y(d.frequency)) + "px");
-			})
-			.on("mouseout", function() {
-				tooltip.style("opacity", 0);
-			});
+			.call(tooltip.mouseOverHandler(function(d) {
+				return {
+					x: leftOffsetOf(svg) + margin.left + x(d.amount + 1) - halfOf(barWidth),
+					y: topOffsetOf(svg) + y(d.frequency) + halfOf(height - y(d.frequency))
+				};
+			}));
 
 		bar.append("rect")
 			.attr("x", 1) // "1" to not overlap x axis
@@ -134,6 +128,29 @@ function createHistogram(elementId, histogramTitle, rawData) {
 			parent.removeChild(element.children.item(i));
 		}
 	}
+}
+
+function addTooltipTo(element) {
+	var tooltip = element.append("div")
+		.attr("class", "tooltip")
+		.style("opacity", 0);
+
+	tooltip.mouseOverHandler = function(getRelativeXY) {
+		return function(element) {
+			element.on("mouseover", function(d) {
+				tooltip.html("Amount: " + d.amount + "<br/>Frequency: " + d.frequency)
+					.style("opacity", .85)
+					.style("position", "absolute")
+					.style("left", getRelativeXY(d).x - halfOf(clientWidthOf(tooltip)) + "px")
+					.style("top", getRelativeXY(d).y + "px");
+			})
+			.on("mouseout", function() {
+				tooltip.style("opacity", 0);
+			});
+		};
+	};
+
+	return tooltip;
 }
 
 function addScaleTypeDropDownTo(element, defaultScaleType, onChange) {
