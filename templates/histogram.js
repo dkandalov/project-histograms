@@ -72,9 +72,9 @@ function createHistogram(elementId, histogramTitle, rawData) {
 			.attr("transform", function(d) {
 				return "translate(" + x(d.amount) + "," + y(d.frequency) + ")";
 			})
-			.call(tooltip.mouseOverHandler(function(d) {
+			.call(tooltip.mouseOverHandler(function(d, tooltipWidth) {
 				return {
-					x: leftOffsetOf(svg) + margin.left + x(d.amount + 1) - halfOf(barWidth),
+					x: leftOffsetOf(svg) + margin.left + x(d.amount + 1) - halfOf(barWidth + tooltipWidth),
 					y: topOffsetOf(svg) + y(d.frequency) + halfOf(height - y(d.frequency))
 				};
 			}));
@@ -93,6 +93,20 @@ function createHistogram(elementId, histogramTitle, rawData) {
 		svgGroup.append("path")
 			.attr("class", "line")
 			.attr("d", function() { return line(data); });
+
+		svgGroup.selectAll(".circle")
+			.data(data)
+			.enter().append("circle")
+			.attr("class", "circle")
+			.attr("r", 4)
+			.attr("cx", function(d) { return x(d.amount) + halfOf(barWidth); })
+			.attr("cy", function(d) { return y(d.frequency); })
+			.call(tooltip.mouseOverHandler(function(d) {
+				return {
+					x: leftOffsetOf(svg) + margin.left + x(d.amount + 1),
+					y: topOffsetOf(svg) + y(d.frequency)
+				};
+			}));
 
 
 		svgGroup.append("g")
@@ -148,11 +162,12 @@ function addTooltipTo(element) {
 	tooltip.mouseOverHandler = function(getRelativeXY) {
 		return function(element) {
 			element.on("mouseover", function(d) {
+				var relativeXY = getRelativeXY(d, clientWidthOf(tooltip), clientHeightOf(tooltip));
 				tooltip.html("Amount: " + d.amount + "<br/>Frequency: " + d.frequency)
 					.style("opacity", .85)
 					.style("position", "absolute")
-					.style("left", getRelativeXY(d).x - halfOf(clientWidthOf(tooltip)) + "px")
-					.style("top", getRelativeXY(d).y + "px");
+					.style("left", relativeXY.x + "px")
+					.style("top", relativeXY.y + "px");
 			})
 			.on("mouseout", function() {
 				tooltip.style("opacity", 0);
