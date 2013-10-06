@@ -45,10 +45,10 @@ function createHistogram(elementId, histogramTitle, rawData) {
 
 		var maxFrequency = d3.max(data, function(d){return d.frequency;});
 		var maxAmount = d3.max(data, function(d){ return d.amount; }) + 1; // +1 to include first "0" in range
+		var barWidth = atLeast(1, (width / maxAmount) - 1); // -1 to have gap if bars are big, but at least width of 1 if bars are small
 
 		var x = d3.scale.linear().domain([0, maxAmount]).range([0, width]);
 		var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat).tickValues(range(maxAmount, 10));
-
 		var y;
 		var yAxis;
 		if (scaleType == "log") {
@@ -58,69 +58,79 @@ function createHistogram(elementId, histogramTitle, rawData) {
 			y = d3.scale.linear().domain([1, maxFrequency]).range([height, 0]);
 			yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(numberFormat).tickValues(range(maxFrequency, 10));
 		}
-		var barWidth = atLeast(1, (width / maxAmount) - 1); // -1 to have gap if bars are big, but at least width of 1 if bars are small
 
 
-		svg.select("g").remove();
-		var svgGroup = svg.append("g")
-			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-		var bar = svgGroup.selectAll(".bar")
-			.data(data)
-			.enter().append("g")
-			.attr("class", "bar")
-			.attr("transform", function(d) {
-				return "translate(" + x(d.amount) + "," + y(d.frequency) + ")";
-			})
-			.call(tooltip.mouseOverHandler(function(d, tooltipWidth) {
-				return {
-					x: leftOffsetOf(svg) + margin.left + x(d.amount + 1) - halfOf(barWidth + tooltipWidth),
-					y: topOffsetOf(svg) + y(d.frequency) + halfOf(height - y(d.frequency))
-				};
-			}));
-
-		bar.append("rect")
-			.attr("x", 1) // "1" to not overlap x axis
-			.attr("width", barWidth)
-			.attr("height", function(d){ return height - y(d.frequency); });
+		var svgGroup = init();
+		addBarChart();
+		addLineChart();
+		addAxis();
 
 
-		var line = d3.svg.line()
-			.interpolate("linear")
-			.x(function(d) { return x(d.amount) + halfOf(barWidth); })
-			.y(function(d) { return y(d.frequency); });
+		function init() {
+			svg.select("g").remove();
+			return svg.append("g")
+				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+		}
 
-		svgGroup.append("path")
-			.attr("class", "line")
-			.attr("d", function() { return line(data); });
+		function addAxis() {
+			svgGroup.append("g")
+				.attr("class", "x axis")
+				.attr("transform", "translate(0," + height + ")")
+				.call(xAxis)
+				.call(xAxisLabel(histogramTitle))
+				.selectAll(".tick").attr("transform", function (d) {
+					return "translate(" + (x(d) + halfOf(barWidth)) + "," + 0 + ")";
+				});
+			svgGroup.append("g")
+				.attr("class", "y axis")
+				.call(yAxis)
+				.call(yAxisLabel("Frequency"));
+		}
 
-		svgGroup.selectAll(".circle")
-			.data(data)
-			.enter().append("circle")
-			.attr("class", "circle")
-			.attr("r", 4)
-			.attr("cx", function(d) { return x(d.amount) + halfOf(barWidth); })
-			.attr("cy", function(d) { return y(d.frequency); })
-			.call(tooltip.mouseOverHandler(function(d) {
-				return {
-					x: leftOffsetOf(svg) + margin.left + x(d.amount + 1),
-					y: topOffsetOf(svg) + y(d.frequency)
-				};
-			}));
+		function addLineChart() {
+			var line = d3.svg.line()
+				.interpolate("linear")
+				.x(function(d) { return x(d.amount) + halfOf(barWidth); })
+				.y(function(d) { return y(d.frequency); });
+			svgGroup.append("path")
+				.attr("class", "line")
+				.attr("d", function() { return line(data); });
+			svgGroup.selectAll(".circle")
+				.data(data)
+				.enter().append("circle")
+				.attr("class", "circle")
+				.attr("r", 4)
+				.attr("cx", function(d) { return x(d.amount) + halfOf(barWidth); })
+				.attr("cy", function(d) { return y(d.frequency); })
+				.call(tooltip.mouseOverHandler(function(d) {
+					return {
+						x: leftOffsetOf(svg) + margin.left + x(d.amount + 1),
+						y: topOffsetOf(svg) + y(d.frequency)
+					};
+				}));
+		}
 
-
-		svgGroup.append("g")
-			.attr("class", "x axis")
-			.attr("transform", "translate(0," + height + ")")
-			.call(xAxis)
-			.call(xAxisLabel(histogramTitle))
-			.selectAll(".tick").attr("transform", function (d) {
-				return "translate(" + (x(d) + halfOf(barWidth)) + "," + 0 + ")";
-			});
-		svgGroup.append("g")
-			.attr("class", "y axis")
-			.call(yAxis)
-			.call(yAxisLabel("Frequency"));
+		function addBarChart() {
+			var bar = svgGroup.selectAll(".bar")
+				.data(data)
+				.enter().append("g")
+				.attr("class", "bar")
+				.attr("transform", function(d) {
+					return "translate(" + x(d.amount) + "," + y(d.frequency) + ")";
+				})
+				.call(tooltip.mouseOverHandler(function(d, tooltipWidth) {
+					return {
+						x: leftOffsetOf(svg) + margin.left + x(d.amount + 1) - halfOf(barWidth + tooltipWidth),
+						y: topOffsetOf(svg) + y(d.frequency) + halfOf(height - y(d.frequency))
+					};
+				}));
+			bar.append("rect")
+				.attr("x", 1) // "1" to not overlap x axis
+				.attr("width", barWidth)
+				.attr("height", function(d) {
+					return height - y(d.frequency);
+				});
+		}
 	}
 
 	function xAxisLabel(labelText) {
