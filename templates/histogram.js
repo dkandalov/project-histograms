@@ -3,7 +3,7 @@ function createHistogram(elementId, histogramTitle, rawData) {
 		return {amount: d[0], frequency: d[1]};
 	});
 
-	var margin = {top: 20, right: 20, bottom: 50, left: 50},
+	var margin = {top: 20, right: 20, bottom: 50, left: 150},
 		width = 960 - margin.left - margin.right,
 		height = 500 - margin.top - margin.bottom;
 	var percentile = 1;
@@ -12,13 +12,18 @@ function createHistogram(elementId, histogramTitle, rawData) {
 	var rootElement = d3.select("#" + elementId).attr("class", "histogram");
 	removeChildrenOf(elementId);
 
+	var tooltip = rootElement.append("div")
+		.attr("class", "tooltip")
+		.style("opacity", 0);
+
 	var headerSpan = appendBlockElementTo(rootElement, width);
 	headerSpan.append("h2").text(histogramTitle).style({"text-align": "center"});
 
 	var svg = rootElement.append("svg")
 		.attr("width", width + margin.left + margin.right)
 		.attr("height", height + margin.top + margin.bottom)
-		.append("g")
+	var svgPos = svg[0][0];
+	svg = svg.append("g")
 		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 	var footerSpan = appendBlockElementTo(rootElement, width).append("span").style({float: "right"});
@@ -54,6 +59,7 @@ function createHistogram(elementId, histogramTitle, rawData) {
 			y = d3.scale.linear().domain([1, maxFrequency]).range([height, 0]);
 			yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(numberFormat).tickValues(range(maxFrequency, 10));
 		}
+		var barWidth = atLeast(1, (width / maxAmount) - 1); // -1 to have gap if bars are big, but at least width of 1 if bars are small
 
 		svg.selectAll(".bar").remove();
 		var bar = svg.selectAll(".bar")
@@ -62,15 +68,25 @@ function createHistogram(elementId, histogramTitle, rawData) {
 			.attr("class", "bar")
 			.attr("transform", function(d) {
 				return "translate(" + x(d.amount) + "," + y(d.frequency) + ")";
+			})
+			.on("mouseover", function(d) {
+				console.log(tooltip)
+				console.log(tooltip[0][0])
+				tooltip.html("Amount: " + d.amount + "<br/>Frequency: " + d.frequency)
+					.style("opacity", .9)
+					.style("position", "absolute")
+					.style("left", svgPos.offsetLeft + margin.left + x(d.amount + 1) - (barWidth / 2) - (tooltip[0][0].clientWidth / 2) + "px")
+					.style("top", svgPos.offsetTop + y(d.frequency) + ((height - y(d.frequency)) / 2) + "px");
+			})
+			.on("mouseout", function() {
+				tooltip.style("opacity", .0);
 			});
 
-		var barWidth = atLeast(1, (width / maxAmount) - 1); // -1 to have gap if bars are big, but at least width of 1 if bars are small
 		bar.append("rect")
 			.attr("x", 1) // "1" to not overlap x axis
 			.attr("width", barWidth)
-			.attr("height", function(d){ return height - y(d.frequency); })
-			.append("title")
-			.text(function(d){ return "Amount:" + d.amount + "\nFrequency: " + d.frequency});
+			.attr("height", function(d){ return height - y(d.frequency); });
+
 
 		svg.select((".x.axis")).remove();
 		svg.select((".y.axis")).remove();

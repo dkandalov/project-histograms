@@ -20,14 +20,27 @@
         stroke: #aaa;
         shape-rendering: crispEdges;
     }
+    #histograms div.tooltip {
+        position: absolute;
+        text-align: center;
+        height: auto;
+        padding: 5px;
+        font: 12px sans-serif;
+        background: lightsteelblue;
+        border: 0;
+        border-radius: 8px;
+        pointer-events: none;
+    }
 </style>
 <head><title></title></head>
 <body>
-<span id="parameters-per-method-histogram"></span>
-<br/><br/><br/>
-<span id="fields-per-class-histogram"></span>
-<br/><br/><br/>
-<span id="methods-per-class-histogram"></span>
+<span id="histograms">
+    <span id="parameters-per-method-histogram"></span>
+    <br/><br/><br/>
+    <span id="fields-per-class-histogram"></span>
+    <br/><br/><br/>
+    <span id="methods-per-class-histogram"></span>
+</span>
 <script src="d3.js"></script>
 <script src="histogram.js"></script>
 <script>
