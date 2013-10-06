@@ -100,9 +100,10 @@ function createHistogram(elementId, histogramTitle, rawData) {
 				.attr("r", 4)
 				.attr("cx", function(d) { return x(d.amount) + halfOf(barWidth); })
 				.attr("cy", function(d) { return y(d.frequency); })
-				.call(tooltip.mouseOverHandler(function(d) {
+				.call(tooltip.mouseOverHandler(function(d, tooltipWidth) {
+					var shiftForCursor = 12;
 					return {
-						x: leftOffsetOf(svg) + margin.left + x(d.amount + 1),
+						x: leftOffsetOf(svg) + margin.left + x(d.amount) + halfOf(barWidth) + shiftForCursor,
 						y: topOffsetOf(svg) + y(d.frequency)
 					};
 				}));
@@ -148,11 +149,11 @@ function addTooltipTo(element) {
 	tooltip.mouseOverHandler = function(getRelativeXY) {
 		return function(element) {
 			element.on("mouseover", function(d) {
-				var relativeXY = getRelativeXY(d, clientWidthOf(tooltip), clientHeightOf(tooltip));
-				tooltip.html("Amount: " + d.amount + "<br/>Frequency: " + d.frequency)
+				var html = tooltip.html("Amount: " + d.amount + "<br/>Frequency: " + d.frequency)
 					.style("opacity", .85)
-					.style("position", "absolute")
-					.style("left", relativeXY.x + "px")
+					.style("position", "absolute");
+				var relativeXY = getRelativeXY(d, clientWidthOf(tooltip), clientHeightOf(tooltip));
+				html.style("left", relativeXY.x + "px")
 					.style("top", relativeXY.y + "px");
 			})
 			.on("mouseout", function() {
