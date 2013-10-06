@@ -8,6 +8,7 @@ function createHistogram(elementId, histogramTitle, rawData) {
 		height = 500 - margin.top - margin.bottom;
 	var percentile = 1;
 	var scaleType = "log";
+	var interpolation = "basis";
 
 	var rootElement = d3.select("#" + elementId).attr("class", "histogram");
 	removeChildrenOf(elementId);
@@ -22,11 +23,16 @@ function createHistogram(elementId, histogramTitle, rawData) {
 		.attr("height", height + margin.top + margin.bottom);
 
 	var update = function() {
-		updateHistogram(svg, data, percentile, scaleType, tooltip);
+		updateHistogram(svg, data, interpolation, percentile, scaleType, tooltip);
 	};
 
 	var footerSpan = appendBlockElementTo(rootElement, width).append("span").style({float: "right"});
 
+	addInterpolatonTypeDropDownTo(footerSpan, interpolation, function(newInterpolation) {
+		interpolation = newInterpolation;
+		update(); // TODO animate
+	})
+	addPaddingTo(footerSpan);
 	addScaleTypeDropDownTo(footerSpan, scaleType, function(newScaleType) {
 		scaleType = newScaleType;
 		update(); // TODO animate?
@@ -40,7 +46,7 @@ function createHistogram(elementId, histogramTitle, rawData) {
 	update();
 
 
-	function updateHistogram(svg, data, percentile, scaleType, tooltip) {
+	function updateHistogram(svg, data, interpolation, percentile, scaleType, tooltip) {
 		data = takePercentileOf(data, percentile, function(d){ return d.amount; });
 
 		var maxFrequency = d3.max(data, function(d){return d.frequency;});
@@ -87,7 +93,7 @@ function createHistogram(elementId, histogramTitle, rawData) {
 
 		function addLineChart() {
 			var line = d3.svg.line()
-				.interpolate("linear")
+				.interpolate(interpolation)
 				.x(function(d) { return x(d.amount) + halfOf(barWidth); })
 				.y(function(d) { return y(d.frequency); });
 			svgGroup.append("path")
@@ -165,6 +171,16 @@ function addTooltipTo(element) {
 	return tooltip;
 }
 
+function addInterpolatonTypeDropDownTo(element, defaultInterpolation, onChange) {
+	element.append("label").html("Interpolation: ");
+	var dropDown = element.append("select");
+	["basis", "linear"].forEach(function(interpolation) {
+		var option = dropDown.append("option").attr("value", interpolation).html(interpolation);
+		if (defaultInterpolation == interpolation) option.attr("selected", "selected");
+	});
+	dropDown.on("change", function(){ onChange(this.value); });
+}
+
 function addScaleTypeDropDownTo(element, defaultScaleType, onChange) {
 	element.append("label").html("Y axis scale: ");
 	var dropDown = element.append("select");
@@ -172,9 +188,7 @@ function addScaleTypeDropDownTo(element, defaultScaleType, onChange) {
 		var option = dropDown.append("option").attr("value", scaleType).html(scaleType);
 		if (defaultScaleType == scaleType) option.attr("selected", "selected");
 	});
-	dropDown.on("change", function() {
-		onChange(this.value);
-	});
+	dropDown.on("change", function(){ onChange(this.value); });
 }
 
 function addPercentileDropDownTo(element, defaultPercentile, onChange) {
@@ -190,9 +204,7 @@ function addPercentileDropDownTo(element, defaultPercentile, onChange) {
 		if (defaultPercentile * 100 == i) option.attr("selected", "selected");
 	});
 
-	dropDown.on("change", function() {
-		onChange(+this.value / 100);
-	});
+	dropDown.on("change", function(){ onChange(+this.value / 100); });
 }
 
 function halfOf(n) { return n / 2; }
