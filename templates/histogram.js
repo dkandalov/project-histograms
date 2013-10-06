@@ -85,6 +85,16 @@ function createHistogram(elementId, histogramTitle, rawData) {
 			.attr("height", function(d){ return height - y(d.frequency); });
 
 
+		var line = d3.svg.line()
+			.interpolate("linear")
+			.x(function(d) { return x(d.amount) + halfOf(barWidth); })
+			.y(function(d) { return y(d.frequency); });
+
+		svgGroup.append("path")
+			.attr("class", "line")
+			.attr("d", function() { return line(data); });
+
+
 		svgGroup.append("g")
 			.attr("class", "x axis")
 			.attr("transform", "translate(0," + height + ")")
