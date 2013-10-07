@@ -1,7 +1,7 @@
 function createHistogram(elementId, histogramTitle, rawData) {
-	var data = rawData.map(function(d) {
+	var listOfData = [rawData.map(function(d) {
 		return {amount: d[0], frequency: d[1]};
-	});
+	})];
 
 	var margin = {top: 20, right: 20, bottom: 50, left: 50},
 		width = 960 - margin.left - margin.right,
@@ -23,7 +23,7 @@ function createHistogram(elementId, histogramTitle, rawData) {
 		.attr("height", height + margin.top + margin.bottom);
 
 	var update = function() {
-		updateHistogram(svg, data, interpolation, percentile, scaleType, tooltip);
+		updateHistogram(svg, listOfData, interpolation, percentile, scaleType, tooltip);
 	};
 
 	var footerSpan = appendBlockElementTo(rootElement, width + margin.left * 2).append("span")
@@ -47,11 +47,17 @@ function createHistogram(elementId, histogramTitle, rawData) {
 	update();
 
 
-	function updateHistogram(svg, data, interpolation, percentile, scaleType, tooltip) {
-		data = takePercentileOf(data, percentile, function(d){ return d.amount; });
+	function updateHistogram(svg, listOfData, interpolation, percentile, scaleType, tooltip) {
+		listOfData = listOfData.map(function(data) {
+			return takePercentileOf(data, percentile, function(d){ return d.amount; });
+		});
 
-		var maxFrequency = d3.max(data, function(d){return d.frequency;});
-		var maxAmount = d3.max(data, function(d){ return d.amount; }) + 1; // +1 to include first "0" in range
+		var maxFrequency = d3.max(listOfData, function(data) {
+			return d3.max(data, function(d){return d.frequency;});
+		});
+		var maxAmount = d3.max(listOfData, function(data) {
+			return d3.max(data, function(d){ return d.amount; });
+		}) + 1; // +1 to include first "0" in range
 		var barWidth = atLeast(1, (width / maxAmount) - 1); // -1 to have gap if bars are big, but at least width of 1 if bars are small
 
 		var x = d3.scale.linear().domain([0, maxAmount]).range([0, width]);
@@ -67,7 +73,7 @@ function createHistogram(elementId, histogramTitle, rawData) {
 		}
 
 		var svgGroup = init();
-		addLineChart();
+		addLineCharts();
 		addAxis();
 
 
@@ -92,28 +98,38 @@ function createHistogram(elementId, histogramTitle, rawData) {
 				.call(yAxisLabel("Frequency"));
 		}
 
-		function addLineChart() {
+		function addLineCharts() {
 			var line = d3.svg.line()
 				.interpolate(interpolation)
 				.x(function(d) { return x(d.amount) + halfOf(barWidth); })
 				.y(function(d) { return y(d.frequency); });
-			svgGroup.append("path")
+
+			var lineCharts = svgGroup.selectAll(".lineChart")
+				.data(listOfData)
+				.enter()
+				.append("g").attr("class", "lineChart");
+
+			lineCharts
+				.append("path")
 				.attr("class", "line")
-				.attr("d", function() { return line(data); });
-			svgGroup.selectAll(".circle")
-				.data(data)
-				.enter().append("circle")
-				.attr("class", "circle")
-				.attr("r", 4)
-				.attr("cx", function(d) { return x(d.amount) + halfOf(barWidth); })
-				.attr("cy", function(d) { return y(d.frequency); })
-				.call(tooltip.mouseOverHandler(function(d, tooltipWidth) {
-					var shiftForCursor = 12;
-					return {
-						x: leftOffsetOf(svg) + margin.left + x(d.amount) + halfOf(barWidth) + shiftForCursor,
-						y: topOffsetOf(svg) + y(d.frequency)
-					};
-				}));
+				.attr("d", function(d) { return line(d); });
+
+			listOfData.forEach(function(data) {
+				svgGroup.selectAll(".circle")
+					.data(data)
+					.enter().append("circle")
+					.attr("class", "circle")
+					.attr("r", 4)
+					.attr("cx", function(d) { return x(d.amount) + halfOf(barWidth); })
+					.attr("cy", function(d) { return y(d.frequency); })
+					.call(tooltip.mouseOverHandler(function(d) {
+						var shiftForCursor = 12;
+						return {
+							x: leftOffsetOf(svg) + margin.left + x(d.amount) + halfOf(barWidth) + shiftForCursor,
+							y: topOffsetOf(svg) + y(d.frequency)
+						};
+					}));
+			});
 		}
 	}
 
