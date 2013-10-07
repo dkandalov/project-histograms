@@ -26,7 +26,8 @@ function createHistogram(elementId, histogramTitle, rawData) {
 		updateHistogram(svg, data, interpolation, percentile, scaleType, tooltip);
 	};
 
-	var footerSpan = appendBlockElementTo(rootElement, width).append("span").style({float: "right"});
+	var footerSpan = appendBlockElementTo(rootElement, width + margin.left * 2).append("span")
+		.style({ "margin-left": "auto", "margin-right": "auto" });
 
 	addInterpolatonTypeDropDownTo(footerSpan, interpolation, function(newInterpolation) {
 		interpolation = newInterpolation;
@@ -301,5 +302,6 @@ function removeFrom(string, subString) {
 }
 
 function appendBlockElementTo(element, width) {
-	return element.append("span").style({display: "block", width: width + "px"});
+	return element
+		.append("span").style({display: "block", "text-align": "center", width: width + "px"});
 }
