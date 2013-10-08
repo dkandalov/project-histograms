@@ -75,7 +75,13 @@
             [[0, 1], [1, 2], [2, 2], [3, 1], [4, 1], [5, 5]]
     /*methods_per_class_data*/;
 
-    createHistogram("parameters-per-method-histogram", "Amount of parameters per method", parametersPerMethod);
-    createHistogram("fields-per-class-histogram", "Amount of fields per class", fieldsPerClass);
-    createHistogram("methods-per-class-histogram", "Amount of methods per class", methodsPerClass);
+    new Histogram("parameters-per-method-histogram", "Amount of parameters per method")
+            .addSeries(parametersPerMethod)
+            .update();
+    new Histogram("fields-per-class-histogram", "Amount of fields per class")
+            .addSeries(fieldsPerClass)
+            .update();
+    new Histogram("methods-per-class-histogram", "Amount of methods per class")
+            .addSeries(methodsPerClass)
+            .update();
 </script>

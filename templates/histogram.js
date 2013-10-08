@@ -1,7 +1,5 @@
-function createHistogram(elementId, histogramTitle, rawData) {
-	var listOfData = [rawData.map(function(d) {
-		return {amount: d[0], frequency: d[1]};
-	})];
+function Histogram(elementId, histogramTitle) {
+	var listOfData = [];
 	var amount = function(d) { return d.amount; };
 	var frequency = function(d) { return d.frequency; };
 
@@ -24,8 +22,16 @@ function createHistogram(elementId, histogramTitle, rawData) {
 		.attr("width", width + margin.left + margin.right)
 		.attr("height", height + margin.top + margin.bottom);
 
-	var update = function() {
+	var outerThis = this;
+	this.update = function() {
 		updateHistogram(svg, listOfData, interpolation, percentile, scaleType, tooltip);
+		return outerThis;
+	};
+	this.addSeries = function(data) { // TODO rename "data" to "series"
+		listOfData.push(data.map(function(d) {
+			return {amount: d[0], frequency: d[1]};
+		}));
+		return outerThis;
 	};
 
 	var footerSpan = appendBlockElementTo(rootElement, width + margin.left * 2).append("span")
@@ -33,29 +39,29 @@ function createHistogram(elementId, histogramTitle, rawData) {
 
 	addInterpolationTypeDropDownTo(footerSpan, interpolation, function(newInterpolation) {
 		interpolation = newInterpolation;
-		update(); // TODO animate
-	})
+		outerThis.update(); // TODO animate
+	});
 	addPaddingTo(footerSpan);
 	addScaleTypeDropDownTo(footerSpan, scaleType, function(newScaleType) {
 		scaleType = newScaleType;
-		update(); // TODO animate?
+		outerThis.update(); // TODO animate?
 	});
 	addPaddingTo(footerSpan);
 	addPercentileDropDownTo(footerSpan, percentile, function(newPercentile) {
 		percentile = newPercentile;
-		update(); // TODO animate?
+		outerThis.update(); // TODO animate?
 	});
 
-	update();
+	return this;
 
 
 	function updateHistogram(svg, listOfData, interpolation, percentile, scaleType, tooltip) {
-		listOfData = listOfData.map(function(data) {
+		var data = listOfData.map(function(data) {
 			return takePercentileOf(data, percentile, amount);
 		});
 
-		var maxFrequency = flat(d3.max, listOfData, frequency);
-		var maxAmount = flat(d3.max, listOfData, amount) + 1; // +1 to include first "0" in range
+		var maxFrequency = flat(d3.max, data, frequency);
+		var maxAmount = flat(d3.max, data, amount) + 1; // +1 to include first "0" in range
 		var barWidth = atLeast(1, (width / maxAmount) - 1); // -1 to have gap if bars are big, but at least width of 1 if bars are small
 
 		var x = d3.scale.linear().domain([0, maxAmount]).range([0, width]);
@@ -103,7 +109,7 @@ function createHistogram(elementId, histogramTitle, rawData) {
 				.y(function(d) { return y(frequency(d)); });
 
 			var lineCharts = svgGroup.selectAll(".lineChart")
-				.data(listOfData)
+				.data(data)
 				.enter()
 				.append("g").attr("class", "lineChart");
 
@@ -112,22 +118,20 @@ function createHistogram(elementId, histogramTitle, rawData) {
 				.attr("class", "line")
 				.attr("d", function(d) { return line(d); });
 
-			listOfData.forEach(function(data) {
-				svgGroup.selectAll(".circle")
-					.data(data)
-					.enter().append("circle")
-					.attr("class", "circle")
-					.attr("r", 4)
-					.attr("cx", function(d) { return x(amount(d)) + halfOf(barWidth); })
-					.attr("cy", function(d) { return y(frequency(d)); })
-					.call(tooltip.mouseOverHandler(function(d) {
-						var shiftForCursor = 12;
-						return {
-							x: leftOffsetOf(svg) + margin.left + x(amount(d)) + halfOf(barWidth) + shiftForCursor,
-							y: topOffsetOf(svg) + y(frequency(d))
-						};
-					}));
-			});
+			lineCharts.selectAll(".circle")
+				.data(function(d) { return d; })
+				.enter().append("circle")
+				.attr("class", "circle")
+				.attr("r", 4)
+				.attr("cx", function(d) { return x(amount(d)) + halfOf(barWidth); })
+				.attr("cy", function(d) { return y(frequency(d)); })
+				.call(tooltip.mouseOverHandler(function(d) {
+					var shiftForCursor = 12;
+					return {
+						x: leftOffsetOf(svg) + margin.left + x(amount(d)) + halfOf(barWidth) + shiftForCursor,
+						y: topOffsetOf(svg) + y(frequency(d))
+					};
+				}));
 		}
 	}
 
