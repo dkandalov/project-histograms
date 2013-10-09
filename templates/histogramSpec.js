@@ -1,3 +1,25 @@
+describe("histogram", function () {
+	var rootElement;
+	var testSeries = [ [0, 1], [1, 2], [2, 2], [3, 1], [4, 1], [5, 5] ];
+	beforeEach(function() {
+		rootElement = d3.select("body").append("span").attr("id", "test-histogram");
+		new Histogram("test-histogram", "Test histogram title").addSeries(testSeries).update();
+	});
+
+	it("should be represented as a line chart", function () {
+		expect(d3.selectAll(".lineChart path").size()).toEqual(1);
+		expect(d3.select(".lineChart path").node().getAttribute("d").length).toBeGreaterThan(0);
+	});
+
+	it("and have circles for each data point", function() {
+		expect(d3.selectAll(".lineChart circle").size()).toEqual(testSeries.length);
+	});
+
+	afterEach(function() {
+		d3.select("#test-histogram").remove();
+	});
+});
+
 describe("number format", function () {
 	it("should not be more than 4 characters long", function () {
 		expect(numberFormat(1)).toEqual("1");
