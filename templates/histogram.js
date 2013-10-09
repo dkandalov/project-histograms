@@ -1,5 +1,5 @@
 function Histogram(elementId, histogramTitle) {
-	var listOfData = [];
+	var listOfSeries = [];
 	var amount = function(d) { return d.amount; };
 	var frequency = function(d) { return d.frequency; };
 
@@ -24,11 +24,11 @@ function Histogram(elementId, histogramTitle) {
 
 	var outerThis = this;
 	this.update = function() {
-		updateHistogram(svg, listOfData, interpolation, percentile, scaleType, tooltip);
+		updateHistogram(svg, listOfSeries, interpolation, percentile, scaleType, tooltip);
 		return outerThis;
 	};
-	this.addSeries = function(data) { // TODO rename "data" to "series"
-		listOfData.push(data.map(function(d) {
+	this.addSeries = function(series) {
+		listOfSeries.push(series.map(function(d) { // TODO don't map, just use the above functions
 			return {amount: d[0], frequency: d[1]};
 		}));
 		return outerThis;
@@ -55,13 +55,13 @@ function Histogram(elementId, histogramTitle) {
 	return this;
 
 
-	function updateHistogram(svg, listOfData, interpolation, percentile, scaleType, tooltip) {
-		var data = listOfData.map(function(data) {
-			return takePercentileOf(data, percentile, amount);
+	function updateHistogram(svg, listOfSeries, interpolation, percentile, scaleType, tooltip) {
+		var series = listOfSeries.map(function(series) {
+			return takePercentileOf(series, percentile, amount);
 		});
 
-		var maxFrequency = flat(d3.max, data, frequency);
-		var maxAmount = flat(d3.max, data, amount) + 1; // +1 to include first "0" in range
+		var maxFrequency = flat(d3.max, series, frequency);
+		var maxAmount = flat(d3.max, series, amount) + 1; // +1 to include first "0" in range
 		var barWidth = atLeast(1, (width / maxAmount) - 1); // -1 to have gap if bars are big, but at least width of 1 if bars are small
 
 		var x = d3.scale.linear().domain([0, maxAmount]).range([0, width]);
@@ -109,7 +109,7 @@ function Histogram(elementId, histogramTitle) {
 				.y(function(d) { return y(frequency(d)); });
 
 			var lineCharts = svgGroup.selectAll(".lineChart")
-				.data(data)
+				.data(series)
 				.enter()
 				.append("g").attr("class", "lineChart");
 
@@ -244,12 +244,12 @@ function addPaddingTo(element) {
 	element.append("span").style({width: "20px", display: "inline-block"});
 }
 
-function takePercentileOf(data, percentile, accessor) {
+function takePercentileOf(series, percentile, accessor) {
 	function valueOf(d) {
 		return accessor != null ? accessor(d) : d;
 	}
-	var i = Math.round((data.length - 1) * percentile);
-	return data.filter(function(d) { return valueOf(d) <= valueOf(data[i]); });
+	var i = Math.round((series.length - 1) * percentile);
+	return series.filter(function(d) { return valueOf(d) <= valueOf(series[i]); });
 }
 
 function range(to, desiredAmountOfSteps) {
