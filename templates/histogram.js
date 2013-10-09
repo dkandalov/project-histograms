@@ -1,7 +1,7 @@
 function Histogram(elementId, histogramTitle) {
 	var listOfSeries = [];
-	var amount = function(d) { return d.amount; };
-	var frequency = function(d) { return d.frequency; };
+	var amount = function(d) { return d[0]; };
+	var frequency = function(d) { return d[1]; };
 
 	var margin = {top: 20, right: 20, bottom: 50, left: 50},
 		width = 960 - margin.left - margin.right,
@@ -28,9 +28,7 @@ function Histogram(elementId, histogramTitle) {
 		return outerThis;
 	};
 	this.addSeries = function(series) {
-		listOfSeries.push(series.map(function(d) { // TODO don't map, just use the above functions
-			return {amount: d[0], frequency: d[1]};
-		}));
+		listOfSeries.push(series);
 		return outerThis;
 	};
 
