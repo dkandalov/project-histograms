@@ -1,4 +1,4 @@
-function Histogram(elementId, histogramTitle) {
+function Histogram(rootElement, histogramTitle) {
 	var listOfSeries = [];
 	var amount = function(d) { return d[0]; };
 	var frequency = function(d) { return d[1]; };
@@ -10,8 +10,8 @@ function Histogram(elementId, histogramTitle) {
 	var scaleType = "log";
 	var interpolation = "basis";
 
-	var rootElement = d3.select("#" + elementId).attr("class", "histogram");
-	removeChildrenOf(elementId);
+	rootElement.attr("class", "histogram");
+	rootElement.selectAll().remove();
 
 	var tooltip = addTooltipTo(rootElement);
 
@@ -153,13 +153,6 @@ function Histogram(elementId, histogramTitle) {
 				.attr("x", function () {
 					return -halfOf(height - this.clientHeight) + margin.top;
 				});
-		}
-	}
-
-	function removeChildrenOf(elementId) {
-		var element = document.getElementById(elementId);
-		for (var i = 0; i < element.children.length; i++) {
-			parent.removeChild(element.children.item(i));
 		}
 	}
 

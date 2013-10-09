@@ -3,7 +3,7 @@ describe("histogram", function () {
 	var testSeries = [ [0, 1], [1, 2], [2, 2], [3, 1], [4, 1], [5, 5] ];
 	beforeEach(function() {
 		rootElement = d3.select("body").append("span").attr("id", "test-histogram");
-		new Histogram("test-histogram", "Test histogram title").addSeries(testSeries).update();
+		new Histogram(rootElement, "Test histogram title").addSeries(testSeries).update();
 	});
 
 	it("should be represented as a line chart", function () {
@@ -16,7 +16,7 @@ describe("histogram", function () {
 	});
 
 	afterEach(function() {
-		d3.select("#test-histogram").remove();
+		rootElement.remove();
 	});
 });
 
