@@ -1,4 +1,4 @@
-function Histogram(rootElement, histogramTitle) {
+function Histogram(rootElement, labels) {
 	var listOfSeries = [];
 	var amount = function(d) { return d[0]; };
 	var frequency = function(d) { return d[1]; };
@@ -12,13 +12,15 @@ function Histogram(rootElement, histogramTitle) {
 	var scaleType = "log";
 	var interpolation = "basis";
 
+	labels = inferLabelDefaults(labels);
+
 	rootElement.attr("class", "histogram");
 	rootElement.selectAll().remove();
 
 	var tooltip = addTooltipTo(rootElement);
 
 	var headerSpan = appendBlockElementTo(rootElement, width);
-	headerSpan.append("h2").text(histogramTitle).style({"text-align": "center"});
+	headerSpan.append("h2").text(labels.title).style({"text-align": "center"});
 
 	var svg = rootElement.append("svg")
 		.attr("width", width + margin.left + margin.right)
@@ -92,14 +94,14 @@ function Histogram(rootElement, histogramTitle) {
 				.attr("class", "x axis")
 				.attr("transform", "translate(0," + height + ")")
 				.call(xAxis)
-				.call(xAxisLabel(histogramTitle))
+				.call(xAxisLabel(labels.xAxis))
 				.selectAll(".tick").attr("transform", function (d) {
 					return "translate(" + (x(d) + halfOf(barWidth)) + "," + 0 + ")";
 				});
 			svgGroup.append("g")
 				.attr("class", "y axis")
 				.call(yAxis)
-				.call(yAxisLabel("Frequency"));
+				.call(yAxisLabel(labels.yAxis));
 		}
 
 		function addLineCharts() {
@@ -167,7 +169,8 @@ function Histogram(rootElement, histogramTitle) {
 		tooltip.mouseOverHandler = function(getRelativeXY) {
 			return function(element) {
 				element.on("mouseover", function(d) {
-					var html = tooltip.html("Amount: " + amount(d) + "<br/>Frequency: " + frequency(d)) // TODO extract as configuration?
+					var text = labels.yAxisTooltip + ": " + frequency(d) + "<br/>" + labels.xAxisTooltip + ": " + amount(d) ;
+					var html = tooltip.html(text)
 						.style("opacity", .85)
 						.style("position", "absolute");
 					var relativeXY = getRelativeXY(d, clientWidthOf(tooltip), clientHeightOf(tooltip));
@@ -184,6 +187,16 @@ function Histogram(rootElement, histogramTitle) {
 	}
 }
 
+function inferLabelDefaults(labels) {
+	var defaultTo = function(defaultValue, value) { return value == null ? defaultValue : value; };
+	return {
+		title: defaultTo("", labels.title),
+		xAxis: defaultTo("Amount", labels.xAxis),
+		yAxis: defaultTo("Frequency", labels.yAxis),
+		xAxisTooltip: defaultTo("Amount", defaultTo(labels.xAxis, labels.xAxisTooltip)),
+		yAxisTooltip: defaultTo("Frequency", defaultTo(labels.yAxis, labels.yAxisTooltip))
+	};
+}
 
 function addInterpolationTypeDropDownTo(element, defaultInterpolation, onChange) {
 	element.append("label").html("Interpolation: ");

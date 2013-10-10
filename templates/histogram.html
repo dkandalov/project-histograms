@@ -73,13 +73,13 @@
             [[0, 1], [1, 2], [2, 2], [3, 1], [4, 1], [5, 5]]
     /*methods_per_class_data*/;
 
-    new Histogram(d3.select("#parameters-per-method-histogram"), "Amount of parameters per method")
+    new Histogram(d3.select("#parameters-per-method-histogram"), { title: "Amount of parameters per method", xAxis: "Parameters per method" })
             .addSeries(parametersPerMethod)
             .update();
-    new Histogram(d3.select("#fields-per-class-histogram"), "Amount of fields per class")
+    new Histogram(d3.select("#fields-per-class-histogram"), {title: "Amount of fields per class", xAxis: "Fields per class"})
             .addSeries(fieldsPerClass)
             .update();
-    new Histogram(d3.select("#methods-per-class-histogram"), "Amount of methods per class")
+    new Histogram(d3.select("#methods-per-class-histogram"), {title: "Amount of methods per class", xAxis: "Methods per class"})
             .addSeries(methodsPerClass)
             .update();
 </script>
