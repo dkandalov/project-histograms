@@ -6,6 +6,8 @@ function Histogram(rootElement, histogramTitle) {
 	var margin = {top: 20, right: 20, bottom: 50, left: 50},
 		width = 960 - margin.left - margin.right,
 		height = 500 - margin.top - margin.bottom;
+	var colorCategory = d3.scale.category10();
+	var seriesColor = function(i) { return d3.rgb(colorCategory(i)).darker(); };
 	var percentile = 1;
 	var scaleType = "log";
 	var interpolation = "basis";
@@ -109,7 +111,8 @@ function Histogram(rootElement, histogramTitle) {
 			var lineCharts = svgGroup.selectAll(".lineChart")
 				.data(series)
 				.enter()
-				.append("g").attr("class", "lineChart");
+				.append("g").attr("class", "lineChart")
+				.style("stroke", function(chart, i) { return seriesColor(i); });
 
 			lineCharts
 				.append("path")
