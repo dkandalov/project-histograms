@@ -31,8 +31,9 @@ function Histogram(rootElement, labels) {
 		updateHistogram(svg, listOfSeries, interpolation, percentile, scaleType, tooltip);
 		return outerThis;
 	};
-	this.addSeries = function(series) {
+	this.addSeries = function(series, name) {
 		listOfSeries.push(series);
+		labels.seriesNames.push(name || "series" + labels.seriesNames.length + 1);
 		return outerThis;
 	};
 
@@ -81,7 +82,7 @@ function Histogram(rootElement, labels) {
 		var svgGroup = init();
 		addLineCharts();
 		addAxis();
-
+		addLegend();
 
 		function init() {
 			svg.select("g").remove();
@@ -116,10 +117,15 @@ function Histogram(rootElement, labels) {
 				.append("g").attr("class", "lineChart")
 				.style("stroke", function(chart, i) { return seriesColor(i); });
 
-			lineCharts
+			var paths = lineCharts
 				.append("path")
 				.attr("class", "line")
 				.attr("d", function(d) { return line(d); });
+
+			paths
+				.attr("data-legend", function(d, i) {
+					return labels.seriesNames[i];
+				});
 
 			lineCharts.selectAll(".circle")
 				.data(function(d) { return d; })
@@ -135,6 +141,12 @@ function Histogram(rootElement, labels) {
 						y: topOffsetOf(svg) + y(frequency(d))
 					};
 				}));
+		}
+
+		function addLegend() {
+			svgGroup
+				.call(d3.legend);
+			// TODO legend position
 		}
 	}
 
@@ -188,13 +200,14 @@ function Histogram(rootElement, labels) {
 }
 
 function inferLabelDefaults(labels) {
-	var defaultTo = function(defaultValue, value) { return value == null ? defaultValue : value; };
+	var defaultTo = function(defaultValue, value) { return value || defaultValue; };
 	return {
 		title: defaultTo("", labels.title),
 		xAxis: defaultTo("Amount", labels.xAxis),
 		yAxis: defaultTo("Frequency", labels.yAxis),
 		xAxisTooltip: defaultTo("Amount", defaultTo(labels.xAxis, labels.xAxisTooltip)),
-		yAxisTooltip: defaultTo("Frequency", defaultTo(labels.yAxis, labels.yAxisTooltip))
+		yAxisTooltip: defaultTo("Frequency", defaultTo(labels.yAxis, labels.yAxisTooltip)),
+		seriesNames: defaultTo([], labels.seriesNames)
 	};
 }
 

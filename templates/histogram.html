@@ -39,6 +39,9 @@
         fill: #ffffff;
         stroke-width: 1.2px;
     }
+    #histograms .legend-box {
+        fill: #f2f2f2;
+    }
 </style>
 <head><title></title></head>
 <body>
@@ -50,6 +53,7 @@
     <span id="methods-per-class-histogram"></span>
 </span>
 <script src="d3.js"></script>
+<script src="d3.legend.js"></script>
 <script src="histogram.js"></script>
 <script>
     const parametersPerMethod = /*parameters_per_method_data*/
@@ -74,7 +78,8 @@
     /*methods_per_class_data*/;
 
     new Histogram(d3.select("#parameters-per-method-histogram"), { title: "Amount of parameters per method", xAxis: "Parameters per method" })
-            .addSeries(parametersPerMethod)
+            .addSeries(parametersPerMethod, "IntelliJ")
+            .addSeries(fieldsPerClass, "IntelliJ2")
             .update();
     new Histogram(d3.select("#fields-per-class-histogram"), {title: "Amount of fields per class", xAxis: "Fields per class"})
             .addSeries(fieldsPerClass)
