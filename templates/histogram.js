@@ -82,7 +82,7 @@ function Histogram(rootElement, labels) {
 		var svgGroup = init();
 		addLineCharts();
 		addAxis();
-		addLegend();
+		if (listOfSeries.length > 1) addLegend();
 
 		function init() {
 			svg.select("g").remove();
@@ -139,9 +139,14 @@ function Histogram(rootElement, labels) {
 		}
 
 		function addLegend() {
-			svgGroup
-				.call(d3.legend(labels.seriesNames, seriesColor));
-			// TODO legend position
+			svgGroup.call(
+				d3.legend(
+					labels.seriesNames,
+					seriesColor, {
+						from: d3Unpack(svg.clientLeft),
+						to: d3Unpack(svg).clientLeft + d3Unpack(svg).clientWidth
+					})
+			);
 		}
 	}
 
