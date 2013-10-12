@@ -79,7 +79,6 @@
 
     new Histogram(d3.select("#parameters-per-method-histogram"), { title: "Amount of parameters per method", xAxis: "Parameters per method" })
             .addSeries(parametersPerMethod, "IntelliJ")
-            .addSeries(fieldsPerClass, "IntelliJ2")
             .update();
     new Histogram(d3.select("#fields-per-class-histogram"), {title: "Amount of fields per class", xAxis: "Fields per class"})
             .addSeries(fieldsPerClass)

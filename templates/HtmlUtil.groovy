@@ -3,13 +3,15 @@ package templates
 import java.util.regex.Matcher
 
 class HtmlUtil {
-	static void createFromTemplate(String templateFolder, String template, String projectName, Map placeHoldersMapping) {
+	static File createFromTemplate(String templateFolder, String template, String projectName, Map placeHoldersMapping) {
 		def templateText = new File("$templateFolder/$template").readLines().join("\n")
 		def text = inlineJSLibraries(templateText) { fileName -> new File("$templateFolder/$fileName").readLines().join("\n") }
 		text = placeHoldersMapping.inject(text) { result, entry ->
 			fillPlaceholder(result, entry.value(), entry.key)
 		}
-		new File("${templateFolder}/${projectName}_${template}").write(text)
+		def file = new File("${templateFolder}/${projectName}_${template}")
+		file.write(text)
+		file
 	}
 
 	static String inlineJSLibraries(String html, Closure<String> sourceCodeReader) {
