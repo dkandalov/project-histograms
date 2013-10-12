@@ -117,15 +117,10 @@ function Histogram(rootElement, labels) {
 				.append("g").attr("class", "lineChart")
 				.style("stroke", function(chart, i) { return seriesColor(i); });
 
-			var paths = lineCharts
+			lineCharts
 				.append("path")
 				.attr("class", "line")
 				.attr("d", function(d) { return line(d); });
-
-			paths
-				.attr("data-legend", function(d, i) {
-					return labels.seriesNames[i];
-				});
 
 			lineCharts.selectAll(".circle")
 				.data(function(d) { return d; })
@@ -145,7 +140,7 @@ function Histogram(rootElement, labels) {
 
 		function addLegend() {
 			svgGroup
-				.call(d3.legend);
+				.call(d3.legend(labels.seriesNames, seriesColor));
 			// TODO legend position
 		}
 	}
