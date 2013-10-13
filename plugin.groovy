@@ -4,12 +4,14 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.psi.*
 import groovy.json.JsonOutput
+import templates.HtmlUtil
 
 import static liveplugin.PluginUtil.*
-import static templates.HtmlUtil.asJsArray
 import static templates.HtmlUtil.createFromTemplate
 
 String pluginPath() { pluginPath }
+
+static openInBrowser(File file) { BrowserUtil.open("file://${file.absolutePath}") }
 
 class Histogram {
 	final TreeMap map = new TreeMap()
@@ -26,12 +28,14 @@ class Histogram {
 	def persist(String path, String name) {
 		FileUtil.writeToFile(new File(path + "/data/${name}-histogram.json"), JsonOutput.toJson(map))
 	}
+
+	String asJsArray() { HtmlUtil.asJsArray(map) }
 }
 
 class ProjectHistograms {
-	def amountOfMethodsInClasses = new Histogram()
-	def amountOfFieldsInClasses = new Histogram()
-	def amountOfParametersInMethods = new Histogram()
+	final def amountOfMethodsInClasses = new Histogram()
+	final def amountOfFieldsInClasses = new Histogram()
+	final def amountOfParametersInMethods = new Histogram()
 
 	ProjectHistograms process(Iterator<PsiFileSystemItem> items) {
 		for (PsiFileSystemItem item : items) {
@@ -109,12 +113,10 @@ def buildHistogramFor(Project project) {
 File fillTemplateFrom(ProjectHistograms histograms) {
 	createFromTemplate("${pluginPath()}/templates", "histogram.html", project.name, [
 			"project_name_placeholder": { project.name },
-			"parameters_per_method_data": { asJsArray(histograms.amountOfParametersInMethods.map) },
-			"fields_per_class_data": { asJsArray(histograms.amountOfFieldsInClasses.map) },
-			"methods_per_class_data": { asJsArray(histograms.amountOfMethodsInClasses.map) },
+			"parameters_per_method_data": { histograms.amountOfParametersInMethods.asJsArray() },
+			"fields_per_class_data": { histograms.amountOfFieldsInClasses.asJsArray() },
+			"methods_per_class_data": { histograms.amountOfMethodsInClasses.asJsArray() },
 	])
 }
-
-static openInBrowser(File file) { BrowserUtil.open("file://${file.absolutePath}") }
 
 show("reloaded")
