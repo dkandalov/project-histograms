@@ -25,12 +25,12 @@ class Histogram {
 		map.size()
 	}
 
-	def persist(String path, String name) {
-		FileUtil.writeToFile(new File(path + "/data/${name}-histogram.json"), JsonOutput.toJson(map))
+	def persist(String filePath) {
+		FileUtil.writeToFile(new File(filePath), JsonOutput.toJson(map))
 	}
 
-	def loadFrom(String path, String name) {
-		def file = new File(path + "/data/${name}-histogram.json")
+	def loadFrom(String filePath) {
+		def file = new File(filePath)
 		if (!file.exists()) return
 
 		def loadedMap = (Map) new JsonSlurper().parseText(FileUtil.loadFile(file))
@@ -66,13 +66,13 @@ class ProjectHistograms {
 		this
 	}
 
-	ProjectHistograms persist(String path, String name) {
-		allHistograms.each{ it.persist(path, name) }
+	ProjectHistograms persist(String filePath) {
+		allHistograms.each{ it.persist(filePath) }
 		this
 	}
 
-	ProjectHistograms loadFrom(String path, String name) {
-		allHistograms.each{ it.loadFrom(path, name) }
+	ProjectHistograms loadFrom(String filePath) {
+		allHistograms.each{ it.loadFrom(filePath) }
 		this
 	}
 
@@ -106,6 +106,8 @@ class ProjectHistograms {
 
 registerAction("miscProjectHistograms", "ctrl shift H") { AnActionEvent event ->
   def project = event.project
+	def accumulatedHistograms = "accumulated"
+	def pathToDataFor = { String name -> "${pluginPath()}/data/${name}-histogram.json" }
 
 	showPopupMenu([
 			"Build and Show Histogram": {
@@ -113,7 +115,7 @@ registerAction("miscProjectHistograms", "ctrl shift H") { AnActionEvent event ->
 					runReadAction{
 						def histograms = new ProjectHistograms()
 								.process(allPsiItemsIn(project))
-								.persist(pluginPath(), project.name)
+								.persist(pathToDataFor(project.name))
 						openInBrowser(fillTemplateFrom(histograms, project.name))
 					}
 				}
@@ -121,17 +123,17 @@ registerAction("miscProjectHistograms", "ctrl shift H") { AnActionEvent event ->
 			"Build Histogram and Accumulate": {
 				doInBackground("Building and accumulating histogram"){
 					runReadAction{
-						def name = "accumulated"
 						def histograms = new ProjectHistograms()
-								.loadFrom(pluginPath(), name)
+								.loadFrom(pathToDataFor(accumulatedHistograms))
 								.process(allPsiItemsIn(project))
-								.persist(pluginPath(), name)
-						openInBrowser(fillTemplateFrom(histograms, name))
+								.persist(pathToDataFor(accumulatedHistograms))
+						openInBrowser(fillTemplateFrom(histograms, accumulatedHistograms))
 					}
 				}
 			},
-			"Reset Accumulator": {
-
+			"Reset Accumulated Data": {
+				new File(pathToDataFor(accumulatedHistograms)).delete()
+				show("Deleted accumulated data")
 			},
 			"Show Accumulated Histogram": {  }, // TODO
 	], "Histograms")
