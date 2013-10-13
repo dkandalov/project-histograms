@@ -1,6 +1,9 @@
 import com.intellij.ide.BrowserUtil
+import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.io.FileUtil
 import com.intellij.psi.*
+import groovy.json.JsonOutput
 
 import static liveplugin.PluginUtil.*
 import static templates.HtmlUtil.asJsArray
@@ -32,6 +35,8 @@ static int amountOfParametersIn(PsiMethod method) {
   method.parameterList.parametersCount
 }
 
+String pluginPath() { pluginPath }
+
 class Histogram {
 	final TreeMap map = new TreeMap()
 
@@ -43,16 +48,21 @@ class Histogram {
 	int size() {
 		map.size()
 	}
+
+	def persist(String path, String name) {
+		FileUtil.writeToFile(new File(path + "/data/${name}-histogram.json"), JsonOutput.toJson(map))
+	}
 }
 
 
-registerAction("miscProjectHistograms", "ctrl shift H") { event ->
+registerAction("miscProjectHistograms", "ctrl shift H") { AnActionEvent event ->
   def project = event.project
 
 	showPopupMenu([
-			"Build Histogram": { buildHistogramFor(project) },
+			"Build and Show Histogram": { buildHistogramFor(project) },
 			"Build Histogram and Accumulate": {  }, // TODO
 			"Reset Accumulator": {  }, // TODO
+			"Show Accumulated Histogram": {  }, // TODO
 	], "Histograms")
 }
 
@@ -75,6 +85,10 @@ def buildHistogramFor(Project project) {
 					amountOfParametersInMethods.add(amountOfParametersIn(it))
 				}
 			}
+
+			amountOfFieldsInClasses.persist(pluginPath(), project.name)
+			amountOfMethodsInClasses.persist(pluginPath(), project.name)
+			amountOfParametersInMethods.persist(pluginPath(), project.name)
 
 			def file = createFromTemplate("${pluginPath}/templates", "histogram.html", project.name, [
 					"project_name_placeholder" : { project.name },
