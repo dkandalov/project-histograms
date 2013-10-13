@@ -1,9 +1,9 @@
 import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.psi.*
 import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
 import templates.HtmlUtil
 
 import static liveplugin.PluginUtil.*
@@ -29,6 +29,17 @@ class Histogram {
 		FileUtil.writeToFile(new File(path + "/data/${name}-histogram.json"), JsonOutput.toJson(map))
 	}
 
+	def loadFrom(String path, String name) {
+		def file = new File(path + "/data/${name}-histogram.json")
+		if (!file.exists()) return
+
+		def loadedMap = (Map) new JsonSlurper().parseText(FileUtil.loadFile(file))
+				.collectEntries{ [Integer.parseInt(it.key), it.value] }
+
+		map.clear()
+		map.putAll(loadedMap)
+	}
+
 	String asJsArray() { HtmlUtil.asJsArray(map) }
 }
 
@@ -36,6 +47,8 @@ class ProjectHistograms {
 	final def amountOfMethodsInClasses = new Histogram()
 	final def amountOfFieldsInClasses = new Histogram()
 	final def amountOfParametersInMethods = new Histogram()
+	final def allHistograms = [amountOfMethodsInClasses, amountOfFieldsInClasses, amountOfParametersInMethods]
+
 
 	ProjectHistograms process(Iterator<PsiFileSystemItem> items) {
 		for (PsiFileSystemItem item : items) {
@@ -54,9 +67,12 @@ class ProjectHistograms {
 	}
 
 	ProjectHistograms persist(String path, String name) {
-		amountOfFieldsInClasses.persist(path, name)
-		amountOfMethodsInClasses.persist(path, name)
-		amountOfParametersInMethods.persist(path, name)
+		allHistograms.each{ it.persist(path, name) }
+		this
+	}
+
+	ProjectHistograms loadFrom(String path, String name) {
+		allHistograms.each{ it.loadFrom(path, name) }
 		this
 	}
 
@@ -92,27 +108,39 @@ registerAction("miscProjectHistograms", "ctrl shift H") { AnActionEvent event ->
   def project = event.project
 
 	showPopupMenu([
-			"Build and Show Histogram": { buildHistogramFor(project) },
-			"Build Histogram and Accumulate": {  }, // TODO
-			"Reset Accumulator": {  }, // TODO
+			"Build and Show Histogram": {
+				doInBackground("Building histograms"){
+					runReadAction{
+						def histograms = new ProjectHistograms()
+								.process(allPsiItemsIn(project))
+								.persist(pluginPath(), project.name)
+						openInBrowser(fillTemplateFrom(histograms, project.name))
+					}
+				}
+			},
+			"Build Histogram and Accumulate": {
+				doInBackground("Building and accumulating histogram"){
+					runReadAction{
+						def name = "accumulated"
+						def histograms = new ProjectHistograms()
+								.loadFrom(pluginPath(), name)
+								.process(allPsiItemsIn(project))
+								.persist(pluginPath(), name)
+						openInBrowser(fillTemplateFrom(histograms, name))
+					}
+				}
+			},
+			"Reset Accumulator": {
+
+			},
 			"Show Accumulated Histogram": {  }, // TODO
 	], "Histograms")
 }
 
-def buildHistogramFor(Project project) {
-	doInBackground("Building histograms") {
-		runReadAction {
-			def histograms = new ProjectHistograms()
-					.process(allPsiItemsIn(project))
-					.persist(pluginPath(), project.name)
-			openInBrowser(fillTemplateFrom(histograms))
-		}
-	}
-}
 
-File fillTemplateFrom(ProjectHistograms histograms) {
-	createFromTemplate("${pluginPath()}/templates", "histogram.html", project.name, [
-			"project_name_placeholder": { project.name },
+File fillTemplateFrom(ProjectHistograms histograms, String name) {
+	createFromTemplate("${pluginPath()}/templates", "histogram.html", name, [
+			"project_name_placeholder": { name },
 			"parameters_per_method_data": { histograms.amountOfParametersInMethods.asJsArray() },
 			"fields_per_class_data": { histograms.amountOfFieldsInClasses.asJsArray() },
 			"methods_per_class_data": { histograms.amountOfMethodsInClasses.asJsArray() },
