@@ -123,11 +123,11 @@ registerAction("miscProjectHistograms", "ctrl shift H") { AnActionEvent event ->
 			"Build Histogram and Accumulate": {
 				doInBackground("Building and accumulating histogram"){
 					runReadAction{
-						def histograms = new ProjectHistograms()
+						new ProjectHistograms()
 								.loadFrom(pathToDataFor(accumulatedHistograms))
 								.process(allPsiItemsIn(project))
 								.persist(pathToDataFor(accumulatedHistograms))
-						openInBrowser(fillTemplateFrom(histograms, accumulatedHistograms))
+						show("Accumulated histograms from ${project.name}")
 					}
 				}
 			},
@@ -135,7 +135,11 @@ registerAction("miscProjectHistograms", "ctrl shift H") { AnActionEvent event ->
 				new File(pathToDataFor(accumulatedHistograms)).delete()
 				show("Deleted accumulated data")
 			},
-			"Show Accumulated Histogram": {  }, // TODO
+			"Show Accumulated Histogram": {
+				def histograms = new ProjectHistograms()
+						.loadFrom(pathToDataFor(accumulatedHistograms))
+				openInBrowser(fillTemplateFrom(histograms, accumulatedHistograms))
+			}
 	], "Histograms")
 }
 
