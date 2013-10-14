@@ -25,17 +25,11 @@ class Histogram {
 		map.size()
 	}
 
-	def persist(String filePath) {
-		FileUtil.writeToFile(new File(filePath), JsonOutput.toJson(map))
-	}
+	def toJson() { JsonOutput.toJson(map) }
 
-	def loadFrom(String filePath) {
-		def file = new File(filePath)
-		if (!file.exists()) return
-
-		def loadedMap = (Map) new JsonSlurper().parseText(FileUtil.loadFile(file))
+	def fromJson(String json) {
+		def loadedMap = (Map) new JsonSlurper().parseText(json)
 				.collectEntries{ [Integer.parseInt(it.key), it.value] }
-
 		map.clear()
 		map.putAll(loadedMap)
 	}
@@ -67,12 +61,17 @@ class ProjectHistograms {
 	}
 
 	ProjectHistograms persist(String filePath) {
-		allHistograms.each{ it.persist(filePath) }
+		FileUtil.writeToFile(new File(filePath), allHistograms.collect{ it.toJson() }.join("\n"))
 		this
 	}
 
 	ProjectHistograms loadFrom(String filePath) {
-		allHistograms.each{ it.loadFrom(filePath) }
+		def file = new File(filePath)
+		if (!file.exists()) return this
+
+		FileUtil.loadFile(file).split(/\n/).eachWithIndex{ String line, int i ->
+			allHistograms[i].fromJson(line)
+		}
 		this
 	}
 
