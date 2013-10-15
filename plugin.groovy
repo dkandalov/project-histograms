@@ -42,6 +42,7 @@ class ProjectHistograms {
 	final def amountOfMethodsInClasses = new Histogram()
 	final def amountOfFieldsInClasses = new Histogram()
 	final def amountOfParametersInMethods = new Histogram()
+	final def amountOfIfsInMethods = new Histogram()
 	final def allHistograms = [amountOfMethodsInClasses, amountOfFieldsInClasses, amountOfParametersInMethods]
 
 
@@ -54,8 +55,9 @@ class ProjectHistograms {
 
 			amountOfFieldsInClasses.add(fields.size())
 			amountOfMethodsInClasses.add(methods.size())
-			methods.each{
-				amountOfParametersInMethods.add(amountOfParametersIn(it))
+			methods.each{ method ->
+				amountOfParametersInMethods.add(amountOfParametersIn(method))
+				amountOfIfsInMethods.add(amountOfIfStatementsIn(method))
 			}
 		}
 		this
@@ -181,6 +183,7 @@ File fillTemplateFrom(ProjectHistograms histograms, String name) {
 	createFromTemplate("${pluginPath()}/templates", "histogram.html", name, [
 			"project_name_placeholder": { name },
 			"parameters_per_method_data": { histograms.amountOfParametersInMethods.asJsArray() },
+			"ifs_per_method_data": { histograms.amountOfIfsInMethods.asJsArray() },
 			"fields_per_class_data": { histograms.amountOfFieldsInClasses.asJsArray() },
 			"methods_per_class_data": { histograms.amountOfMethodsInClasses.asJsArray() },
 	])
