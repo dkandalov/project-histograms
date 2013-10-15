@@ -6,6 +6,7 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import templates.HtmlUtil
 
+import static PsiStatsUtil.*
 import static liveplugin.PluginUtil.*
 import static templates.HtmlUtil.createFromTemplate
 
@@ -74,8 +75,11 @@ class ProjectHistograms {
 		}
 		this
 	}
+}
 
-	private static List<PsiMethod> allMethodsIn(PsiJavaFile javaFile) {
+class PsiStatsUtil {
+
+ static List<PsiMethod> allMethodsIn(PsiJavaFile javaFile) {
 		def result = []
 		javaFile.acceptChildren(new JavaRecursiveElementVisitor() {
 			@Override void visitMethod(PsiMethod method) {
@@ -89,7 +93,7 @@ class ProjectHistograms {
 		result
 	}
 
-	private static List<PsiField> allFieldsIn(PsiJavaFile javaFile) {
+	static List<PsiField> allFieldsIn(PsiJavaFile javaFile) {
 		def result = []
 		javaFile.acceptChildren(new JavaRecursiveElementVisitor() {
 			@Override void visitField(PsiField field) { result << field }
@@ -97,8 +101,31 @@ class ProjectHistograms {
 		result
 	}
 
-	private static int amountOfParametersIn(PsiMethod method) {
+	static int amountOfParametersIn(PsiMethod method) {
 		method.parameterList.parametersCount
+	}
+
+	static int amountOfIfStatementsIn(PsiMethod method) {
+		int counter = 0
+		def visit = null
+		visit = { PsiElement element ->
+			element.acceptChildren(new JavaRecursiveElementVisitor() {
+				@Override void visitIfStatement(PsiIfStatement ifStatement) {
+					counter++
+					visit(ifStatement)
+				}
+
+				@Override void visitSwitchLabelStatement(PsiSwitchLabelStatement statement) {
+					if (!statement.defaultCase) counter++
+				}
+
+				@Override void visitConditionalExpression(PsiConditionalExpression expression) {
+					counter++
+				}
+			})
+		}
+		visit(method)
+		counter
 	}
 }
 
@@ -109,6 +136,13 @@ registerAction("miscProjectHistograms", "ctrl shift H") { AnActionEvent event ->
 	def pathToDataFor = { String name -> "${pluginPath()}/data/${name}-histogram.json" }
 
 	showPopupMenu([
+//			"amountOfIfStatementsIn": {
+//				currentPsiFileIn(project).accept(new JavaRecursiveElementVisitor() {
+//					@Override void visitMethod(PsiMethod method) {
+//						show(method.name + " : " + amountOfIfStatementsIn(method))
+//					}
+//				})
+//			},
 			"Build and Show Histogram": {
 				doInBackground("Building histograms"){
 					runReadAction{
