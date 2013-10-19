@@ -1,3 +1,5 @@
+package histograms
+
 import com.intellij.psi.JavaRecursiveElementVisitor
 import com.intellij.psi.PsiConditionalExpression
 import com.intellij.psi.PsiElement
@@ -7,7 +9,7 @@ import com.intellij.psi.PsiJavaFile
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiSwitchLabelStatement
 
-class PsiStatsUtil {
+class PsiStats {
 
  static List<PsiMethod> allMethodsIn(PsiJavaFile javaFile) {
 		def result = []

@@ -1,8 +1,14 @@
 import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.actionSystem.AnActionEvent
+import histograms.ProjectHistograms
+import tests.IntegrationTestsRunner
+import tests.PsiStatsTest
 
 import static liveplugin.PluginUtil.*
 import static templates.HtmlUtil.createFromTemplate
+
+if (true) return IntegrationTestsRunner.runIntegrationTests(project, [PsiStatsTest])
+
 
 
 registerAction("miscProjectHistograms", "ctrl shift H") { AnActionEvent event ->
@@ -11,7 +17,7 @@ registerAction("miscProjectHistograms", "ctrl shift H") { AnActionEvent event ->
 	def pathToDataFor = { String name -> "${pluginPath()}/data/${name}-histogram.json" }
 
 	showPopupMenu([
-			"Build and Show Histogram": {
+			"Build and Show histograms.Histogram": {
 				doInBackground("Building histograms"){
 					runReadAction{
 						def histograms = new ProjectHistograms()
@@ -21,7 +27,7 @@ registerAction("miscProjectHistograms", "ctrl shift H") { AnActionEvent event ->
 					}
 				}
 			},
-			"Build Histogram and Accumulate": {
+			"Build histograms.Histogram and Accumulate": {
 				doInBackground("Building and accumulating histogram"){
 					runReadAction{
 						new ProjectHistograms()
@@ -36,7 +42,7 @@ registerAction("miscProjectHistograms", "ctrl shift H") { AnActionEvent event ->
 				new File(pathToDataFor(accumulatedHistograms)).delete()
 				show("Deleted accumulated data")
 			},
-			"Show Accumulated Histogram": {
+			"Show Accumulated histograms.Histogram": {
 				def histograms = new ProjectHistograms()
 						.loadFrom(pathToDataFor(accumulatedHistograms))
 				openInBrowser(fillTemplateFrom(histograms, accumulatedHistograms))

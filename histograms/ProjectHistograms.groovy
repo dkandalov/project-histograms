@@ -1,3 +1,5 @@
+package histograms
+
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.psi.PsiFileSystemItem
 import com.intellij.psi.PsiJavaFile
@@ -14,14 +16,14 @@ class ProjectHistograms {
 		for (PsiFileSystemItem item : items) {
 			if (item == null || !(item instanceof PsiJavaFile)) continue
 
-			def methods = PsiStatsUtil.allMethodsIn(item)
-			def fields = PsiStatsUtil.allFieldsIn(item)
+			def methods = PsiStats.allMethodsIn(item)
+			def fields = PsiStats.allFieldsIn(item)
 
 			amountOfFieldsInClasses.add(fields.size())
 			amountOfMethodsInClasses.add(methods.size())
 			methods.each{ method ->
-				amountOfParametersInMethods.add(PsiStatsUtil.amountOfParametersIn(method))
-				amountOfIfsInMethods.add(PsiStatsUtil.amountOfIfStatementsIn(method))
+				amountOfParametersInMethods.add(PsiStats.amountOfParametersIn(method))
+				amountOfIfsInMethods.add(PsiStats.amountOfIfStatementsIn(method))
 			}
 		}
 		this
