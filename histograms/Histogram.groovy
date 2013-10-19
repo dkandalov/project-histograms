@@ -12,6 +12,10 @@ class Histogram {
 		map[value] = map[value] + 1
 	}
 
+	def addAll(Collection<Integer> values) {
+		values.each{ add(it) }
+	}
+
 	int size() {
 		map.size()
 	}

@@ -15,15 +15,13 @@ class ProjectHistograms {
 	ProjectHistograms process(Iterator<PsiFileSystemItem> items) {
 		for (PsiFileSystemItem item : items) {
 			if (item == null || !(item instanceof PsiJavaFile)) continue
+			item = (PsiJavaFile) item
 
-			def methods = PsiStats.allMethodsIn(item)
-			def fields = PsiStats.allFieldsIn(item)
-
-			amountOfFieldsInClasses.add(fields.size())
-			amountOfMethodsInClasses.add(methods.size())
-			methods.each{ method ->
-				amountOfParametersInMethods.add(PsiStats.amountOfParametersIn(method))
-				amountOfIfsInMethods.add(PsiStats.amountOfIfStatementsIn(method))
+			new PsiStats(item).with {
+				amountOfFieldsInClasses.add(amountOfFields)
+				amountOfMethodsInClasses.add(amountOfMethods)
+				amountOfParametersInMethods.addAll(amountOfParametersPerMethod)
+				amountOfIfsInMethods.addAll(amountOfIfStatementsPerMethod)
 			}
 		}
 		this

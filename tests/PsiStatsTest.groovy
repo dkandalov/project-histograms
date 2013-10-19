@@ -23,7 +23,7 @@ class PsiStatsTest {
 				}
 			}
 		""")
-		assert PsiStats.allMethodsIn(psiFile).size() == 3
+		assert new PsiStats(psiFile).amountOfMethods == 3
 	}
 
 	@Test void "find amount of fields in class"() {
@@ -36,7 +36,7 @@ class PsiStatsTest {
 				}
 			}
 		""")
-		assert PsiStats.allFieldsIn(psiFile).size() == 3
+		assert new PsiStats(psiFile).amountOfFields == 3
 	}
 
 	private PsiJavaFile asJavaPsi(String fileName, String javaCode) {

@@ -10,8 +10,26 @@ import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiSwitchLabelStatement
 
 class PsiStats {
+	private final List<PsiMethod> methods
+	private final List<PsiField> fields
 
- static List<PsiMethod> allMethodsIn(PsiJavaFile javaFile) {
+	PsiStats(PsiJavaFile javaFile) {
+		methods = allMethodsIn(javaFile)
+		fields = allFieldsIn(javaFile)
+	}
+
+	int getAmountOfFields() { fields.size() }
+	int getAmountOfMethods() { methods.size() }
+
+	Collection<Integer> getAmountOfParametersPerMethod() {
+		methods.collect{ amountOfParametersIn(it) }
+	}
+
+	Collection<Integer> getAmountOfIfStatementsPerMethod() {
+		methods.collect{ amountOfIfStatementsIn(it) }
+	}
+
+	private static List<PsiMethod> allMethodsIn(PsiJavaFile javaFile) {
 		def result = []
 		javaFile.acceptChildren(new JavaRecursiveElementVisitor() {
 			@Override void visitMethod(PsiMethod method) {
@@ -25,7 +43,7 @@ class PsiStats {
 		result
 	}
 
-	static List<PsiField> allFieldsIn(PsiJavaFile javaFile) {
+	private static List<PsiField> allFieldsIn(PsiJavaFile javaFile) {
 		def result = []
 		javaFile.acceptChildren(new JavaRecursiveElementVisitor() {
 			@Override void visitField(PsiField field) { result << field }
@@ -33,11 +51,11 @@ class PsiStats {
 		result
 	}
 
-	static int amountOfParametersIn(PsiMethod method) {
+	private static int amountOfParametersIn(PsiMethod method) {
 		method.parameterList.parametersCount
 	}
 
-	static int amountOfIfStatementsIn(PsiMethod method) {
+	private static int amountOfIfStatementsIn(PsiMethod method) {
 		int counter = 0
 		def visit = null
 		visit = { PsiElement element ->
