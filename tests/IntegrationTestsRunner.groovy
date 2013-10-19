@@ -15,10 +15,14 @@ class IntegrationTestsRunner {
 		}
 		def testsResults = testMethods.collect{ method ->
 			runTest(method.name, testClass.simpleName, {
-				method.invoke(testClass.newInstance())
+				method.invoke(createInstanceOf(testClass, project))
 			})
 		}
-		PluginUtil.showInConsole(testsResults.join("\n-----\n\n"), "Integration tests", project)
+		PluginUtil.showInConsole(testsResults.join("\n-----\n"), "Integration tests", project)
+	}
+
+	public static Object createInstanceOf(Class testClass, Project project) {
+		testClass.newInstance(project)
 	}
 
 	private static String runTest(String methodName, String className, Closure test) {
