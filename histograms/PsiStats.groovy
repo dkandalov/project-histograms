@@ -1,13 +1,5 @@
 package histograms
-
-import com.intellij.psi.JavaRecursiveElementVisitor
-import com.intellij.psi.PsiConditionalExpression
-import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiField
-import com.intellij.psi.PsiIfStatement
-import com.intellij.psi.PsiJavaFile
-import com.intellij.psi.PsiMethod
-import com.intellij.psi.PsiSwitchLabelStatement
+import com.intellij.psi.*
 
 class PsiStats {
 	private final List<PsiMethod> methods
@@ -71,6 +63,7 @@ class PsiStats {
 
 				@Override void visitConditionalExpression(PsiConditionalExpression expression) {
 					counter++
+					visit(expression)
 				}
 			})
 		}

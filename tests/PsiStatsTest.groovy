@@ -16,18 +16,20 @@ class PsiStatsTest {
 	@Test void "find amount of methods in class"() {
 		def psiFile = asJavaPsi("Sample.java", """
 			class Sample {
-				public static void method1() {}
-				private int method2() { return 0; }
+				Sample() {}
+				Sample(int i) {}
+				static void method1() {}
+				int method2() { return 0; }
 				class InnerClass {
-					public int method3() { return 0; }
+					int method3() { return 0; }
 				}
 			}
 		""")
-		assert new PsiStats(psiFile).amountOfMethods == 3
+		assert new PsiStats(psiFile).amountOfMethods == 5
 	}
 
 	@Test void "find amount of fields in class"() {
-		def psiFile = asJavaPsi("Sample.java", """
+		def javaFile = asJavaPsi("Sample.java", """
 			class Sample {
 				public static final int field1;
 				private int field2;
@@ -36,7 +38,77 @@ class PsiStatsTest {
 				}
 			}
 		""")
-		assert new PsiStats(psiFile).amountOfFields == 3
+		assert new PsiStats(javaFile).amountOfFields == 3
+	}
+
+	@Test void "find amount of parameters per method"() {
+		def javaFile = asJavaPsi("Sample.java", "class Sample {}")
+		assert new PsiStats(javaFile).amountOfParametersPerMethod == []
+
+		javaFile = asJavaPsi("Sample.java", """
+			class Sample {
+				Sample() {}
+				Sample(int p1) {}
+				void method(int p2, int p3) {}
+				class InnerClass {
+					void method(int p4, int p5, int p6) {}
+				}
+			}
+		""")
+		assert new PsiStats(javaFile).amountOfParametersPerMethod == [0, 1, 2, 3]
+	}
+
+	@Test void "find amount of 'if' statements per method"() {
+		def javaFile = asJavaPsi("Sample.java", "class Sample {}")
+		assert new PsiStats(javaFile).amountOfIfStatementsPerMethod == []
+
+		javaFile = asJavaPsi("Sample.java", """
+			class Sample {
+				Sample() {}
+				void justOneIf() { if (true) {} else {} }
+				void nestedIfs() {
+					if (true) {
+						if (true) {}
+						else {}
+					} else {
+					}
+				}
+			}
+		""")
+		assert new PsiStats(javaFile).amountOfIfStatementsPerMethod == [0, 1, 2]
+
+		javaFile = asJavaPsi("Sample.java", """
+			class Sample {
+				Sample() {}
+				void switchStatement(int i) {
+					switch (i) {
+						case 0: break;
+						default: break;
+					}
+				}
+				void nestedSwitchStatements(int i) {
+					switch (i) {
+						case 0:
+							switch (i) {
+								case 1: break;
+								default: break;
+							}
+							break;
+						default: break;
+					}
+				}
+			}
+		""")
+		assert new PsiStats(javaFile).amountOfIfStatementsPerMethod == [0, 1, 2]
+
+		javaFile = asJavaPsi("Sample.java", """
+			class Sample {
+				Sample() {}
+				int conditionalExpression() { return (true ? 1 : 2); }
+				int nestedConditionalExpressions() { return (true ? (true ? 1 : 2) : 3); }
+			}
+		""")
+		assert new PsiStats(javaFile).amountOfIfStatementsPerMethod == [0, 1, 2]
 	}
 
 	private PsiJavaFile asJavaPsi(String fileName, String javaCode) {
