@@ -21,6 +21,10 @@ class PsiStats {
 		methods.collect{ amountOfIfStatementsIn(it) }
 	}
 
+	Collection<Integer> getAmountOfLoopsPerMethod() {
+		methods.collect{ amountOfLoopsIn(it) }
+	}
+
 	private static List<PsiMethod> allMethodsIn(PsiJavaFile javaFile) {
 		def result = []
 		javaFile.acceptChildren(new JavaRecursiveElementVisitor() {
@@ -64,6 +68,36 @@ class PsiStats {
 				@Override void visitConditionalExpression(PsiConditionalExpression expression) {
 					counter++
 					visit(expression)
+				}
+			})
+		}
+		visit(method)
+		counter
+	}
+
+	private static int amountOfLoopsIn(PsiMethod method) {
+		int counter = 0
+		def visit = null
+		visit = { PsiElement element ->
+			element.acceptChildren(new JavaRecursiveElementVisitor() {
+				@Override void visitForStatement(PsiForStatement statement) {
+					counter++
+					visit(statement)
+				}
+
+				@Override void visitForeachStatement(PsiForeachStatement statement) {
+					counter++
+					visit(statement)
+				}
+
+				@Override void visitWhileStatement(PsiWhileStatement statement) {
+					counter++
+					visit(statement)
+				}
+
+				@Override void visitDoWhileStatement(PsiDoWhileStatement statement) {
+					counter++
+					visit(statement)
 				}
 			})
 		}

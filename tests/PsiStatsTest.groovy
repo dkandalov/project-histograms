@@ -111,6 +111,61 @@ class PsiStatsTest {
 		assert new PsiStats(javaFile).amountOfIfStatementsPerMethod == [0, 1, 2]
 	}
 
+	@Test void "find amount of loops per method"() {
+		def javaFile = asJavaPsi("Sample.java", "class Sample {}")
+		assert new PsiStats(javaFile).amountOfLoopsPerMethod == []
+
+		javaFile = asJavaPsi("Sample.java", """
+			class Sample {
+				Sample() {}
+				void forLoop() { for (int i = 0; i < 100; i++) {} }
+				void nestedForLoops() {
+					for (int i = 0; i < 100; i++) {
+						for (int j = 0; j < 100; j++) {}
+					}
+				}
+			}
+		""")
+		assert new PsiStats(javaFile).amountOfLoopsPerMethod == [0, 1, 2]
+
+		javaFile = asJavaPsi("Sample.java", """
+			class Sample {
+				void forEachLoop() {
+					for (Object o : new ArrayList()) {}
+				}
+			}
+		""")
+		assert new PsiStats(javaFile).amountOfLoopsPerMethod == [1]
+
+		javaFile = asJavaPsi("Sample.java", """
+			class Sample {
+				Sample() {}
+				void whileLoop(int i) {
+					while (true) {}
+				}
+				void nestedWhileLoops(int i) {
+					while (true) {
+						while(true) {}
+					}
+				}
+			}
+		""")
+		assert new PsiStats(javaFile).amountOfLoopsPerMethod == [0, 1, 2]
+
+		javaFile = asJavaPsi("Sample.java", """
+			class Sample {
+				Sample() {}
+				void doWhileLoop() { do {} while (true) }
+				void nestedDoWhileLoops() {
+					do {
+						do {} while (true)
+					} while (true)
+				}
+			}
+		""")
+		assert new PsiStats(javaFile).amountOfLoopsPerMethod == [0, 1, 2]
+	}
+
 	private PsiJavaFile asJavaPsi(String fileName, String javaCode) {
 		def fileFactory = PsiFileFactory.getInstance(project)
 		fileFactory.createFileFromText(fileName, JavaFileType.INSTANCE, javaCode) as PsiJavaFile
