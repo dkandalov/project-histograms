@@ -9,7 +9,10 @@ class ProjectHistograms {
 	final def amountOfFieldsInClasses = new Histogram()
 	final def amountOfParametersInMethods = new Histogram()
 	final def amountOfIfsInMethods = new Histogram()
-	final def allHistograms = [amountOfMethodsInClasses, amountOfFieldsInClasses, amountOfParametersInMethods]
+	final def amountOfLoopsInMethods = new Histogram()
+	final def allHistograms = [
+			amountOfMethodsInClasses, amountOfFieldsInClasses, amountOfParametersInMethods,
+			amountOfIfsInMethods, amountOfLoopsInMethods]
 
 
 	ProjectHistograms process(Iterator<PsiFileSystemItem> items) {
@@ -22,6 +25,7 @@ class ProjectHistograms {
 				amountOfMethodsInClasses.add(amountOfMethods)
 				amountOfParametersInMethods.addAll(amountOfParametersPerMethod)
 				amountOfIfsInMethods.addAll(amountOfIfStatementsPerMethod)
+				amountOfLoopsInMethods.addAll(amountOfLoopsPerMethod)
 			}
 		}
 		this

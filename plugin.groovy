@@ -7,9 +7,7 @@ import tests.PsiStatsTest
 import static liveplugin.PluginUtil.*
 import static templates.HtmlUtil.createFromTemplate
 
-if (true) return IntegrationTestsRunner.runIntegrationTests(project, [PsiStatsTest])
-
-
+if (false) return IntegrationTestsRunner.runIntegrationTests(project, [PsiStatsTest])
 
 registerAction("miscProjectHistograms", "ctrl shift H") { AnActionEvent event ->
   def project = event.project
@@ -17,7 +15,7 @@ registerAction("miscProjectHistograms", "ctrl shift H") { AnActionEvent event ->
 	def pathToDataFor = { String name -> "${pluginPath()}/data/${name}-histogram.json" }
 
 	showPopupMenu([
-			"Build and Show histograms.Histogram": {
+			"Build and Show Histogram": {
 				doInBackground("Building histograms"){
 					runReadAction{
 						def histograms = new ProjectHistograms()
@@ -27,7 +25,7 @@ registerAction("miscProjectHistograms", "ctrl shift H") { AnActionEvent event ->
 					}
 				}
 			},
-			"Build histograms.Histogram and Accumulate": {
+			"Build Histogram and Accumulate": {
 				doInBackground("Building and accumulating histogram"){
 					runReadAction{
 						new ProjectHistograms()
@@ -42,7 +40,7 @@ registerAction("miscProjectHistograms", "ctrl shift H") { AnActionEvent event ->
 				new File(pathToDataFor(accumulatedHistograms)).delete()
 				show("Deleted accumulated data")
 			},
-			"Show Accumulated histograms.Histogram": {
+			"Show Accumulated Histogram": {
 				def histograms = new ProjectHistograms()
 						.loadFrom(pathToDataFor(accumulatedHistograms))
 				openInBrowser(fillTemplateFrom(histograms, accumulatedHistograms))
@@ -61,6 +59,7 @@ File fillTemplateFrom(ProjectHistograms histograms, String name) {
 			"project_name_placeholder": { name },
 			"parameters_per_method_data": { histograms.amountOfParametersInMethods.asJsArray() },
 			"ifs_per_method_data": { histograms.amountOfIfsInMethods.asJsArray() },
+			"loops_per_method_data": { histograms.amountOfLoopsInMethods.asJsArray() },
 			"fields_per_class_data": { histograms.amountOfFieldsInClasses.asJsArray() },
 			"methods_per_class_data": { histograms.amountOfMethodsInClasses.asJsArray() },
 	])
