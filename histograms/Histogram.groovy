@@ -5,11 +5,11 @@ import groovy.json.JsonSlurper
 import templates.HtmlUtil
 
 class Histogram {
-	final TreeMap map = new TreeMap()
+	final TreeMap<Integer, Integer> map = new TreeMap()
 
-	def add(int value) {
+	def add(int value, int frequency = 1) {
 		if (map[value] == null) map[value] = 0
-		map[value] = map[value] + 1
+		map[value] = map[value] + frequency
 	}
 
 	def addAll(Collection<Integer> values) {
@@ -30,4 +30,8 @@ class Histogram {
 	}
 
 	String asJsArray() { HtmlUtil.asJsArray(map) }
+
+	def addAllFrom(Histogram histogram) {
+		histogram.map.each{ add(it.key, it.value) }
+	}
 }

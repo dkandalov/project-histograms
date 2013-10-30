@@ -8,53 +8,30 @@ import static liveplugin.PluginUtil.*
 import static templates.HtmlUtil.createFromTemplate
 
 if (false) return IntegrationTestsRunner.runIntegrationTests(project, [PsiStatsTest])
+if (false) return accumulate()
 
 registerAction("miscProjectHistograms", "ctrl shift H") { AnActionEvent event ->
   def project = event.project
-	def pathToDataFor = { String name -> "${pluginPath()}/data/${name}-histogram.json" }
 
 	doInBackground("Building histograms"){
 		runReadAction{
 			def histograms = new ProjectHistograms()
 					.process(allPsiItemsIn(project))
 					.persistHistogramsTo(pathToDataFor(project.name))
-			openInBrowser(fillTemplateFrom(histograms, project.name))
+			openInBrowser(fillTemplateWith(histograms, project.name))
 		}
 	}
-
-/*
-	showPopupMenu([
-			"Build Histogram and Accumulate": {
-				doInBackground("Building and accumulating histogram"){
-					runReadAction{
-						new ProjectHistograms()
-								.loadFrom(pathToDataFor(accumulatedHistograms))
-								.process(allPsiItemsIn(project))
-								.persistHistogramsTo(pathToDataFor(accumulatedHistograms))
-						show("Accumulated histograms from ${project.name}")
-					}
-				}
-			},
-			"Reset Accumulated Data": {
-				new File(pathToDataFor(accumulatedHistograms)).delete()
-				show("Deleted accumulated data")
-			},
-			"Show Accumulated Histogram": {
-				def histograms = new ProjectHistograms()
-						.loadFrom(pathToDataFor(accumulatedHistograms))
-				openInBrowser(fillTemplateFrom(histograms, accumulatedHistograms))
-			}
-	], "Histograms")
-*/
 }
 show("reloaded")
 
 
 String pluginPath() { pluginPath }
 
+String pathToDataFor(String name) { "${pluginPath()}/data/${name}-histogram.json" }
+
 static openInBrowser(File file) { BrowserUtil.open("file://${file.absolutePath}") }
 
-File fillTemplateFrom(ProjectHistograms histograms, String name) {
+File fillTemplateWith(ProjectHistograms histograms, String name) {
 	createFromTemplate("${pluginPath()}/templates", "histogram.html", name, [
 			"project_name_placeholder": { name },
 			"parameters_per_method_data": { histograms.amountOfParametersInMethods.asJsArray() },
@@ -65,3 +42,18 @@ File fillTemplateFrom(ProjectHistograms histograms, String name) {
 	])
 }
 
+def accumulate() {
+	def files = ["asm-histogram.json", "commons-collections4-histogram.json", "google-collections-read-only-histogram.json",
+			"JavaHamcrest-histogram.json", "jmock-library-histogram.json", "junit-histogram.json", "mockito-histogram.json",
+			"testng-histogram.json", "trove4j-histogram.json", "xstream-parent-histogram.json"]
+	def histograms = files.collect{
+		new ProjectHistograms().loadFrom("/Users/dima/Library/Application Support/IntelliJIdea12/live-plugins/histograms/data/${it}")
+	}
+	ProjectHistograms accumulatedHistograms = histograms.inject(new ProjectHistograms()){ result, histogram ->
+		result.addAllFrom(histogram)
+	}
+	accumulatedHistograms.persistHistogramsTo(pathToDataFor("accumulated"))
+	fillTemplateWith(accumulatedHistograms, "accumulated")
+
+	show("accumulated")
+}

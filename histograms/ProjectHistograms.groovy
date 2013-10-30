@@ -31,6 +31,13 @@ class ProjectHistograms {
 		this
 	}
 
+	ProjectHistograms addAllFrom(ProjectHistograms otherHistograms) {
+		allHistograms.eachWithIndex{ Histogram histogram, int i ->
+			histogram.addAllFrom(otherHistograms.allHistograms[i])
+		}
+		this
+	}
+
 	ProjectHistograms persistHistogramsTo(String filePath) {
 		FileUtil.writeToFile(new File(filePath), allHistograms.collect{ it.toJson() }.join("\n"))
 		this
