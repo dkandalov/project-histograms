@@ -11,20 +11,19 @@ if (false) return IntegrationTestsRunner.runIntegrationTests(project, [PsiStatsT
 
 registerAction("miscProjectHistograms", "ctrl shift H") { AnActionEvent event ->
   def project = event.project
-	def accumulatedHistograms = "accumulated"
 	def pathToDataFor = { String name -> "${pluginPath()}/data/${name}-histogram.json" }
 
+	doInBackground("Building histograms"){
+		runReadAction{
+			def histograms = new ProjectHistograms()
+					.process(allPsiItemsIn(project))
+					.persistHistogramsTo(pathToDataFor(project.name))
+			openInBrowser(fillTemplateFrom(histograms, project.name))
+		}
+	}
+
+/*
 	showPopupMenu([
-			"Build and Show Histogram": {
-				doInBackground("Building histograms"){
-					runReadAction{
-						def histograms = new ProjectHistograms()
-								.process(allPsiItemsIn(project))
-								.persistHistogramsTo(pathToDataFor(project.name))
-						openInBrowser(fillTemplateFrom(histograms, project.name))
-					}
-				}
-			},
 			"Build Histogram and Accumulate": {
 				doInBackground("Building and accumulating histogram"){
 					runReadAction{
@@ -46,6 +45,7 @@ registerAction("miscProjectHistograms", "ctrl shift H") { AnActionEvent event ->
 				openInBrowser(fillTemplateFrom(histograms, accumulatedHistograms))
 			}
 	], "Histograms")
+*/
 }
 show("reloaded")
 

@@ -30,7 +30,7 @@ class PsiStats {
 		javaFile.acceptChildren(new JavaRecursiveElementVisitor() {
 			@Override void visitMethod(PsiMethod method) {
 				// ignore interfaces assuming that everything will be counted in their implementations
-				// or if there are not implementations, then it probably can be ignored
+				// or if there are no implementations, then it probably should be ignored
 				if (method.containingClass.interface) return
 
 				result << method
