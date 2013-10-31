@@ -52,12 +52,17 @@ describe("range", function() {
 });
 
 describe("logRange", function() {
-	var amountOfSteps = 5;
 	it("should choose multiple-of-ten values between 0 and range end", function() {
+		var amountOfSteps = 5;
 		expect(logRange(10, amountOfSteps)).toEqual([1, 2, 5, 10]);
 		expect(logRange(20, amountOfSteps)).toEqual([1, 2, 5, 10, 20]);
-		expect(logRange(30, amountOfSteps)).toEqual([1, 5, 10, 20, 30]);
-		expect(logRange(100, amountOfSteps)).toEqual([1, 10, 50, 100]);
+		expect(logRange(30, amountOfSteps)).toEqual([1, 2, 5, 10, 20, 30]);
+		expect(logRange(100, amountOfSteps)).toEqual([1, 5, 10, 50, 100]);
+	});
+	it("should ignore next-to-last value if it's close to last", function() {
+		var amountOfSteps = 10;
+		expect(logRange(2100, amountOfSteps)).toEqual([1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2100]);
+		expect(logRange(10378, amountOfSteps)).toEqual([1, 5, 10, 50, 100, 500, 1000, 5000, 10378]);
 	});
 });
 

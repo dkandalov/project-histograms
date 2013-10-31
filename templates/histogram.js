@@ -312,14 +312,16 @@ function logRange(to, desiredAmountOfSteps) {
 	if (result.length < desiredAmountOfSteps) addMultiplesOf(5);
 	if (result.length < desiredAmountOfSteps) addMultiplesOf(2);
 
+	result = result.sort(d3.ascending);
+
 	if (result.length >= 2) {
 		var last = result[result.length - 1];
 		var nextToLast = result[result.length - 2];
-		if (nextToLast / last <= 0.1) {
+		if ((last - nextToLast) / last <= 0.12) {
 			result.splice(result.length - 2, 1);
 		}
 	}
-	return result.sort(d3.ascending);
+	return result;
 }
 
 function atLeast(minValue, value) {
