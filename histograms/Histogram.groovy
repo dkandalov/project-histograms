@@ -5,15 +5,21 @@ import groovy.json.JsonSlurper
 import templates.HtmlUtil
 
 class Histogram {
-	final TreeMap<Integer, Integer> map = new TreeMap()
+	private final TreeMap<Integer, Integer> map = new TreeMap()
+	final TreeMap<Integer, Object> maxItemsByValue = new TreeMap()
 
-	def add(int value, int frequency = 1) {
+	def add(int value, int frequency = 1, item = null) {
 		if (map[value] == null) map[value] = 0
 		map[value] = map[value] + frequency
+
+		addToMaxValues(item, value)
 	}
 
-	def addAll(Collection<Integer> values) {
-		values.each{ add(it) }
+	def addAll(Collection<Integer> values, item = null) {
+		values.each{ value ->
+			add(value)
+			addToMaxValues(item, value)
+		}
 	}
 
 	int size() {
@@ -33,5 +39,12 @@ class Histogram {
 
 	def addAllFrom(Histogram histogram) {
 		histogram.map.each{ add(it.key, it.value) }
+	}
+
+	private addToMaxValues(item, int value) {
+		if (item != null && (maxItemsByValue.isEmpty() || value > maxItemsByValue.firstKey())) {
+			maxItemsByValue.put(value, item)
+			if (maxItemsByValue.size() > 10) maxItemsByValue.remove(maxItemsByValue.firstKey())
+		}
 	}
 }

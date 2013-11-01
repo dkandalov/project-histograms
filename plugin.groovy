@@ -8,11 +8,11 @@ import static com.intellij.openapi.util.text.StringUtil.capitalize
 import static liveplugin.PluginUtil.*
 import static templates.HtmlUtil.createFromTemplate
 
-if (false) return IntegrationTestsRunner.runIntegrationTests(project, [PsiStatsTest])
+if (false) return IntegrationTestsRunner.runIntegrationTests(project, [PsiStatsTest]) // TODO move to liveplugin
 if (false) return createGitHubPages()
 if (false) return accumulate()
 
-registerAction("miscProjectHistograms", "ctrl shift H") { AnActionEvent event ->
+registerAction("miscProjectHistograms", "ctrl shift H", TOOLS_MENU) { AnActionEvent event ->
   def project = event.project
 
 	doInBackground("Building histograms"){
@@ -20,12 +20,22 @@ registerAction("miscProjectHistograms", "ctrl shift H") { AnActionEvent event ->
 			def histograms = new ProjectHistograms()
 					.process(allPsiItemsIn(project))
 					.persistHistogramsTo(pathToDataFor(project.name))
+
+			showInConsole(maxItemsAsString(histograms.maxValueItems), project)
 			openInBrowser(fillTemplateWith(histograms, project.name))
 		}
 	}
 }
 show("reloaded")
 
+
+String maxItemsAsString(Map maxItems) {
+	maxItems.entrySet().collect{ entry ->
+		def name = entry.key
+		def itemsByValue = entry.value
+		name + "\n" + itemsByValue.collect{"" + it.key + " - " + it.value.name}.join("\n")
+	}.join("\n\n")
+}
 
 String pluginPath() { pluginPath }
 

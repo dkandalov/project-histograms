@@ -21,11 +21,11 @@ class ProjectHistograms {
 			item = (PsiJavaFile) item
 
 			new PsiStats(item).with {
-				amountOfFieldsInClasses.add(amountOfFields)
-				amountOfMethodsInClasses.add(amountOfMethods)
-				amountOfParametersInMethods.addAll(amountOfParametersPerMethod)
-				amountOfIfsInMethods.addAll(amountOfIfStatementsPerMethod)
-				amountOfLoopsInMethods.addAll(amountOfLoopsPerMethod)
+				amountOfMethodsInClasses.add(amountOfMethods, 1, item)
+				amountOfFieldsInClasses.add(amountOfFields, 1, item)
+				amountOfParametersInMethods.addAll(amountOfParametersPerMethod, item)
+				amountOfIfsInMethods.addAll(amountOfIfStatementsPerMethod, item)
+				amountOfLoopsInMethods.addAll(amountOfLoopsPerMethod, item)
 			}
 		}
 		this
@@ -52,4 +52,15 @@ class ProjectHistograms {
 		}
 		this
 	}
+
+	Map<String, Map> getMaxValueItems() {
+		[
+				"Amount of fields in classes": amountOfFieldsInClasses.maxItemsByValue,
+				"Amount of methods in classes": amountOfMethodsInClasses.maxItemsByValue,
+				"Amount of parameters in methods": amountOfParametersInMethods.maxItemsByValue,
+				"Amount of ifs in methods": amountOfIfsInMethods.maxItemsByValue,
+				"Amount of loops in methods": amountOfLoopsInMethods.maxItemsByValue
+		]
+	}
+
 }
