@@ -9,6 +9,7 @@ import static liveplugin.PluginUtil.*
 import static templates.HtmlUtil.createFromTemplate
 
 if (false) return IntegrationTestsRunner.runIntegrationTests(project, [PsiStatsTest])
+if (false) return createGitHubPages()
 if (false) return accumulate()
 
 registerAction("miscProjectHistograms", "ctrl shift H") { AnActionEvent event ->
@@ -32,8 +33,9 @@ String pathToDataFor(String name) { "${pluginPath()}/data/${name}-histogram.json
 
 static openInBrowser(File file) { BrowserUtil.open("file://${file.absolutePath}") }
 
-File fillTemplateWith(ProjectHistograms histograms, String name) {
-	createFromTemplate("${pluginPath()}/templates", "histogram.html", name, [
+File fillTemplateWith(ProjectHistograms histograms, String name,
+                      String templateFolder = "${pluginPath()}/templates", String template = "histogram.html") {
+	createFromTemplate(templateFolder, template, name, [
 			"project_name_placeholder": { capitalize(name) },
 			"parameters_per_method_data": { histograms.amountOfParametersInMethods.asJsArray() },
 			"ifs_per_method_data": { histograms.amountOfIfsInMethods.asJsArray() },
@@ -44,9 +46,9 @@ File fillTemplateWith(ProjectHistograms histograms, String name) {
 }
 
 def accumulate() {
-	def files = ["asm-histogram.json", "commons-collections4-histogram.json", "google-collections-read-only-histogram.json",
-			"JavaHamcrest-histogram.json", "jmock-library-histogram.json", "junit-histogram.json", "mockito-histogram.json",
-			"testng-histogram.json", "trove4j-histogram.json", "xstream-parent-histogram.json"]
+	def files = ["asm-histogram.json", "commons-collections4-histogram.json", "google-collections-histogram.json",
+			"JavaHamcrest-histogram.json", "jmock-histogram.json", "junit-histogram.json", "mockito-histogram.json",
+			"testng-histogram.json", "trove4j-histogram.json", "xstream-histogram.json"]
 	def histograms = files.collect{
 		new ProjectHistograms().loadFrom("/Users/dima/Library/Application Support/IntelliJIdea12/live-plugins/histograms/data/${it}")
 	}
@@ -57,4 +59,17 @@ def accumulate() {
 	fillTemplateWith(accumulatedHistograms, "accumulated")
 
 	show("accumulated")
+}
+
+def createGitHubPages() {
+	def files = ["IntelliJ-histogram.json", "NetBeans-histogram.json", "asm-histogram.json", "commons-collections4-histogram.json",
+			"google-collections-histogram.json", "JavaHamcrest-histogram.json", "jmock-histogram.json", "junit-histogram.json",
+			"mockito-histogram.json", "testng-histogram.json", "trove4j-histogram.json", "xstream-histogram.json"]
+	def histograms = files.collect{
+		new ProjectHistograms().loadFrom("/Users/dima/Library/Application Support/IntelliJIdea12/live-plugins/histograms/data/${it}")
+	}
+	def projectNames = files.collect{ it[0..it.lastIndexOf("-")-1] }
+	[projectNames, histograms].transpose().each{ projectName, projectHistograms ->
+		fillTemplateWith(projectHistograms, projectName, "${pluginPath()}/gh_pages", "histogram.html")
+	}
 }

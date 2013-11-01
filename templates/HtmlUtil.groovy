@@ -26,8 +26,8 @@ class HtmlUtil {
 
 	static String fillPlaceholder(String templateText, String jsValue, String placeHolder) {
 		templateText
-				.replaceFirst(/(?s)\/\*${placeHolder}\*\/.*\/\*${placeHolder}\*\//, Matcher.quoteReplacement(jsValue))
-				.replaceFirst(/(?s)\[${placeHolder}\]/, Matcher.quoteReplacement(jsValue))
+				.replaceAll(/(?s)\/\*${placeHolder}\*\/.*\/\*${placeHolder}\*\//, Matcher.quoteReplacement(jsValue))
+				.replaceAll(/(?s)\[${placeHolder}\]/, Matcher.quoteReplacement(jsValue))
 	}
 
 	static String asJsArray(Map map) {
