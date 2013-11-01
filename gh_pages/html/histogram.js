@@ -4,7 +4,7 @@ function Histogram(rootElement, labels, sizes) {
 	var frequency = function(d) { return d[1]; };
 
 	if (sizes == null) {
-		sizes = [];
+		sizes = {};
 		sizes.margin = {top: 20, right: 20, bottom: 50, left: 50};
 		sizes.width = 960;
 		sizes.height = 500;
@@ -26,7 +26,9 @@ function Histogram(rootElement, labels, sizes) {
 
 	var tooltip = addTooltipTo(rootElement);
 
-	rootElement.append("h4").text(labels.title);
+
+	var headerSpan = appendBlockElementTo(rootElement, width);
+	headerSpan.append("h4").text(labels.title);
 
 	var svg = rootElement.append("svg")
 		.attr("width", width + margin.left + margin.right)

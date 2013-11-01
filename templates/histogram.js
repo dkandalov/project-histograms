@@ -27,7 +27,7 @@ function Histogram(rootElement, labels, sizes) {
 	var tooltip = addTooltipTo(rootElement);
 
 	var headerSpan = appendBlockElementTo(rootElement, width);
-	headerSpan.append("h2").text(labels.title).style({"text-align": "center"});
+	headerSpan.append("h4").text(labels.title);
 
 	var svg = rootElement.append("svg")
 		.attr("width", width + margin.left + margin.right)

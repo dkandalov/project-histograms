@@ -4,6 +4,10 @@
         background: #f2f2f2;
         margin: 30px;
     }
+    h4 {
+        font-size: 17px;
+        /*text-align: center;*/
+    }
     .histogram {
         font: 11px sans-serif;
         font-family: 'Lucida Grande','Calibri',Helvetica,Arial,sans-serif;
@@ -20,7 +24,7 @@
         stroke: #aaa;
         shape-rendering: crispEdges;
     }
-    #histograms div.tooltip {
+    .histograms div.tooltip {
         position: absolute;
         text-align: center;
         height: auto;
@@ -31,21 +35,21 @@
         border-radius: 8px;
         pointer-events: none;
     }
-    #histograms .line {
+    .histograms .line {
         fill: none;
         stroke-width: 1.5px;
     }
-    #histograms .circle {
+    .histograms .circle {
         fill: #ffffff;
         stroke-width: 1.2px;
     }
-    #histograms .legend-box {
+    .histograms .legend-box {
         fill: #f2f2f2;
     }
 </style>
 <head><title>[project_name_placeholder] code histograms</title></head>
 <body>
-<span id="histograms">
+<span class="histograms">
     <span id="parameters-per-method-histogram"></span>
     <br/><br/><br/>
     <span id="ifs-per-method-histogram"></span>
