@@ -26,7 +26,7 @@
             stroke: #aaa;
             shape-rendering: crispEdges;
         }
-        #histograms div.tooltip {
+        .histograms div.tooltip {
             position: absolute;
             text-align: center;
             height: auto;
@@ -37,15 +37,15 @@
             border-radius: 8px;
             pointer-events: none;
         }
-        #histograms .line {
+        .histograms .line {
             fill: none;
             stroke-width: 1.5px;
         }
-        #histograms .circle {
+        .histograms .circle {
             fill: #ffffff;
             stroke-width: 1.2px;
         }
-        #histograms .legend-box {
+        .histograms .legend-box {
             fill: #f2f2f2;
         }
     </style>
@@ -65,24 +65,36 @@
 <div id="main_content_wrap" class="outer">
     <section id="main_content" class="inner">
         <p>
-            These are miscellaneous code metrics histograms for [project_name_placeholder].
+            These are miscellaneous code metric histograms for [project_name_placeholder].
+            There is no particular idea behind it except that all these metrics seem to follow
+            <a href="http://en.wikipedia.org/wiki/Power_law">power law</a>.
+        </p>
+        <p>
+            If you are interested in how exactly metrics are calculated,
+            please see <a href="https://github.com/dkandalov/project-histograms/blob/master/tests/PsiStatsTest.groovy">tests</a>
+            or <a href="https://github.com/dkandalov/project-histograms/blob/master/histograms/PsiStats.groovy">source code</a>.
         </p>
 
-        <span id="histograms">
+        <br/>
+        <span class="histograms">
             <span id="parameters-per-method-histogram"></span>
         </span>
-
-        <h4>Change size chart</h4>
-        Shows amount of commits by day/week. Red line is one month moving average.
-        <br/>
-        Note downward trends around New Year and spikes in November/December which somewhat correlate with major releases.
-        <p id="change-size-chart"></p>
-        <br/><br/>
-
-        <h4>Amount of committers</h4>
-        Shows how many different people committed over month/week/day.
-        The idea is to see amount of people contributing to the project.
-        <p id="amount-of-committers-chart"></p>
+        <br/><br/><br/>
+        <span class="histograms">
+            <span id="ifs-per-method-histogram"></span>
+        </span>
+        <br/><br/><br/>
+        <span class="histograms">
+            <span id="loops-per-method-histogram"></span>
+        </span>
+        <br/><br/><br/>
+        <span class="histograms">
+            <span id="fields-per-class-histogram"></span>
+        </span>
+        <br/><br/><br/>
+        <span class="histograms">
+            <span id="methods-per-class-histogram"></span>
+        </span>
         <br/><br/>
     </section>
 </div>
@@ -90,9 +102,12 @@
 <!-- FOOTER  -->
 <div id="footer_wrap" class="outer">
     <footer class="inner">
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a>.</p>
         <p class="copyright">Feel free to drop me a line on <a href="https://twitter.com/dmitrykandalov">twitter</a>
             or create an issue on <a href="https://github.com/dkandalov/project-histograms">GitHub</a>.
+        </p>
+        <p>
+            Inspired by Kent Beck's <a href="http://www.amiando.com/kent-beck-fb-london.html">talk</a> at Facebook.
+            Published with <a href="http://pages.github.com">GitHub Pages</a>.
         </p>
     </footer>
 </div>
@@ -132,18 +147,18 @@
     new Histogram(d3.select("#parameters-per-method-histogram"), { title: "Amount of parameters per method", xAxis: "Parameters per method" }, sizes)
             .addSeries(parametersPerMethod)
             .update();
-   /* new Histogram(d3.select("#ifs-per-method-histogram"), { title: "Amount of 'if' statements per method", xAxis: "'If's per method" })
+    new Histogram(d3.select("#ifs-per-method-histogram"), { title: "Amount of 'if' statements per method", xAxis: "'If's per method" }, sizes)
             .addSeries(ifsPerMethod)
             .update();
-    new Histogram(d3.select("#loops-per-method-histogram"), { title: "Amount of loops per method", xAxis: "Loops per method" })
+    new Histogram(d3.select("#loops-per-method-histogram"), { title: "Amount of loops per method", xAxis: "Loops per method" }, sizes)
             .addSeries(loopsPerMethod)
             .update();
-    new Histogram(d3.select("#fields-per-class-histogram"), {title: "Amount of fields per class", xAxis: "Fields per class"})
+    new Histogram(d3.select("#fields-per-class-histogram"), {title: "Amount of fields per class", xAxis: "Fields per class"}, sizes)
             .addSeries(fieldsPerClass)
             .update();
-    new Histogram(d3.select("#methods-per-class-histogram"), {title: "Amount of methods per class", xAxis: "Methods per class"})
+    new Histogram(d3.select("#methods-per-class-histogram"), {title: "Amount of methods per class", xAxis: "Methods per class"}, sizes)
             .addSeries(methodsPerClass)
-            .update();*/
+            .update();
 </script>
 
 </body>
