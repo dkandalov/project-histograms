@@ -4,6 +4,7 @@ import histograms.ProjectHistograms
 import tests.IntegrationTestsRunner
 import tests.PsiStatsTest
 
+import static com.intellij.openapi.util.text.StringUtil.capitalize
 import static liveplugin.PluginUtil.*
 import static templates.HtmlUtil.createFromTemplate
 
@@ -33,7 +34,7 @@ static openInBrowser(File file) { BrowserUtil.open("file://${file.absolutePath}"
 
 File fillTemplateWith(ProjectHistograms histograms, String name) {
 	createFromTemplate("${pluginPath()}/templates", "histogram.html", name, [
-			"project_name_placeholder": { name },
+			"project_name_placeholder": { capitalize(name) },
 			"parameters_per_method_data": { histograms.amountOfParametersInMethods.asJsArray() },
 			"ifs_per_method_data": { histograms.amountOfIfsInMethods.asJsArray() },
 			"loops_per_method_data": { histograms.amountOfLoopsInMethods.asJsArray() },
