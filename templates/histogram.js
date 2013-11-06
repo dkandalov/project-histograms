@@ -16,7 +16,7 @@ function Histogram(rootElement, labels, sizes) {
 	var colorCategory = d3.scale.category10();
 	var seriesColor = function(i) { return d3.rgb(colorCategory(i)).darker(); };
 	var percentile = 1;
-	var scaleType = {x: "log", y: "log"};
+	var scaleType = {x: "linear", y: "log"};
 	var interpolation = "basis";
 
 	labels = inferLabelDefaults(labels);
@@ -77,8 +77,7 @@ function Histogram(rootElement, labels, sizes) {
 
 		var maxFrequency = flat(d3.max, series, frequency);
 		var maxAmount = flat(d3.max, series, amount) + 1; // +1 to include first "0" in range
-		// TODO rename barWidth
-		var barWidth = atLeast(1, (width / maxAmount) - 1); // -1 to have gap if bars are big, but at least width of 1 if bars are small
+		var widthPerValue = atLeast(1, width / maxAmount);
 
 		var x, xAxis;
 		var y, yAxis;
@@ -119,7 +118,7 @@ function Histogram(rootElement, labels, sizes) {
 				.call(xAxis)
 				.call(xAxisLabel(labels.xAxis))
 				.selectAll(".tick").attr("transform", function (d) {
-					return "translate(" + (x(d) + halfOf(barWidth)) + "," + 0 + ")";
+					return "translate(" + (x(d) + halfOf(widthPerValue)) + "," + 0 + ")";
 				});
 			svgGroup.append("g")
 				.attr("class", "y axis")
@@ -130,7 +129,7 @@ function Histogram(rootElement, labels, sizes) {
 		function addLineCharts() {
 			var line = d3.svg.line()
 				.interpolate(interpolation)
-				.x(function(d) { return x(amount(d)) + halfOf(barWidth); })
+				.x(function(d) { return x(amount(d)) + halfOf(widthPerValue); })
 				.y(function(d) { return y(frequency(d)); });
 
 			var lineCharts = svgGroup.selectAll(".lineChart")
@@ -149,12 +148,12 @@ function Histogram(rootElement, labels, sizes) {
 				.enter().append("circle")
 				.attr("class", "circle")
 				.attr("r", 4)
-				.attr("cx", function(d) { return x(amount(d)) + halfOf(barWidth); })
+				.attr("cx", function(d) { return x(amount(d)) + halfOf(widthPerValue); })
 				.attr("cy", function(d) { return y(frequency(d)); })
 				.call(tooltip.mouseOverHandler(function(d) {
 					var shiftForCursor = 12;
 					return {
-						x: leftOffsetOf(svg) + margin.left + x(amount(d)) + halfOf(barWidth) + shiftForCursor,
+						x: leftOffsetOf(svg) + margin.left + x(amount(d)) + halfOf(widthPerValue) + shiftForCursor,
 						y: topOffsetOf(svg) + y(frequency(d))
 					};
 				}));
