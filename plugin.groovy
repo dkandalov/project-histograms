@@ -8,7 +8,7 @@ import static com.intellij.openapi.util.text.StringUtil.capitalize
 import static liveplugin.PluginUtil.*
 import static templates.HtmlUtil.createFromTemplate
 
-if (false) return IntegrationTestsRunner.runIntegrationTests(project, [PsiStatsTest]) // TODO move to liveplugin
+if (true) return IntegrationTestsRunner.runIntegrationTests(project, [PsiStatsTest]) // TODO move to liveplugin
 if (false) return createGitHubPages()
 if (false) return accumulate()
 

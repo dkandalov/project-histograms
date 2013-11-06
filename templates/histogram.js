@@ -16,7 +16,7 @@ function Histogram(rootElement, labels, sizes) {
 	var colorCategory = d3.scale.category10();
 	var seriesColor = function(i) { return d3.rgb(colorCategory(i)).darker(); };
 	var percentile = 1;
-	var scaleType = "log";
+	var scaleType = {x: "log", y: "log"};
 	var interpolation = "basis";
 
 	labels = inferLabelDefaults(labels);
@@ -52,8 +52,13 @@ function Histogram(rootElement, labels, sizes) {
 		outerThis.update(); // TODO animate
 	});
 	addPaddingTo(footerSpan);
-	addScaleTypeDropDownTo(footerSpan, scaleType, function(newScaleType) {
-		scaleType = newScaleType;
+	addScaleTypeDropDownTo(footerSpan, "Y axis scale: ", scaleType.y, function(newScaleType) {
+		scaleType.y = newScaleType;
+		outerThis.update(); // TODO animate?
+	});
+	addPaddingTo(footerSpan);
+	addScaleTypeDropDownTo(footerSpan, "X axis scale: ", scaleType.x, function(newScaleType) {
+		scaleType.x = newScaleType;
 		outerThis.update(); // TODO animate?
 	});
 	addPaddingTo(footerSpan);
@@ -72,19 +77,29 @@ function Histogram(rootElement, labels, sizes) {
 
 		var maxFrequency = flat(d3.max, series, frequency);
 		var maxAmount = flat(d3.max, series, amount) + 1; // +1 to include first "0" in range
+		// TODO rename barWidth
 		var barWidth = atLeast(1, (width / maxAmount) - 1); // -1 to have gap if bars are big, but at least width of 1 if bars are small
 
-		var x = d3.scale.linear().domain([0, maxAmount]).range([0, width]);
-		var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat).tickValues(range(maxAmount, 10));
-		var y;
-		var yAxis;
-		if (scaleType == "log") {
+		var x, xAxis;
+		var y, yAxis;
+		if (scaleType.y == "log") {
 			y = d3.scale.log().domain([1, maxFrequency]).range([height, 0]);
 			yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(numberFormat).tickValues(logRange(maxFrequency, 10));
-		} else if (scaleType == "linear") {
-			y = d3.scale.linear().domain([1, maxFrequency]).range([height, 0]);
+		} else if (scaleType.y == "linear") {
+			y = d3.scale.linear().domain([0, maxFrequency]).range([height, 0]);
 			yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(numberFormat).tickValues(range(maxFrequency, 10));
 		}
+		if (scaleType.x == "log") {
+			series = series.map(function(list) {
+				return list.filter(function(d) { return amount(d) > 0; });
+			});
+			x = d3.scale.log().domain([1, maxAmount]).range([0, width]);
+			xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat).tickValues(logRange(maxAmount, 10));
+		} else if (scaleType.x == "linear") {
+			x = d3.scale.linear().domain([0, maxAmount]).range([0, width]);
+			xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat).tickValues(range(maxAmount, 10));
+		}
+
 
 		var svgGroup = init();
 		addLineCharts();
@@ -228,8 +243,8 @@ function addInterpolationTypeDropDownTo(element, defaultInterpolation, onChange)
 	dropDown.on("change", function(){ onChange(this.value); });
 }
 
-function addScaleTypeDropDownTo(element, defaultScaleType, onChange) {
-	element.append("label").html("Y axis scale: ");
+function addScaleTypeDropDownTo(element, label, defaultScaleType, onChange) {
+	element.append("label").html(label);
 	var dropDown = element.append("select");
 	["log", "linear"].forEach(function(scaleType) {
 		var option = dropDown.append("option").attr("value", scaleType).html(scaleType);
