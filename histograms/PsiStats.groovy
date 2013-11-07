@@ -41,9 +41,17 @@ class PsiStats {
 
 	private static List<PsiField> allFieldsIn(PsiJavaFile javaFile) {
 		def result = []
-		javaFile.acceptChildren(new JavaRecursiveElementVisitor() {
-			@Override void visitField(PsiField field) { result << field }
-		})
+		def visit = null
+		visit = { PsiElement psiElement ->
+			psiElement.acceptChildren(new JavaElementVisitor() {
+				@Override void visitElement(PsiElement element) {
+					if (element instanceof PsiClass && element.enum) null
+					else if (element instanceof PsiField) result << element
+					else visit(element)
+				}
+			})
+		}
+		visit(javaFile)
 		result
 	}
 
