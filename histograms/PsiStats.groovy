@@ -1,16 +1,20 @@
 package histograms
 import com.intellij.psi.*
 
+import static com.intellij.psi.PsiModifier.STATIC
+
 class PsiStats {
 	private final List<PsiMethod> methods
-	private final List<PsiField> fields
+	private final Map<PsiClass, PsiField> fields
 
 	PsiStats(PsiJavaFile javaFile) {
 		methods = allMethodsIn(javaFile)
-		fields = allFieldsIn(javaFile)
+		fields = allClassesIn(javaFile).collectEntries{ [it, allFieldsIn(it)] }
 	}
 
-	int getAmountOfFields() { fields.size() }
+	Map<String, Integer> getAmountOfFields() {
+		fields.collectEntries{ [it.key.qualifiedName, it.value.size()] } as Map<String, Integer>
+	}
 	int getAmountOfMethods() { methods.size() }
 
 	Collection<Integer> getAmountOfParametersPerMethod() {
@@ -23,6 +27,24 @@ class PsiStats {
 
 	Collection<Integer> getAmountOfLoopsPerMethod() {
 		methods.collect{ amountOfLoopsIn(it) }
+	}
+
+	private static List<PsiClass> allClassesIn(PsiJavaFile javaFile) {
+		def result = []
+		javaFile.acceptChildren(new JavaRecursiveElementVisitor() {
+			@Override void visitClass(PsiClass psiClass) {
+				// ignore interfaces assuming that everything will be counted in their implementations
+				// or if there are no implementations, then it probably should be ignored
+				if (psiClass.interface) return
+				if (psiClass.enum) return
+				if (psiClass.scope != javaFile && !psiClass.modifierList.hasModifierProperty(STATIC)) return
+
+				result << psiClass
+
+				super.visitElement(psiClass)
+			}
+		})
+		result
 	}
 
 	private static List<PsiMethod> allMethodsIn(PsiJavaFile javaFile) {
@@ -39,19 +61,20 @@ class PsiStats {
 		result
 	}
 
-	private static List<PsiField> allFieldsIn(PsiJavaFile javaFile) {
+	private static List<PsiField> allFieldsIn(PsiClass psiClass) {
 		def result = []
 		def visit = null
 		visit = { PsiElement psiElement ->
 			psiElement.acceptChildren(new JavaElementVisitor() {
 				@Override void visitElement(PsiElement element) {
 					if (element instanceof PsiClass && element.enum) null
+					else if (element instanceof PsiClass && element.modifierList.hasModifierProperty(STATIC)) null
 					else if (element instanceof PsiField) result << element
 					else visit(element)
 				}
 			})
 		}
-		visit(javaFile)
+		visit(psiClass)
 		result
 	}
 

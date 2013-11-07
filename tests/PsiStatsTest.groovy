@@ -38,7 +38,7 @@ class PsiStatsTest {
 				}
 			}
 		""")
-		assert new PsiStats(javaFile).amountOfFields == 3
+		assert new PsiStats(javaFile).amountOfFields == ["Sample": 3]
 
 		javaFile = asJavaPsi("Sample.java", """
 			class Sample {
@@ -46,18 +46,18 @@ class PsiStatsTest {
 				enum IgnoreEnums { A, B, C }
 			}
 		""")
-		assert new PsiStats(javaFile).amountOfFields == 1
+		assert new PsiStats(javaFile).amountOfFields == ["Sample": 1]
 
-//		javaFile = asJavaPsi("Sample.java", """
-//			class Sample {
-//				static int onlyField;
-//				static class ShouldBeCountedSeparately {
-//					int field1;
-//					int field2;
-//				}
-//			}
-//		""")
-//		assert new PsiStats(javaFile).amountOfFields == 1
+		javaFile = asJavaPsi("Sample.java", """
+			class Sample {
+				static int onlyField;
+				static class InnerStatic {
+					int field1;
+					int field2;
+				}
+			}
+		""")
+		assert new PsiStats(javaFile).amountOfFields == ["Sample": 1, "Sample.InnerStatic": 2]
 	}
 
 	@Test void "find amount of parameters per method"() {

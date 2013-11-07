@@ -22,7 +22,7 @@ class ProjectHistograms {
 
 			new PsiStats(item).with {
 				amountOfMethodsInClasses.add(amountOfMethods, 1, item)
-				amountOfFieldsInClasses.add(amountOfFields, 1, item)
+				amountOfFields.each{ amountOfFieldsInClasses.add(it.value, 1, it.key) }
 				amountOfParametersInMethods.addAll(amountOfParametersPerMethod, item)
 				amountOfIfsInMethods.addAll(amountOfIfStatementsPerMethod, item)
 				amountOfLoopsInMethods.addAll(amountOfLoopsPerMethod, item)
