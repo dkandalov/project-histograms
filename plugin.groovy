@@ -8,11 +8,11 @@ import static com.intellij.openapi.util.text.StringUtil.capitalize
 import static liveplugin.PluginUtil.*
 import static templates.HtmlUtil.createFromTemplate
 
-if (true) return IntegrationTestsRunner.runIntegrationTests(project, [PsiStatsTest]) // TODO move to liveplugin
+if (false) return IntegrationTestsRunner.runIntegrationTests(project, [PsiStatsTest]) // TODO move to liveplugin
 if (false) return createGitHubPages()
 if (false) return accumulate()
 
-registerAction("miscProjectHistograms", "ctrl shift H", TOOLS_MENU) { AnActionEvent event ->
+registerAction("miscProjectHistograms", "ctrl shift H", TOOLS_MENU, "Project Histograms") { AnActionEvent event ->
   def project = event.project
 
 	doInBackground("Building histograms"){
@@ -33,7 +33,7 @@ String maxItemsAsString(Map maxItems) {
 	maxItems.entrySet().collect{ entry ->
 		def name = entry.key
 		def itemsByValue = entry.value
-		name + "\n" + itemsByValue.collect{"" + it.key + " - " + it.value.name}.join("\n")
+		name + "\n" + itemsByValue.collect{"" + it.key + " - " + it.value}.join("\n")
 	}.join("\n\n")
 }
 

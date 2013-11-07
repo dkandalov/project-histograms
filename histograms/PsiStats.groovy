@@ -50,7 +50,7 @@ class PsiStats {
 				// or if there are no implementations, then it probably should be ignored
 				if (psiClass.interface) return
 				if (psiClass.enum) return
-				if (psiClass.scope != javaFile && !psiClass.modifierList.hasModifierProperty(STATIC)) return
+				if (psiClass.scope != javaFile && !psiClass?.modifierList?.hasModifierProperty(STATIC)) return
 
 				result << psiClass
 
@@ -67,7 +67,7 @@ class PsiStats {
 			psiElement.acceptChildren(new JavaElementVisitor() {
 				@Override void visitElement(PsiElement element) {
 					if (element instanceof PsiClass && element.enum) null
-					else if (element instanceof PsiClass && element.modifierList.hasModifierProperty(STATIC)) null
+					else if (element instanceof PsiClass && element.modifierList?.hasModifierProperty(STATIC)) null
 					else if (element instanceof PsiMethod) result << element
 					else visit(element)
 				}
@@ -84,7 +84,7 @@ class PsiStats {
 			psiElement.acceptChildren(new JavaElementVisitor() {
 				@Override void visitElement(PsiElement element) {
 					if (element instanceof PsiClass && element.enum) null
-					else if (element instanceof PsiClass && element.modifierList.hasModifierProperty(STATIC)) null
+					else if (element instanceof PsiClass && element.modifierList?.hasModifierProperty(STATIC)) null
 					else if (element instanceof PsiField) result << element
 					else visit(element)
 				}

@@ -44,7 +44,7 @@ class Histogram {
 	private addToMaxValues(item, int value) {
 		if (item != null && (maxItemsByValue.isEmpty() || value > maxItemsByValue.firstKey())) {
 			maxItemsByValue.put(value, item)
-			if (maxItemsByValue.size() > 10) maxItemsByValue.remove(maxItemsByValue.firstKey())
+			if (maxItemsByValue.size() > 15) maxItemsByValue.remove(maxItemsByValue.firstKey())
 		}
 	}
 }
