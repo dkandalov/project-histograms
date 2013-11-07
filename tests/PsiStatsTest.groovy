@@ -23,9 +23,12 @@ class PsiStatsTest {
 				class InnerClass {
 					int method3() { return 0; }
 				}
+				static class StaticInnerClass {
+					int method4() { return 0; }
+				}
 			}
 		""")
-		assert new PsiStats(psiFile).amountOfMethods == 5
+		assert new PsiStats(psiFile).amountOfMethods == ["Sample": 5, "Sample.StaticInnerClass": 1]
 	}
 
 	@Test void "find amount of fields in class"() {
@@ -62,7 +65,7 @@ class PsiStatsTest {
 
 	@Test void "find amount of parameters per method"() {
 		def javaFile = asJavaPsi("Sample.java", "class Sample {}")
-		assert new PsiStats(javaFile).amountOfParametersPerMethod == []
+		assert new PsiStats(javaFile).amountOfParametersPerMethod == ["Sample": []]
 
 		javaFile = asJavaPsi("Sample.java", """
 			class Sample {
@@ -74,12 +77,12 @@ class PsiStatsTest {
 				}
 			}
 		""")
-		assert new PsiStats(javaFile).amountOfParametersPerMethod == [0, 1, 2, 3]
+		assert new PsiStats(javaFile).amountOfParametersPerMethod == ["Sample": [0, 1, 2, 3]]
 	}
 
 	@Test void "find amount of 'if' statements per method"() {
 		def javaFile = asJavaPsi("Sample.java", "class Sample {}")
-		assert new PsiStats(javaFile).amountOfIfStatementsPerMethod == []
+		assert new PsiStats(javaFile).amountOfIfStatementsPerMethod == ["Sample": []]
 
 		javaFile = asJavaPsi("Sample.java", """
 			class Sample {
@@ -94,7 +97,7 @@ class PsiStatsTest {
 				}
 			}
 		""")
-		assert new PsiStats(javaFile).amountOfIfStatementsPerMethod == [0, 1, 2]
+		assert new PsiStats(javaFile).amountOfIfStatementsPerMethod == ["Sample": [0, 1, 2]]
 
 		javaFile = asJavaPsi("Sample.java", """
 			class Sample {
@@ -118,7 +121,7 @@ class PsiStatsTest {
 				}
 			}
 		""")
-		assert new PsiStats(javaFile).amountOfIfStatementsPerMethod == [0, 1, 2]
+		assert new PsiStats(javaFile).amountOfIfStatementsPerMethod == ["Sample": [0, 1, 2]]
 
 		javaFile = asJavaPsi("Sample.java", """
 			class Sample {
@@ -127,12 +130,12 @@ class PsiStatsTest {
 				int nestedConditionalExpressions() { return (true ? (true ? 1 : 2) : 3); }
 			}
 		""")
-		assert new PsiStats(javaFile).amountOfIfStatementsPerMethod == [0, 1, 2]
+		assert new PsiStats(javaFile).amountOfIfStatementsPerMethod == ["Sample": [0, 1, 2]]
 	}
 
 	@Test void "find amount of loops per method"() {
 		def javaFile = asJavaPsi("Sample.java", "class Sample {}")
-		assert new PsiStats(javaFile).amountOfLoopsPerMethod == []
+		assert new PsiStats(javaFile).amountOfLoopsPerMethod == ["Sample": []]
 
 		javaFile = asJavaPsi("Sample.java", """
 			class Sample {
@@ -145,7 +148,7 @@ class PsiStatsTest {
 				}
 			}
 		""")
-		assert new PsiStats(javaFile).amountOfLoopsPerMethod == [0, 1, 2]
+		assert new PsiStats(javaFile).amountOfLoopsPerMethod == ["Sample": [0, 1, 2]]
 
 		javaFile = asJavaPsi("Sample.java", """
 			class Sample {
@@ -154,7 +157,7 @@ class PsiStatsTest {
 				}
 			}
 		""")
-		assert new PsiStats(javaFile).amountOfLoopsPerMethod == [1]
+		assert new PsiStats(javaFile).amountOfLoopsPerMethod == ["Sample": [1]]
 
 		javaFile = asJavaPsi("Sample.java", """
 			class Sample {
@@ -169,7 +172,7 @@ class PsiStatsTest {
 				}
 			}
 		""")
-		assert new PsiStats(javaFile).amountOfLoopsPerMethod == [0, 1, 2]
+		assert new PsiStats(javaFile).amountOfLoopsPerMethod == ["Sample": [0, 1, 2]]
 
 		javaFile = asJavaPsi("Sample.java", """
 			class Sample {
@@ -182,7 +185,7 @@ class PsiStatsTest {
 				}
 			}
 		""")
-		assert new PsiStats(javaFile).amountOfLoopsPerMethod == [0, 1, 2]
+		assert new PsiStats(javaFile).amountOfLoopsPerMethod == ["Sample": [0, 1, 2]]
 	}
 
 	private PsiJavaFile asJavaPsi(String fileName, String javaCode) {

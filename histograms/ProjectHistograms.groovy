@@ -21,11 +21,11 @@ class ProjectHistograms {
 			item = (PsiJavaFile) item
 
 			new PsiStats(item).with {
-				amountOfMethodsInClasses.add(amountOfMethods, 1, item)
+				amountOfMethods.each{ amountOfMethodsInClasses.add(it.value, 1, it.key) }
 				amountOfFields.each{ amountOfFieldsInClasses.add(it.value, 1, it.key) }
-				amountOfParametersInMethods.addAll(amountOfParametersPerMethod, item)
-				amountOfIfsInMethods.addAll(amountOfIfStatementsPerMethod, item)
-				amountOfLoopsInMethods.addAll(amountOfLoopsPerMethod, item)
+				amountOfParametersPerMethod.each{ amountOfParametersInMethods.addAll(it.value, it.key) }
+				amountOfIfStatementsPerMethod.each{ amountOfIfsInMethods.addAll(it.value, it.key) }
+				amountOfLoopsPerMethod.each{ amountOfLoopsInMethods.addAll(it.value, it.key) }
 			}
 		}
 		this
