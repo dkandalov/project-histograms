@@ -7,18 +7,29 @@ class PsiStats {
 	private final List<PsiClass> classes
 	private final Map<PsiClass, List<PsiMethod>> methods
 	private final Map<PsiClass, List<PsiField>> fields
+	private final PsiJavaFile javaFile
+	private int counter
 
 	PsiStats(PsiJavaFile javaFile) {
+		this.javaFile = javaFile
 		classes = allClassesIn(javaFile)
 		methods = classes.collectEntries{ [it, allMethodsIn(it)] }
 		fields = classes.collectEntries{ [it, allFieldsIn(it)] }
 	}
 
 	Map<String, Integer> getAmountOfFields() {
-		fields.collectEntries{ [it.key.qualifiedName, it.value.size()] } as Map<String, Integer>
+		fields.collectEntries{ [qualifiedNameOf(it.key), it.value.size()] } as Map<String, Integer>
 	}
 	Map<String, Integer> getAmountOfMethods() {
-		methods.collectEntries{ [it.key.qualifiedName, it.value.size()] } as Map<String, Integer>
+		methods.collectEntries{ [qualifiedNameOf(it.key), it.value.size()] } as Map<String, Integer>
+	}
+
+	private qualifiedNameOf(PsiClass psiClass) {
+		if (psiClass instanceof PsiAnonymousClass) {
+			javaFile.packageName + javaFile.name + "-" + psiClass.baseClassReference.qualifiedName + "\$" + (counter++)
+		} else {
+			psiClass.qualifiedName
+		}
 	}
 
 	Map<String, Collection<Integer>> getAmountOfParametersPerMethod() {
@@ -50,7 +61,9 @@ class PsiStats {
 				// or if there are no implementations, then it probably should be ignored
 				if (psiClass.interface) return
 				if (psiClass.enum) return
-				if (psiClass.scope != javaFile && !psiClass?.modifierList?.hasModifierProperty(STATIC)) return
+				if (psiClass.scope != javaFile
+						&& !(psiClass instanceof PsiAnonymousClass)
+						&& !psiClass?.modifierList?.hasModifierProperty(STATIC)) return
 
 				result << psiClass
 
@@ -67,6 +80,7 @@ class PsiStats {
 			psiElement.acceptChildren(new JavaElementVisitor() {
 				@Override void visitElement(PsiElement element) {
 					if (element instanceof PsiClass && element.enum) null
+					else if (element instanceof PsiAnonymousClass) null
 					else if (element instanceof PsiClass && element.modifierList?.hasModifierProperty(STATIC)) null
 					else if (element instanceof PsiMethod) result << element
 					else visit(element)

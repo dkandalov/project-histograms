@@ -26,9 +26,16 @@ class PsiStatsTest {
 				static class StaticInnerClass {
 					int method4() { return 0; }
 				}
+				Runnable countAnonymousSeparately = new Runnable() {
+					@Override public void run() {}
+				}
 			}
 		""")
-		assert new PsiStats(psiFile).amountOfMethods == ["Sample": 5, "Sample.StaticInnerClass": 1]
+		assert new PsiStats(psiFile).amountOfMethods == [
+				"Sample": 5,
+				"Sample.StaticInnerClass": 1,
+				"Sample.java-java.lang.Runnable\$0": 1
+		]
 	}
 
 	@Test void "find amount of fields in class"() {
