@@ -1,0 +1,52 @@
+Amount of fields in classes
+0 - ClassFromOtherClassLoader
+1 - org.jmock.test.unit.integration.junit3.VerifyingTestCaseTests
+2 - org.jmock.test.unit.auto.internal.MockomaticTests.ObjectWithPublicAndPrivateFields
+3 - org.jmock.test.unit.internal.ReturnDefaultValueActionTests
+4 - org.jmock.test.unit.lib.concurrent.internal.DeltaQueueTests
+5 - org.jmock.test.unit.lib.concurrent.DeterministicExecutorTests
+6 - org.jmock.test.unit.lib.concurrent.SynchroniserTests
+7 - org.jmock.test.unit.lib.concurrent.DeterministicSchedulerTests
+8 - org.jmock.test.unit.support.MockExpectation
+9 - org.jmock.lib.concurrent.DeterministicScheduler
+10 - org.jmock.example.timedcache.TimedCacheTests
+11 - org.jmock.internal.InvocationExpectation
+
+Amount of methods in classes
+5 - org.jmock.test.unit.lib.script.ScriptedActionTests
+6 - org.jmock.test.unit.integration.junit3.VerifyingTestCaseTests
+7 - org.jmock.test.unit.lib.concurrent.SynchroniserTests
+8 - org.jmock.test.unit.lib.action.ThrowActionTests
+9 - org.jmock.test.unit.lib.legacy.ClassImposteriserTests
+10 - org.jmock.test.unit.internal.ReturnDefaultCollectionTests
+11 - org.jmock.test.acceptance.ExpectationErrorCheckingAcceptanceTests
+12 - org.jmock.integration.junit3.MockObjectTestCase
+13 - org.jmock.test.unit.lib.concurrent.internal.DeltaQueueTests
+16 - org.jmock.test.unit.lib.concurrent.DeterministicSchedulerTests
+18 - org.jmock.test.unit.internal.InvocationExpectationTests
+19 - org.jmock.test.unit.api.InvocationTests
+21 - org.jmock.internal.InvocationExpectation
+40 - org.jmock.lib.concurrent.DeterministicScheduler
+47 - org.jmock.Expectations
+
+Amount of parameters in methods
+0 - ClassFromOtherClassLoader
+1 - org.jmock.test.unit.lib.concurrent.DeterministicSchedulerTests
+2 - org.jmock.test.unit.lib.concurrent.ScheduleOnExecutorAction
+3 - org.jmock.test.unit.lib.legacy.ClassImposteriserTests
+4 - org.jmock.test.unit.support.MethodFactory
+
+Amount of ifs in methods
+0 - ClassFromOtherClassLoader
+1 - org.jmock.test.unit.lib.concurrent.SynchroniserTests
+2 - org.jmock.lib.concurrent.internal.DeltaQueue
+3 - org.jmock.test.unit.support.MockAction
+4 - org.jmock.internal.FakeObjectMethods
+5 - org.jmock.internal.ReturnDefaultValueAction
+6 - org.jmock.internal.Cardinality
+
+Amount of loops in methods
+0 - ClassFromOtherClassLoader
+1 - org.jmock.test.unit.lib.action.ReturnEnumerationActionTests
+2 - org.jmock.internal.InvocationExpectation
+3 - org.jmock.test.unit.lib.action.ActionSequenceTests

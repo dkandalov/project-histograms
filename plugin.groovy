@@ -22,6 +22,9 @@ registerAction("miscProjectHistograms", "ctrl shift H", TOOLS_MENU, "Project His
 					.persistHistogramsTo(pathToDataFor(project.name))
 
 			showInConsole(maxItemsAsString(histograms.maxValueItems), project)
+			new File("${pluginPath()}/data/${project.name}-top.txt").withWriter {
+				it.write(maxItemsAsString(histograms.maxValueItems))
+			}
 			openInBrowser(fillTemplateWith(histograms, project.name))
 		}
 	}
@@ -57,7 +60,7 @@ File fillTemplateWith(ProjectHistograms histograms, String name,
 
 def accumulate() {
 	def files = ["asm-histogram.json", "commons-collections4-histogram.json", "google-collections-histogram.json",
-			"JavaHamcrest-histogram.json", "jmock-histogram.json", "junit-histogram.json", "mockito-histogram.json",
+			"hamcrest-histogram.json", "jmock-histogram.json", "junit-histogram.json", "mockito-histogram.json",
 			"testng-histogram.json", "trove4j-histogram.json", "xstream-histogram.json"]
 	def histograms = files.collect{
 		new ProjectHistograms().loadFrom("/Users/dima/Library/Application Support/IntelliJIdea12/live-plugins/histograms/data/${it}")
@@ -73,7 +76,7 @@ def accumulate() {
 
 def createGitHubPages() {
 	def files = ["IntelliJ-histogram.json", "NetBeans-histogram.json", "asm-histogram.json", "commons-collections4-histogram.json",
-			"google-collections-histogram.json", "JavaHamcrest-histogram.json", "jmock-histogram.json", "junit-histogram.json",
+			"google-collections-histogram.json", "hamcrest-histogram.json", "jmock-histogram.json", "junit-histogram.json",
 			"mockito-histogram.json", "testng-histogram.json", "trove4j-histogram.json", "xstream-histogram.json"]
 	def histograms = files.collect{
 		new ProjectHistograms().loadFrom("/Users/dima/Library/Application Support/IntelliJIdea12/live-plugins/histograms/data/${it}")

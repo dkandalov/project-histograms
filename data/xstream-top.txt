@@ -1,0 +1,72 @@
+Amount of parameters in methods
+0 - com.thoughtworks.xstream.tools.benchmark.xmlfriendly.products.CachingIterativeAppenderWithShortcut.XmlFriendlyReplacer
+1 - com.thoughtworks.xstream.tools.benchmark.xmlfriendly.products.CachingIterativeAppenderWithShortcut.XmlFriendlyReplacer
+2 - com.thoughtworks.xstream.tools.benchmark.xmlfriendly.products.CachingIterativeAppenderWithShortcut
+3 - com.thoughtworks.xstream.tools.benchmark.xmlfriendly.products.CachingIterativeAppenderWithShortcut.XmlFriendlyReplacer
+4 - com.thoughtworks.xstream.tools.benchmark.xmlfriendly.XmlFriendlyBenchmark.ReplacerTest
+5 - com.thoughtworks.xstream.tools.benchmark.model.SerializableFive
+6 - com.thoughtworks.xstream.io.path.PathTest
+7 - com.thoughtworks.xstream.converters.extended.NamedMapConverter
+9 - com.thoughtworks.xstream.converters.extended.NamedMapConverter
+10 - com.thoughtworks.xstream.converters.extended.NamedMapConverter
+
+Amount of ifs in methods
+7 - com.thoughtworks.xstream.tools.benchmark.xmlfriendly.products.AbstractXmlFriendlyReplacer
+8 - com.thoughtworks.xstream.converters.collections.TreeSetConverter
+9 - com.thoughtworks.xstream.converters.extended.NamedMapConverter
+10 - com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider
+13 - com.thoughtworks.xstream.converters.extended.NamedMapConverter
+14 - com.thoughtworks.xstream.tools.benchmark.parsers.ParserBenchmark
+16 - com.thoughtworks.xstream.io.xml.xppdom.XppDomComparator
+17 - com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter
+18 - com.thoughtworks.xstream.io.xml.PrettyPrintWriter
+22 - com.thoughtworks.xstream.core.util.XmlHeaderAwareReader
+25 - com.thoughtworks.xstream.converters.reflection.SerializableConverter
+26 - com.thoughtworks.xstream.core.util.DependencyInjectionFactory
+27 - com.thoughtworks.xstream.converters.reflection.AbstractReflectionConverter
+28 - com.thoughtworks.xstream.converters.reflection.AbstractReflectionConverter
+83 - com.thoughtworks.xstream.io.json.AbstractJsonWriter
+
+Amount of loops in methods
+0 - com.thoughtworks.xstream.tools.benchmark.xmlfriendly.products.CachingIterativeAppenderWithShortcut.XmlFriendlyReplacer
+1 - com.thoughtworks.xstream.tools.benchmark.xmlfriendly.products.AbstractXmlFriendlyReplacer
+2 - com.thoughtworks.xstream.tools.benchmark.xmlfriendly.products.AbstractXmlFriendlyReplacer
+3 - com.thoughtworks.xstream.tools.benchmark.Harness
+4 - com.thoughtworks.xstream.io.binary.BinaryStreamTest
+5 - com.thoughtworks.xstream.converters.reflection.CGLIBEnhancedConverter
+6 - com.thoughtworks.xstream.converters.extended.PropertyEditorCapableConverterTest
+7 - com.thoughtworks.xstream.core.util.DependencyInjectionFactory
+
+Amount of fields in classes
+6 - com.thoughtworks.xstream.converters.javabean.BeanProperty
+7 - com.thoughtworks.xstream.io.xml.xppdom.XppDom
+8 - com.thoughtworks.xstream.converters.javabean.PropertyDictionaryTest
+9 - com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProviderTest.WithFinalFields
+10 - com.thoughtworks.xstream.converters.reflection.SerializableConverter
+11 - com.thoughtworks.xstream.hibernate.util.Hibernate
+13 - com.thoughtworks.xstream.core.JVM
+14 - com.thoughtworks.xstream.io.xml.SaxWriter
+15 - com.thoughtworks.xstream.converters.reflection.ReflectionConverterTest.World
+17 - com.thoughtworks.xstream.io.binary.Token
+18 - com.thoughtworks.xstream.io.json.AbstractJsonWriter
+20 - com.thoughtworks.xstream.io.json.JsonHierarchicalStreamDriverTest.Message
+30 - com.thoughtworks.xstream.XStream
+50 - com.thoughtworks.xstream.tools.benchmark.model.A50InnerClasses
+100 - com.thoughtworks.xstream.tools.benchmark.xmlfriendly.model.A100_Fields
+
+Amount of methods in classes
+21 - com.thoughtworks.xstream.io.json.JettisonMappedXmlDriverTest
+22 - com.thoughtworks.acceptance.CollectionsTest
+24 - com.thoughtworks.xstream.io.json.JsonWriter
+25 - com.thoughtworks.xstream.core.util.PresortedSet
+26 - com.thoughtworks.xstream.io.xml.StaxDriver
+27 - com.thoughtworks.xstream.mapper.DefaultMapper
+28 - com.thoughtworks.xstream.io.json.JsonHierarchicalStreamDriverTest
+29 - com.thoughtworks.xstream.io.xml.PrettyPrintWriter
+30 - com.thoughtworks.xstream.converters.javabean.JavaBeanConverterTest.World
+31 - com.thoughtworks.xstream.core.JVM
+32 - com.thoughtworks.xstream.persistence.FileStreamStrategyTest
+33 - com.thoughtworks.xstream.persistence.FilePersistenceStrategyTest
+39 - com.thoughtworks.xstream.core.util.CustomObjectOutputStream
+51 - com.thoughtworks.xstream.core.util.CustomObjectInputStream
+94 - com.thoughtworks.xstream.XStream

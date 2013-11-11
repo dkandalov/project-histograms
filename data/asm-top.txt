@@ -1,0 +1,78 @@
+Amount of parameters in methods
+0 - org.objectweb.asm.tree.analysis.SimpleVerifierUnitTest
+1 - org.objectweb.asm.tree.analysis.AnalyzerUnitTest
+2 - org.objectweb.asm.tree.analysis.AnalyzerUnitTest
+3 - org.objectweb.asm.test.cases.Generator
+4 - org.objectweb.asm.tree.analysis.SourceInterpreter
+5 - org.objectweb.asm.test.cases.Frames.RenameAdapter
+6 - org.objectweb.asm.test.cases.Frames.RenameAdapter
+7 - org.objectweb.asm.commons.GASMifier
+8 - org.objectweb.asm.MethodWriter
+10 - org.objectweb.asm.xml.SAXAnnotationAdapter
+12 - org.objectweb.asm.xml.SAXAnnotationAdapter
+
+Amount of ifs in methods
+29 - org.objectweb.asm.util.ASMifier
+30 - org.objectweb.asm.tree.analysis.BasicInterpreter
+32 - org.objectweb.asm.ClassReader
+37 - org.objectweb.asm.util.ASMifier
+49 - org.objectweb.asm.tree.analysis.BasicVerifier
+53 - org.objectweb.asm.tree.analysis.BasicInterpreter
+54 - org.objectweb.asm.tree.analysis.BasicInterpreter
+58 - org.objectweb.asm.tree.analysis.BasicVerifier
+62 - org.objectweb.asm.MethodWriter
+80 - org.objectweb.asm.ClassReader
+107 - org.objectweb.asm.commons.GASMifier
+115 - org.objectweb.asm.commons.AdviceAdapter
+163 - org.objectweb.asm.commons.AnalyzerAdapter
+180 - org.objectweb.asm.Frame
+185 - org.objectweb.asm.tree.analysis.Frame
+
+Amount of loops in methods
+0 - org.objectweb.asm.tree.analysis.SimpleVerifierUnitTest
+1 - org.objectweb.asm.tree.analysis.SimpleVerifierUnitTest
+2 - org.objectweb.asm.test.cases.Frames.RenameAdapter
+3 - org.objectweb.asm.tree.analysis.Frame
+4 - org.objectweb.asm.test.cases.Insns
+5 - org.objectweb.asm.signature.SignatureReader
+6 - org.objectweb.asm.ClassReader
+8 - org.objectweb.asm.optimizer.AnnotationConstantsCollector
+9 - org.objectweb.asm.ClassReader
+11 - org.objectweb.asm.tree.analysis.Analyzer
+12 - org.objectweb.asm.MethodWriter
+14 - org.objectweb.asm.tree.MethodNode
+22 - org.objectweb.asm.ClassReader
+
+Amount of fields in classes
+9 - org.objectweb.asm.tree.analysis.Analyzer
+10 - org.objectweb.asm.optimizer.Constant
+11 - org.objectweb.asm.util.TraceSignatureVisitor
+14 - org.objectweb.asm.util.CheckMethodAdapter
+16 - org.objectweb.asm.util.CheckSignatureAdapter
+19 - org.objectweb.asm.tree.ClassNode
+20 - org.objectweb.asm.Context
+22 - org.objectweb.asm.tree.AbstractInsnNode
+23 - org.objectweb.asm.TypeReference
+24 - org.objectweb.asm.Label
+25 - org.objectweb.asm.Type
+33 - org.objectweb.asm.Frame
+39 - org.objectweb.asm.commons.GeneratorAdapter
+63 - org.objectweb.asm.MethodWriter
+81 - org.objectweb.asm.ClassWriter
+
+Amount of methods in classes
+34 - org.objectweb.asm.commons.JSRInlinerAdapterUnitTest
+35 - org.objectweb.asm.util.CheckClassAdapter
+39 - org.objectweb.asm.ClassReader
+40 - org.objectweb.asm.tree.MethodNode
+43 - org.objectweb.asm.tree.analysis.SimpleVerifierUnitTest
+44 - org.objectweb.asm.ClassWriter
+50 - org.objectweb.asm.tree.InsnListUnitTest
+54 - org.objectweb.asm.util.Printer
+57 - org.objectweb.asm.util.CheckMethodAdapter
+64 - org.objectweb.asm.util.ASMifier
+66 - org.objectweb.asm.xml.ASMContentHandler
+73 - org.objectweb.asm.util.Textifier
+77 - org.objectweb.asm.util.CheckClassAdapterUnitTest
+84 - org.objectweb.asm.commons.GeneratorAdapter
+95 - org.objectweb.asm.commons.InstructionAdapter

@@ -1,0 +1,70 @@
+Amount of parameters in methods
+0 - org.apache.commons.collections4.trie.analyzer.StringKeyAnalyzer
+1 - org.apache.commons.collections4.trie.analyzer.StringKeyAnalyzer
+2 - org.apache.commons.collections4.comparators.FixedOrderComparatorTest
+3 - org.apache.commons.collections4.trie.analyzer.StringKeyAnalyzer
+4 - org.apache.commons.collections4.trie.analyzer.StringKeyAnalyzer
+5 - org.apache.commons.collections4.sequence.SequencesComparator
+6 - org.apache.commons.collections4.trie.analyzer.StringKeyAnalyzer
+
+Amount of ifs in methods
+3 - org.apache.commons.collections4.collection.AbstractCollectionTest
+4 - org.apache.commons.collections4.comparators.ComparatorChainTest.PseudoRow
+5 - org.apache.commons.collections4.iterators.FilterListIteratorTest
+6 - org.apache.commons.collections4.trie.analyzer.StringKeyAnalyzer
+7 - org.apache.commons.collections4.bidimap.TreeBidiMap
+8 - org.apache.commons.collections4.sequence.SequencesComparator
+9 - org.apache.commons.collections4.comparators.FixedOrderComparator
+10 - org.apache.commons.collections4.bidimap.TreeBidiMap
+11 - org.apache.commons.collections4.trie.AbstractPatriciaTrie
+12 - org.apache.commons.collections4.trie.AbstractPatriciaTrie
+14 - org.apache.commons.collections4.bidimap.TreeBidiMap
+15 - org.apache.commons.collections4.map.Flat3Map
+17 - org.apache.commons.collections4.map.Flat3Map
+21 - org.apache.commons.collections4.map.Flat3Map
+22 - org.apache.commons.collections4.map.Flat3Map
+
+Amount of loops in methods
+0 - org.apache.commons.collections4.trie.analyzer.StringKeyAnalyzer
+1 - org.apache.commons.collections4.trie.analyzer.StringKeyAnalyzer
+2 - org.apache.commons.collections4.collection.TransformedCollectionTest
+3 - org.apache.commons.collections4.collection.CompositeCollectionTest
+4 - org.apache.commons.collections4.comparators.FixedOrderComparatorTest
+5 - org.apache.commons.collections4.list.TreeListTest
+6 - org.apache.commons.collections4.sequence.SequencesComparatorTest
+7 - org.apache.commons.collections4.iterators.FilterListIteratorTest
+8 - org.apache.commons.collections4.list.TreeListTest
+
+Amount of fields in classes
+2 - org.apache.commons.collections4.comparators.ComparatorChainTest.ColumnComparator
+3 - org.apache.commons.collections4.collection.CompositeCollectionTest
+4 - org.apache.commons.collections4.trie.analyzer.StringKeyAnalyzer
+5 - org.apache.commons.collections4.iterators.ObjectGraphIteratorTest
+6 - org.apache.commons.collections4.map.ReferenceIdentityMapTest
+7 - org.apache.commons.collections4.iterators.ObjectGraphIterator
+8 - org.apache.commons.collections4.set.AbstractSortedSetTest
+9 - org.apache.commons.collections4.queue.CircularFifoQueue
+10 - org.apache.commons.collections4.ListUtilsTest
+12 - org.apache.commons.collections4.map.Flat3Map
+13 - org.apache.commons.collections4.iterators.FilterListIteratorTest
+16 - org.apache.commons.collections4.CollectionUtilsTest
+17 - org.apache.commons.collections4.bidimap.TreeBidiMap
+19 - org.apache.commons.collections4.map.AbstractHashedMap
+37 - org.apache.commons.collections4.trie.AbstractPatriciaTrie
+
+Amount of methods in classes
+39 - org.apache.commons.collections4.map.ListOrderedMapTest
+48 - org.apache.commons.collections4.collection.AbstractCollectionTest
+49 - org.apache.commons.collections4.list.AbstractLinkedList
+50 - org.apache.commons.collections4.IteratorUtils
+51 - org.apache.commons.collections4.map.AbstractHashedMap
+52 - org.apache.commons.collections4.bidimap.AbstractBidiMapTest
+54 - org.apache.commons.collections4.list.AbstractListTest
+57 - org.apache.commons.collections4.list.CursorableLinkedListTest
+63 - org.apache.commons.collections4.CollectionUtils
+67 - org.apache.commons.collections4.PredicateUtilsTest
+73 - org.apache.commons.collections4.MapUtils
+100 - org.apache.commons.collections4.CollectionUtilsTest
+122 - org.apache.commons.collections4.map.AbstractMapTest
+132 - org.apache.commons.collections4.bidimap.TreeBidiMap
+148 - org.apache.commons.collections4.trie.AbstractPatriciaTrie

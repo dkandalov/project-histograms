@@ -1,0 +1,52 @@
+Amount of parameters in methods
+0 - org.hamcrest.generator.config.XmlConfiguratorTest.MockSugarConfiguration
+1 - org.hamcrest.generator.config.XmlConfiguratorTest.MockSugarConfiguration
+2 - org.hamcrest.generator.config.XmlConfiguratorTest.AnotherMatcher
+3 - org.hamcrest.beans.SamePropertyValuesAsTest.SubBeanWithExtraProperty
+4 - org.hamcrest.xml.HasXPath
+5 - org.hamcrest.core.AnyOf
+6 - org.hamcrest.core.AnyOf
+
+Amount of ifs in methods
+0 - org.hamcrest.generator.config.XmlConfiguratorTest.MockSugarConfiguration
+1 - org.hamcrest.generator.config.XmlConfigurator
+2 - org.hamcrest.collection.IsArray
+3 - org.hamcrest.generator.ReflectiveFactoryReader
+4 - org.hamcrest.generator.config.XmlConfigurator
+7 - org.hamcrest.generator.FactoryMethod
+8 - org.hamcrest.core.IsInstanceOf
+9 - org.hamcrest.generator.FactoryMethod.Parameter
+24 - org.hamcrest.generator.FactoryMethod
+
+Amount of loops in methods
+0 - org.hamcrest.generator.config.XmlConfiguratorTest.MockSugarConfiguration
+1 - org.hamcrest.generator.config.XmlConfiguratorTest.MockSugarConfiguration
+2 - org.hamcrest.generator.HamcrestFactoryWriter
+4 - org.hamcrest.generator.ReflectiveFactoryReader
+
+Amount of fields in classes
+0 - org.hamcrest.generator.config.XmlConfiguratorTest.AnotherMatcher
+1 - org.hamcrest.examples.testng.ExampleWithEasyMock2
+2 - org.hamcrest.generator.config.XmlConfiguratorTest.MockSugarConfiguration
+3 - org.hamcrest.examples.junit4.ExampleWithAssertThat.ComplicatedClass
+4 - org.hamcrest.generator.config.XmlConfigurator
+6 - org.hamcrest.generator.EasyMock2FactoryWriter
+7 - org.hamcrest.number.OrderingComparison
+8 - org.hamcrest.generator.FactoryMethod
+
+Amount of methods in classes
+1 - org.hamcrest.generator.configXmlConfigurator.java-org.xml.sax.helpers.DefaultHandler$0
+2 - org.hamcrest.generator.config.XmlConfiguratorTest.SomeMatcher
+3 - org.hamcrest.examples.junit4ExampleWithAssertThat.java-TypeSafeMatcher$0
+4 - org.hamcrest.generator.config.XmlConfiguratorTest.MockSugarConfiguration
+5 - org.hamcrest.generator.config.XmlConfiguratorTest.AnotherMatcher
+6 - org.hamcrest.collection.IsArrayContainingInOrderTest
+7 - org.hamcrest.object.IsCompatibleTypeTest
+8 - org.hamcrest.collection.IsMapContainingKeyTest
+9 - org.hamcrest.collection.IsIterableContainingInAnyOrderTest
+10 - org.hamcrest.number.OrderingComparisonTest
+11 - org.hamcrest.collection.IsIterableContainingInOrderTest
+12 - org.hamcrest.collection.IsMapWithSizeTest
+13 - org.hamcrest.BaseDescription
+15 - org.hamcrest.generator.ReflectiveFactoryReaderTest
+17 - org.hamcrest.generator.FactoryMethod

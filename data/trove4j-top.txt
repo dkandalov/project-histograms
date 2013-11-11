@@ -1,0 +1,57 @@
+Amount of parameters in methods
+0 - gnu.trove.stack.array.TStackTest
+1 - gnu.trove.stack.array.TStackTest
+2 - gnu.trove.map.hash.ArrayHashingStrategy
+3 - gnu.trove.impl.hash.HashTestKit
+4 - gnu.trove.impl.hash.TObjectHash
+5 - gnu.trove.impl.hash.TObjectHash
+
+Amount of ifs in methods
+0 - gnu.trove.stack.array.TStackTest
+1 - gnu.trove.list.linked.TPrimitiveLinkedListTest
+2 - gnu.trove.list.linked.TLinkedListTest
+3 - gnu.trove.map.hash.TPrimitivePrimitiveHashMapTest
+4 - gnu.trove.set.hash.TCustomHashSetTest
+5 - gnu.trove.list.linked.TLinkedList
+6 - gnu.trove.impl.hash.TObjectHash
+18 - gnu.trove.list.linked.TLinkedList
+
+Amount of loops in methods
+0 - gnu.trove.stack.array.TStackTest
+1 - gnu.trove.list.linked.TPrimitiveLinkedListTest
+2 - gnu.trove.list.linked.TPrimitiveLinkedListTest
+3 - gnu.trove.list.linked.TPrimitiveLinkedListTest
+4 - gnu.trove.list.linked.TPrimitiveLinkedListTest
+5 - gnu.trove.list.linked.TPrimitiveLinkedListTest
+6 - gnu.trove.list.linked.TPrimitiveLinkedListTest
+7 - gnu.trove.list.linked.TPrimitiveLinkedListTest
+9 - gnu.trove.list.linked.TPrimitiveLinkedListTest
+
+Amount of fields in classes
+0 - gnu.trove.stack.array.TStackTest
+1 - gnu.trove.list.linked.TLinkableAdapterTest
+2 - gnu.trove.procedure.array.ToObjectArrayProceedure
+3 - gnu.trove.list.linked.TLinkedListTest.Data
+4 - gnu.trove.impl.hash.THashIterator
+5 - gnu.trove.list.linked.TPrimitiveLinkedListTest
+6 - gnu.trove.map.hash.TPrimitiveObjectHashMapTest
+7 - gnu.trove.list.linked.TLinkedList
+8 - gnu.trove.set.hash.TLinkedHashSet
+10 - gnu.trove.map.hash.TPrimitivePrimitiveHashMapTest
+
+Amount of methods in classes
+23 - gnu.trove.impl.hash.THash
+24 - gnu.trove.decorator.TPrimitiveSetDecoratorTest
+25 - gnu.trove.decorator.TPrimitiveObjectMapDecoratorTest
+26 - gnu.trove.set.hash.TPrimitiveHashSetTest
+28 - gnu.trove.set.hash.THashSetTest
+29 - gnu.trove.impl.hash.TObjectHash
+30 - gnu.trove.set.hash.TLinkedHashSetTest
+37 - gnu.trove.list.linked.TLinkedList
+39 - gnu.trove.map.hash.TObjectPrimitiveHashMapTest
+46 - gnu.trove.map.hash.TPrimitiveObjectHashMapTest
+51 - gnu.trove.list.linked.TPrimitiveLinkedListTest
+52 - gnu.trove.list.linked.TLinkedListTest
+56 - gnu.trove.list.array.TPrimitiveArrayListTest
+67 - gnu.trove.map.hash.TCustomHashMap
+68 - gnu.trove.map.hash.THashMap

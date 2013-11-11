@@ -1,0 +1,80 @@
+Amount of parameters in methods
+1 - org.testng.internal.thread.graph.TestNGThreadPoolFactory
+2 - org.testng.internal.thread.graph.GraphThreadPoolExecutor
+3 - org.testng.internal.thread.graph.SuiteWorkerFactory
+4 - org.testng.reporters.jq.NavigatorPanel
+5 - org.testng.reporters.jq.SuitePanel
+6 - org.testng.reporters.jq.NavigatorPanel
+7 - org.testng.internal.thread.graph.GraphThreadPoolExecutor
+8 - org.testng.remote.strprotocol.TestMessage
+9 - org.testng.reporters.TestHTMLReporter
+10 - org.testng.internal.annotations.AnnotationHelper
+11 - org.testng.internal.Invoker
+13 - org.testng.remote.strprotocol.TestResultMessage
+14 - org.testng.remote.strprotocol.TestResultMessage
+17 - org.testng.internal.TestMethodWithDataProviderMethodWorker
+23 - org.testng.internal.annotations.JDK15TagFactory
+
+Amount of ifs in methods
+8 - org.testng.remote.strprotocol.TestResultMessage
+9 - org.testng.internal.collections.Pair
+10 - org.testng.internal.annotations.AnnotationHelper
+11 - org.testng.reporters.EmailableReporter
+12 - org.testng.reporters.jq.ChronologicalPanel
+13 - org.testng.xml.XmlMethodSelector
+14 - org.testng.reporters.SuiteHTMLReporter
+15 - org.testng.xml.TestNGContentHandler
+16 - org.testng.reporters.EmailableReporter
+17 - org.testng.internal.Invoker
+19 - org.testng.TestNG
+21 - org.testng.internal.TestNGClassFinder
+30 - org.testng.xml.TestNGContentHandler
+49 - org.testng.xml.XmlTest
+50 - org.testng.xml.XmlSuite
+
+Amount of loops in methods
+0 - org.testng.internal.thread.graph.TestNGThreadPoolFactory
+1 - org.testng.internal.thread.graph.GraphThreadPoolExecutor
+2 - org.testng.reporters.jq.NavigatorPanel
+3 - org.testng.reporters.jq.IgnoredMethodsPanel
+4 - org.testng.xml.dom.Reflect
+5 - org.testng.xml.dom.DomUtil
+6 - org.testng.reporters.JUnitReportReporter
+7 - org.testng.reporters.jq.Model
+8 - org.testng.remote.strprotocol.TestResultMessage
+9 - org.testng.TestNG
+10 - org.testng.internal.TestNGClassFinder
+
+Amount of fields in classes
+14 - org.testng.remote.strprotocol.TestResultMessage
+15 - org.testng.reporters.SuiteHTMLReporter
+16 - org.testng.internal.annotations.ConfigurationAnnotation
+17 - org.testng.internal.NoOpTestClass
+18 - org.testng.internal.TestMethodWithDataProviderMethodWorker
+19 - org.testng.remote.strprotocol.MessageHelper
+24 - org.testng.log4testng.Logger
+32 - org.testng.internal.BaseTestMethod
+36 - org.testng.xml.TestNGContentHandler
+43 - org.testng.TestNGAntTask
+46 - org.testng.TestRunner
+50 - org.testng.xml.XmlSuite
+58 - org.testng.reporters.XMLReporterConfig
+64 - org.testng.TestNG
+66 - org.testng.CommandLineArgs
+
+Amount of methods in classes
+35 - org.testng.log4testng.Logger
+41 - org.testng.AssertJUnit
+43 - org.testng.internal.Utils
+47 - org.testng.SuiteRunner
+49 - org.testng.internal.Invoker
+59 - test.BaseTest
+66 - org.testng.internal.ClonedMethod
+70 - org.testng.xml.XmlTest
+73 - org.testng.asserts.Assertion
+77 - org.testng.Assert
+79 - org.testng.xml.XmlSuite
+85 - org.testng.internal.BaseTestMethod
+90 - org.testng.TestNGAntTask
+95 - org.testng.TestRunner
+113 - org.testng.TestNG

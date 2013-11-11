@@ -1,0 +1,40 @@
+Amount of fields in classes
+0 - org.junit.Assert
+1 - org.junit.tests.experimental.theories.extendingwithstubs.StringableObject
+2 - org.junit.tests.experimental.theories.extendingwithstubs.GuesserQueue
+3 - org.junit.tests.experimental.theories.runner.SuccessfulWithDataPointFields.BeforeAndAfterEachTime
+4 - org.junit.tests.experimental.theories.extendingwithstubs.Guesser
+5 - org.junit.tests.description.SuiteDescriptionTest
+6 - org.junit.tests.experimental.theories.internal.ParameterizedAssertionErrorTest
+7 - org.junit.tests.experimental.rules.EventCollector
+8 - org.junit.internal.MethodSorterTest
+9 - org.junit.runner.Description
+
+Amount of methods in classes
+67 - org.junit.Assert
+78 - org.junit.tests.assertion.AssertionTest
+
+Amount of parameters in methods
+0 - org.junit.Assert
+1 - org.junit.tests.experimental.theories.extendingwithstubs.StubbedTheoriesTest
+2 - org.junit.tests.experimental.theories.extendingwithstubs.StubbedTheories.StubbedTheoryAnchor
+3 - org.junit.tests.experimental.theories.extendingwithstubs.Guesser.GuessMap
+4 - org.junit.experimental.theories.internal.AllMembersSupplier
+5 - org.junit.experimental.theories.internal.AllMembersSupplier
+6 - org.junit.tests.experimental.theories.runner.WithUnresolvedGenericTypeVariablesOnTheoryParms.TypeVariablesAbound
+
+Amount of ifs in methods
+0 - org.junit.Assert
+1 - org.junit.tests.experimental.theories.extendingwithstubs.StringableObject
+2 - org.junit.tests.experimental.theories.extendingwithstubs.Guesser.GuessMap
+3 - org.junit.experimental.theories.ParameterSignature
+4 - org.junit.experimental.max.MaxCore
+5 - org.junit.internal.runners.JUnit38ClassRunner
+6 - org.junit.internal.runners.MethodValidator
+7 - org.junit.experimental.categories.Categories.CategoryFilter
+
+Amount of loops in methods
+0 - org.junit.Assert
+1 - org.junit.tests.experimental.theories.extendingwithstubs.StubbedTheories.StubbedTheoryAnchor
+2 - org.junit.experimental.theories.Theories
+3 - org.junit.runner.notification.ConcurrentRunNotifierTest

@@ -1,0 +1,62 @@
+Amount of parameters in methods
+0 - org.mockito.internal.configuration.injection.scanner.InjectMocksScanner
+1 - org.mockito.internal.configuration.injection.scanner.InjectMocksScanner
+2 - org.mockito.internal.configuration.injection.scanner.InjectMocksScanner
+3 - org.mockito.internal.configuration.injection.filter.TypeBasedCandidateFilter
+4 - org.mockito.internal.verification.checkers.NumberOfInvocationsCheckerTest
+5 - org.mockito.internal.matchers.apachecommons.EqualsBuilder
+6 - org.mockito.internal.matchers.apachecommons.EqualsBuilderTest
+
+Amount of ifs in methods
+0 - org.mockito.internal.configuration.injection.scanner.InjectMocksScanner
+1 - org.mockito.internal.configuration.injection.scanner.InjectMocksScanner
+2 - org.mockito.internal.configuration.injection.scanner.MockScanner
+3 - org.mockito.internal.matchers.apachecommons.EqualsBuilderTest.TestBCanEqualA
+4 - org.mockito.internal.verification.checkers.MissingInvocationInOrderChecker
+5 - org.mockito.internal.stubbing.answers.AnswersValidator
+6 - org.mockito.internal.matchers.apachecommons.EqualsBuilder
+8 - org.mockito.internal.listeners.NotifiedMethodInvocationReport
+10 - org.mockito.internal.matchers.ArrayEquals
+13 - org.mockito.internal.invocation.SerializableMethod
+14 - org.mockito.internal.matchers.apachecommons.EqualsBuilder
+15 - org.mockito.internal.stubbing.defaultanswers.ReturnsEmptyValues
+
+Amount of loops in methods
+0 - org.mockito.internal.configuration.injection.scanner.InjectMocksScanner
+1 - org.mockito.internal.configuration.injection.scanner.InjectMocksScanner
+2 - org.mockito.internal.matchers.apachecommons.EqualsBuilderTest
+3 - org.mockitousage.serialization.ParallelSerializationTest
+4 - org.mockito.internal.debugging.WarningsFinder
+
+Amount of fields in classes
+0 - org.mockito.internal.configuration.injection.filterFinalMockCandidateFilter.java-org.mockito.internal.configuration.injection.filter.OngoingInjecter$3
+1 - org.mockito.internal.configuration.injection.scanner.InjectMocksScanner
+2 - org.mockito.internal.configuration.injection.filter.NameBasedCandidateFilter
+3 - org.mockito.internal.configuration.injection.scanner.MockScanner
+4 - org.mockito.internal.configuration.injection.ConstructorInjectionTest
+5 - org.mockito.internal.configuration.injection.MockInjection.OngoingMockInjection
+6 - org.mockito.internal.configuration.injection.FieldTypeAndNameComparatorTest
+7 - org.mockito.internal.verification.checkers.InvocationsFinderStub
+8 - org.mockito.internal.verification.checkers.MissingInvocationCheckerTest
+9 - org.mockito.internal.verification.checkers.NumberOfInvocationsCheckerTest
+10 - org.mockito.internal.creation.settings.CreationSettings
+11 - org.mockito.internal.verification.checkers.MissingInvocationInOrderCheckerTest
+14 - org.mockito.internal.util.reflection.FieldInitializerTest
+17 - org.mockitousage.annotation.MockInjectionUsingSetterOrPropertyTest
+
+Amount of methods in classes
+19 - org.mockito.internal.stubbing.InvocationContainerImpl
+20 - org.mockitoutil.TestBase
+21 - org.mockito.internal.util.collections.HashCodeAndEqualsSafeSet
+23 - org.mockitousage.basicapi.MocksSerializationForAnnotationTest
+24 - org.mockitousage.verification.BasicVerificationInOrderTest
+25 - org.mockitousage.verification.DescriptiveMessagesWhenVerificationFailsTest
+26 - org.mockitousage.stacktrace.ModellingDescriptiveMessagesTest
+27 - org.mockitousage.basicapi.MocksSerializationTest
+28 - org.mockito.internal.matchers.apachecommons.EqualsBuilder
+33 - org.mockitousage.matchers.MatchersTest
+35 - org.mockito.Mockito
+48 - org.mockito.internal.matchers.apachecommons.EqualsBuilderTest
+53 - org.mockito.Matchers
+69 - org.mockito.exceptions.Reporter
+102 - org.mockitousage.MethodsImpl

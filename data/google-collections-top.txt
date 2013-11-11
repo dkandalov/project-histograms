@@ -1,0 +1,66 @@
+Amount of parameters in methods
+0 - com.google.common.collect.testing.features.ConflictingRequirementsException
+1 - com.google.common.collect.testing.features.TesterRequirements
+2 - com.google.common.collect.testing.features.TesterRequirements
+3 - com.google.common.collect.testing.features.ConflictingRequirementsException
+4 - com.google.common.collect.testing.IteratorTester
+5 - com.google.common.collect.testing.features.FeatureUtil
+6 - com.google.common.collect.testing.AbstractIteratorTester
+7 - com.google.common.collect.ImmutableList
+8 - com.google.common.collect.ImmutableSortedMapFauxverideShim
+9 - com.google.common.collect.ImmutableList
+10 - com.google.common.collect.ImmutableSortedMapFauxverideShim
+11 - com.google.common.collect.ImmutableList
+
+Amount of ifs in methods
+0 - com.google.common.collect.testing.features.ConflictingRequirementsException
+1 - com.google.common.collect.testing.features.FeatureUtil
+2 - com.google.common.collect.testing.features.TesterRequirements
+3 - com.google.common.collect.testing.google.UnmodifiableCollectionTests
+4 - com.google.common.collect.testing.AbstractIteratorTester
+5 - com.google.common.collect.testing.MapInterfaceTest
+6 - com.google.common.collect.RegularImmutableSortedSet
+9 - com.google.common.collect.CustomConcurrentHashMap.ComputingImpl
+
+Amount of loops in methods
+0 - com.google.common.collect.testing.features.ConflictingRequirementsException
+1 - com.google.common.collect.testing.features.FeatureUtil
+2 - com.google.common.collect.testing.testers.ListSubListTester
+3 - com.google.common.collect.testing.Helpers
+4 - com.google.common.collect.testing.MapInterfaceTest
+6 - com.google.common.collect.CustomConcurrentHashMap.Impl
+8 - com.google.common.collect.HashBiMapTest
+
+Amount of fields in classes
+2 - com.google.common.collect.testing.testers.MapPutAllTester
+3 - com.google.common.collect.testing.features.ConflictingRequirementsException
+4 - com.google.common.collect.testing.testers.MapPutTester
+5 - com.google.common.collect.testing.FeatureSpecificTestSuiteBuilder
+6 - com.google.common.collect.testing.MapInterfaceTest
+7 - com.google.common.collect.LegacyComparable
+8 - com.google.common.collect.MapsTest
+9 - com.google.common.collect.MultimapCollectionTest
+10 - com.google.common.collect.testing.testers.CollectionRetainAllTester
+11 - com.google.common.collect.ImmutableSortedMap
+12 - com.google.common.base.JoinerTest
+17 - com.google.common.collect.Jsr166HashMapTest
+22 - com.google.common.collect.LinkedListMultimap
+24 - com.google.common.collect.testing.AbstractIteratorTester
+31 - com.google.common.collect.AbstractMultimap
+
+Amount of methods in classes
+43 - com.google.common.collect.ImmutableMultisetTest
+46 - com.google.common.collect.AbstractImmutableSetTest
+48 - com.google.common.collect.SetsTest
+50 - com.google.common.collect.MapsTest
+51 - com.google.common.collect.ListsTest
+55 - com.google.common.collect.ImmutableListTest.CreationTests
+63 - com.google.common.collect.testing.MapInterfaceTest
+67 - com.google.common.collect.LinkedListMultimap
+75 - com.google.common.collect.CustomConcurrentHashMap.Impl
+80 - com.google.common.collect.IterablesTest
+81 - com.google.common.collect.AbstractMultisetTest
+83 - com.google.common.collect.ImmutableSortedSetTest
+102 - com.google.common.collect.IteratorsTest
+105 - com.google.common.collect.AbstractMultimapTest
+175 - com.google.common.collect.AbstractMultimap
