@@ -1,0 +1,84 @@
+Amount of parameters in methods
+9 - org.jetbrains.plugins.groovy.lang.parser.parsing.statements.expressions.primary.CompoundStringExpression
+10 - com.intellij.openapi.editor.impl.softwrap.mapping.CachingSoftWrapDataMapper
+11 - com.intellij.openapi.vcs.changes.ui.CommitChangeListDialog
+12 - com.intellij.vcs.log.impl.VcsLogObjectsFactoryImpl
+13 - org.jetbrains.idea.maven.model.MavenArtifact
+14 - com.intellij.tasks.mantis.model.IssueHeaderData
+15 - org.jetbrains.jps.builders.java.dependencyView.ClassRepr
+17 - com.intellij.ui.plaf.beg.IdeaMenuUI
+18 - com.intellij.tasks.mantis.model.CustomFieldDefinitionData
+19 - com.intellij.ui.plaf.beg.BegMenuItemUI
+22 - org.jetbrains.idea.svn.portable.PortableStatus
+23 - com.intellij.codeInsight.daemon.impl.DaemonListeners
+24 - org.jetbrains.idea.svn.portable.IdeaSVNInfo
+35 - com.intellij.tasks.mantis.model.IssueData
+38 - com.intellij.ui.popup.AbstractPopup
+
+Amount of ifs in methods
+57 - com.intellij.compiler.make.JavaDependencyProcessor
+64 - com.intellij.compiler.make.JavaDependencyProcessor
+72 - com.intellij.refactoring.util.duplicates.DuplicatesFinder
+88 - com.intellij.tasks.jira.jql._JqlLexer
+92 - com.intellij.debugger.engine.evaluation.expression.BinaryExpressionEvaluator
+95 - com.intellij.lexer._HtmlLexer
+99 - com.intellij.lexer.__XmlLexer
+108 - org.jetbrains.plugins.groovy.lang.parser.GroovyPsiCreator
+110 - com.jetbrains.rest.lexer._RestFlexLexer
+153 - com.intellij.lexer._DtdLexer
+180 - org.intellij.lang.regexp._RegExLexer
+202 - org.intellij.lang.xpath._XPathLexer
+218 - com.jetbrains.python.lexer._PythonLexer
+232 - com.intellij.lang.java.lexer._JavaLexer
+382 - org.jetbrains.plugins.groovy.lang.lexer._GroovyLexer
+
+Amount of loops in methods
+2 - org.jetbrains.plugins.groovy.lang.psi.impl.statements.typedef.members.GrMethodBaseImpl
+3 - org.jetbrains.plugins.groovy.lang.parser.parsing.statements.expressions.arithmetic.ShiftExpression
+4 - com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceCompletionImpl
+5 - com.intellij.psi.impl.source.resolve.reference.impl.providers.JavaClassListReferenceProvider
+6 - com.intellij.psi.impl.source.resolve.graphInference.constraints.CheckedExceptionCompatibilityConstraint
+7 - com.intellij.psi.impl.source.resolve.reference.impl.providers.JavaClassReferenceSet
+8 - org.jetbrains.plugins.groovy.lang.psi.controlFlow.impl.ControlFlowBuilder
+9 - com.intellij.openapi.roots.libraries.ui.impl.RootDetectionUtil
+10 - com.intellij.openapi.fileEditor.impl.EditorWindow
+11 - org.jetbrains.plugins.groovy.lang.psi.impl.types.GrCodeReferenceElementImpl
+12 - org.jetbrains.idea.eclipse.conversion.IdeaSpecificSettings
+13 - com.intellij.refactoring.typeCook.deductive.builder.ReductionSystem
+15 - org.jetbrains.idea.devkit.dom.generator.DTDModelLoader
+16 - com.intellij.openapi.roots.impl.RootIndex
+17 - com.jetbrains.python.psi.impl.CallArgumentsMappingImpl
+
+Amount of fields in classes
+78 - com.intellij.icons.AllIcons.Debugger
+87 - com.intellij.uiDesigner.UIFormXmlConstants
+101 - git4idea.history.wholeTree.GitLogUI
+108 - com.intellij.psi.codeStyle.CodeStyleSettings
+114 - com.jetbrains.python.PyNames
+120 - com.jetbrains.python.PyTokenTypes
+121 - com.intellij.openapi.application.impl.ApplicationInfoImpl
+125 - com.intellij.icons.AllIcons.Nodes
+132 - com.intellij.icons.AllIcons.Actions
+133 - com.intellij.psi.impl.source.tree.ChildRole
+146 - com.intellij.icons.AllIcons.General
+175 - com.intellij.openapi.editor.impl.EditorImpl
+190 - com.intellij.psi.codeStyle.CommonCodeStyleSettings
+241 - com.intellij.debugger.jdi.Bytecodes
+513 - com.intellij.ui.Gray
+
+Amount of methods in classes
+145 - com.intellij.openapi.wm.impl.ToolWindowManagerImpl
+147 - com.intellij.refactoring.TypeCookTest
+148 - org.jetbrains.idea.maven.navigator.MavenProjectsStructure
+150 - com.intellij.openapi.ui.DialogWrapper
+163 - com.intellij.psi.formatter.java.JavaFormatterTest
+180 - com.intellij.codeInsight.daemon.XmlHighlightingTest
+203 - com.intellij.util.containers.ContainerUtil
+222 - com.intellij.openapi.util.text.StringUtil
+230 - com.intellij.codeInsight.daemon.lambda.GenericsHighlighting8Test
+231 - com.intellij.ui.tabs.impl.JBTabsImpl
+249 - com.intellij.codeInsight.daemon.GenericsHighlightingTest
+259 - com.intellij.ide.util.treeView.AbstractTreeUi
+266 - com.intellij.util.ui.UIUtil
+286 - com.intellij.codeInsight.completion.SmartTypeCompletionTest
+338 - com.intellij.openapi.editor.impl.EditorImpl

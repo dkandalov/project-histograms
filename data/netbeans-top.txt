@@ -1,0 +1,84 @@
+Amount of parameters in methods
+7 - org.netbeans.modules.websvc.rest.wadl.design.view.widget.ParametersWidget
+8 - org.netbeans.modules.java.api.common.project.ui.customizer.SourceRootsUi.EditMediator
+9 - org.netbeans.modules.javaee.project.api.ant.ui.wizard.ProjectServerWizardPanel
+10 - org.netbeans.modules.versioning.system.cvss.ui.actions.diff.ResolveConflictsExecutor.MergeResultWriterInfo
+11 - org.netbeans.modules.j2ee.ejbcore.ejb.wizard.jpa.dao.EjbFacadeWizardIterator
+12 - org.netbeans.modules.java.api.common.project.ui.LibrariesNode
+13 - org.netbeans.modules.java.api.common.project.ui.customizer.EditMediator
+14 - org.netbeans.modules.java.api.common.project.ui.customizer.EditMediator
+15 - org.netbeans.modules.j2ee.core.api.support.java.method.MethodCustomizer
+16 - org.netbeans.modules.java.api.common.project.ui.customizer.EditMediator
+17 - org.netbeans.modules.java.api.common.project.ui.customizer.EditMediator
+18 - org.netbeans.modules.web.jsf.wizards.PersistenceClientIterator
+19 - org.netbeans.modules.web.jsf.wizards.JSFClientGenerator
+20 - org.netbeans.modules.subversion.client.parser.ParserSvnInfo
+23 - org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion
+
+Amount of ifs in methods
+230 - org.netbeans.lib.html.lexer.HtmlLexer
+234 - org.netbeans.lib.xml.lexer.XMLLexer
+237 - org.netbeans.modules.cnd.antlr.actions.java.ActionLexer
+238 - org.netbeans.modules.cnd.completion.cplusplus.ext.CsmCompletionQuery
+245 - org.netbeans.lib.jsp.lexer.JspLexer
+247 - org.netbeans.modules.el.lexer.ELLexer
+257 - org.netbeans.modules.cnd.antlr.actions.java.ActionLexer
+286 - org.netbeans.modules.javascript2.editor.lexer.JavaScriptColoringLexer
+311 - org.netbeans.lib.java.lexer.JavaLexer
+315 - org.netbeans.modules.schema2beansdev.S2bConfig
+330 - org.netbeans.modules.php.editor.lexer.PHP5ColoringLexer
+352 - org.netbeans.modules.xml.text.syntax.UnicodeClasses
+444 - org.netbeans.modules.php.editor.parser.ASTPHP5Scanner
+452 - org.netbeans.modules.php.editor.indent.TokenFormatter
+535 - org.netbeans.modules.cnd.completion.cplusplus.ext.CsmCompletionTokenProcessor
+
+Amount of loops in methods
+12 - org.netbeans.modules.vmd.game.editor.scene.ScenePanel
+13 - org.netbeans.modules.git.ui.push.PushAction
+14 - org.netbeans.modules.websvc.customization.multiview.WSCustomizationView
+15 - org.netbeans.modules.form.layoutsupport.delegates.GridBagLayoutSupport
+16 - org.netbeans.modules.form.layoutdesign.LayoutOperations
+17 - org.netbeans.modules.javascript2.editor.model.impl.ModelUtils
+18 - org.netbeans.installer.infra.server.client.servlets.Components2
+19 - org.netbeans.modules.dbschema.jdbcimpl.SchemaElementImpl
+21 - org.netbeans.modules.j2ee.sun.ide.j2ee.VerifierImpl.VerifierToolSupport
+23 - org.netbeans.modules.e2e.wsdl.wsdl2java.WSDL2JavaImpl
+26 - org.netbeans.modules.cnd.completion.cplusplus.ext.CsmCompletionQuery
+28 - org.netbeans.installer.infra.server.client.servlets.Components
+29 - org.netbeans.modules.php.editor.indent.TokenFormatter
+31 - org.netbeans.modules.php.editor.model.impl.OccurenceBuilder
+32 - org.netbeans.api.java.source.ui.ElementJavadoc
+
+Amount of fields in classes
+146 - org.netbeans.lib.ddl.adaptors.DefaultAdaptor
+147 - org.netbeans.modules.web.project.ui.customizer.WebProjectProperties
+153 - org.netbeans.installer.products.glassfish.ConfigurationLogic
+154 - org.netbeans.modules.jira.issue.IssuePanel
+155 - org.netbeans.modules.odcs.tasks.issue.IssuePanel
+157 - org.netbeans.modules.form.GandalfPersistenceManager
+171 - org.netbeans.modules.cnd.makeproject.configurations.CommonConfigurationXMLCodec
+173 - org.netbeans.modules.jmx.test.helpers.JellyConstants
+178 - org.netbeans.modules.jmx.common.WizardConstants
+179 - org.netbeans.modules.cnd.editor.options.EditorOptions
+184 - org.netbeans.test.php.operators.NewPHPProjectNameLocationStepOperator
+202 - org.netbeans.modules.schema2beansdev.S2bConfig
+210 - org.netbeans.modules.java.ui.FmtOptions
+219 - org.netbeans.modules.bugzilla.issue.IssuePanel
+228 - org.netbeans.modules.mercurial.util.HgCommand
+
+Amount of methods in classes
+270 - org.netbeans.modules.java.source.save.ReindenterTest
+276 - org.netbeans.lib.terminalemulator.Term
+281 - org.netbeans.modules.cnd.modelimpl.parser.CppParserEmptyActionImpl
+282 - org.netbeans.modules.cnd.modelimpl.parser.CppParserActionTracer
+284 - org.netbeans.modules.cnd.modelimpl.parser.CXXParserActionImpl
+285 - org.netbeans.modules.php.editor.csl.OccurrencesFinderImplTest
+314 - org.netbeans.modules.java.editor.completion.JavaCompletionProviderBasicTest
+349 - org.netbeans.modules.javascript2.editor.formatter.JsFormatterTest
+357 - javax.swing.JTable
+405 - org.netbeans.modules.cnd.modelimpl.parser.CppParserActionImpl
+406 - org.netbeans.lib.ddl.adaptors.DefaultAdaptor
+486 - org.netbeans.modules.cnd.modelimpl.parserFortranParserEx.java-IFortranParserAction$0
+503 - org.netbeans.modules.css.editor.module.main.properties.PropertiesATest
+600 - org.netbeans.modules.schema2beansdev.SchemaRep
+1002 - simple.cpu.Methods2
