@@ -1,6 +1,6 @@
 ### What is this?
 
-This is experimental IntelliJ plugin for analyzing source code and building histograms:
+This is experimental IntelliJ plugin for analyzing source code and building histograms for:
  - amount of 'if' statements per method
  - amount of loops per method
  - amount of fields per class
@@ -10,9 +10,9 @@ To run it you will need [live-plugin](https://github.com/dkandalov/live-plugin).
 
 ### Examples
  - [NetBeans](http://dkandalov.github.io/project-histograms/gh_pages/NetBeans_histogram.html)
- - [IntelliJ](http://dkandalov.github.io/project-histograms/gh_pages/IntelliJ_histogram.html)
+ - [IntelliJ](http://dkandalov.github.io/project-histograms/gh_pages/idea_histogram.html)
  - [JUnit](http://dkandalov.github.io/project-histograms/gh_pages/junit_histogram.html)
- - [Hamcrest](http://dkandalov.github.io/project-histograms/gh_pages/JavaHamcrest_histogram.html)
+ - [Hamcrest](http://dkandalov.github.io/project-histograms/gh_pages/hamcrest_histogram.html)
  - [JMock](http://dkandalov.github.io/project-histograms/gh_pages/jmock_histogram.html)
  - [Mockito](http://dkandalov.github.io/project-histograms/gh_pages/mockito_histogram.html)
  - [TestNG](http://dkandalov.github.io/project-histograms/gh_pages/testng_histogram.html)
