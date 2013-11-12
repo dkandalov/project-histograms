@@ -16,7 +16,7 @@ function Histogram(rootElement, labels, sizes) {
 	var colorCategory = d3.scale.category10();
 	var seriesColor = function(i) { return d3.rgb(colorCategory(i)).darker(); };
 	var percentile = 1;
-	var scaleType = "log";
+	var scaleType = {x: "linear", y: "log"};
 	var interpolation = "basis";
 
 	labels = inferLabelDefaults(labels);
@@ -25,7 +25,6 @@ function Histogram(rootElement, labels, sizes) {
 	rootElement.selectAll().remove();
 
 	var tooltip = addTooltipTo(rootElement);
-
 
 	var headerSpan = appendBlockElementTo(rootElement, width);
 	headerSpan.append("h4").text(labels.title);
@@ -53,8 +52,13 @@ function Histogram(rootElement, labels, sizes) {
 		outerThis.update(); // TODO animate
 	});
 	addPaddingTo(footerSpan);
-	addScaleTypeDropDownTo(footerSpan, scaleType, function(newScaleType) {
-		scaleType = newScaleType;
+	addScaleTypeDropDownTo(footerSpan, "Y axis scale: ", scaleType.y, function(newScaleType) {
+		scaleType.y = newScaleType;
+		outerThis.update(); // TODO animate?
+	});
+	addPaddingTo(footerSpan);
+	addScaleTypeDropDownTo(footerSpan, "X axis scale: ", scaleType.x, function(newScaleType) {
+		scaleType.x = newScaleType;
 		outerThis.update(); // TODO animate?
 	});
 	addPaddingTo(footerSpan);
@@ -73,19 +77,28 @@ function Histogram(rootElement, labels, sizes) {
 
 		var maxFrequency = flat(d3.max, series, frequency);
 		var maxAmount = flat(d3.max, series, amount) + 1; // +1 to include first "0" in range
-		var barWidth = atLeast(1, (width / maxAmount) - 1); // -1 to have gap if bars are big, but at least width of 1 if bars are small
+		var widthPerValue = atLeast(1, width / maxAmount);
 
-		var x = d3.scale.linear().domain([0, maxAmount]).range([0, width]);
-		var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat).tickValues(range(maxAmount, 10));
-		var y;
-		var yAxis;
-		if (scaleType == "log") {
+		var x, xAxis;
+		var y, yAxis;
+		if (scaleType.y == "log") {
 			y = d3.scale.log().domain([1, maxFrequency]).range([height, 0]);
 			yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(numberFormat).tickValues(logRange(maxFrequency, 10));
-		} else if (scaleType == "linear") {
-			y = d3.scale.linear().domain([1, maxFrequency]).range([height, 0]);
+		} else if (scaleType.y == "linear") {
+			y = d3.scale.linear().domain([0, maxFrequency]).range([height, 0]);
 			yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(numberFormat).tickValues(range(maxFrequency, 10));
 		}
+		if (scaleType.x == "log") {
+			series = series.map(function(list) {
+				return list.filter(function(d) { return amount(d) > 0; });
+			});
+			x = d3.scale.log().domain([1, maxAmount]).range([0, width]);
+			xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat).tickValues(logRange(maxAmount, 10));
+		} else if (scaleType.x == "linear") {
+			x = d3.scale.linear().domain([0, maxAmount]).range([0, width]);
+			xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat).tickValues(range(maxAmount, 10));
+		}
+
 
 		var svgGroup = init();
 		addLineCharts();
@@ -105,7 +118,7 @@ function Histogram(rootElement, labels, sizes) {
 				.call(xAxis)
 				.call(xAxisLabel(labels.xAxis))
 				.selectAll(".tick").attr("transform", function (d) {
-					return "translate(" + (x(d) + halfOf(barWidth)) + "," + 0 + ")";
+					return "translate(" + (x(d) + halfOf(widthPerValue)) + "," + 0 + ")";
 				});
 			svgGroup.append("g")
 				.attr("class", "y axis")
@@ -116,7 +129,7 @@ function Histogram(rootElement, labels, sizes) {
 		function addLineCharts() {
 			var line = d3.svg.line()
 				.interpolate(interpolation)
-				.x(function(d) { return x(amount(d)) + halfOf(barWidth); })
+				.x(function(d) { return x(amount(d)) + halfOf(widthPerValue); })
 				.y(function(d) { return y(frequency(d)); });
 
 			var lineCharts = svgGroup.selectAll(".lineChart")
@@ -135,12 +148,12 @@ function Histogram(rootElement, labels, sizes) {
 				.enter().append("circle")
 				.attr("class", "circle")
 				.attr("r", 4)
-				.attr("cx", function(d) { return x(amount(d)) + halfOf(barWidth); })
+				.attr("cx", function(d) { return x(amount(d)) + halfOf(widthPerValue); })
 				.attr("cy", function(d) { return y(frequency(d)); })
 				.call(tooltip.mouseOverHandler(function(d) {
 					var shiftForCursor = 12;
 					return {
-						x: leftOffsetOf(svg) + margin.left + x(amount(d)) + halfOf(barWidth) + shiftForCursor,
+						x: leftOffsetOf(svg) + margin.left + x(amount(d)) + halfOf(widthPerValue) + shiftForCursor,
 						y: topOffsetOf(svg) + y(frequency(d))
 					};
 				}));
@@ -229,8 +242,8 @@ function addInterpolationTypeDropDownTo(element, defaultInterpolation, onChange)
 	dropDown.on("change", function(){ onChange(this.value); });
 }
 
-function addScaleTypeDropDownTo(element, defaultScaleType, onChange) {
-	element.append("label").html("Y axis scale: ");
+function addScaleTypeDropDownTo(element, label, defaultScaleType, onChange) {
+	element.append("label").html(label);
 	var dropDown = element.append("select");
 	["log", "linear"].forEach(function(scaleType) {
 		var option = dropDown.append("option").attr("value", scaleType).html(scaleType);

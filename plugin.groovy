@@ -81,7 +81,7 @@ def accumulate() {
 }
 
 def createGitHubPages() {
-	def files = ["IntelliJ-histogram.json", "NetBeans-histogram.json", "asm-histogram.json", "commons-collections4-histogram.json",
+	def files = ["idea-histogram.json", "NetBeans-histogram.json", "asm-histogram.json", "commons-collections4-histogram.json",
 			"google-collections-histogram.json", "hamcrest-histogram.json", "jmock-histogram.json", "junit-histogram.json",
 			"mockito-histogram.json", "testng-histogram.json", "trove4j-histogram.json", "xstream-histogram.json"]
 	def histograms = files.collect{

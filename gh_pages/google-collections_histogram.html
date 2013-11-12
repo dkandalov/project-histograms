@@ -68,11 +68,14 @@
             These are miscellaneous code metric histograms for Google-collections.
             There is no particular idea behind it except that these metrics seem to follow
             <a href="http://en.wikipedia.org/wiki/Power_law">power law</a>.
+            Note that most outliers are generated classes or namespaces. You can find
+            list of outliers and json data for histograms in
+            <a href="https://github.com/dkandalov/project-histograms/tree/gh-pages/data">data folder</a>.
         </p>
         <p>
             If you are interested in how exactly metrics are calculated,
-            please see <a href="https://github.com/dkandalov/project-histograms/blob/master/tests/PsiStatsTest.groovy">tests</a>
-            or <a href="https://github.com/dkandalov/project-histograms/blob/master/histograms/PsiStats.groovy">source code</a>.
+            please see <a href="https://github.com/dkandalov/project-histograms/blob/gh-pages/tests/PsiStatsTest.groovy">tests</a>
+            or <a href="https://github.com/dkandalov/project-histograms/blob/gh-pages/histograms/PsiStats.groovy">source code</a>.
         </p>
 
         <br/>
@@ -184,7 +187,7 @@ return Math.random()*r}function n(){if(!a){for(a=[],r=0;s>r;++r)a[r]=[];for(r=0;
 	var colorCategory = d3.scale.category10();
 	var seriesColor = function(i) { return d3.rgb(colorCategory(i)).darker(); };
 	var percentile = 1;
-	var scaleType = "log";
+	var scaleType = {x: "linear", y: "log"};
 	var interpolation = "basis";
 
 	labels = inferLabelDefaults(labels);
@@ -193,7 +196,6 @@ return Math.random()*r}function n(){if(!a){for(a=[],r=0;s>r;++r)a[r]=[];for(r=0;
 	rootElement.selectAll().remove();
 
 	var tooltip = addTooltipTo(rootElement);
-
 
 	var headerSpan = appendBlockElementTo(rootElement, width);
 	headerSpan.append("h4").text(labels.title);
@@ -221,8 +223,13 @@ return Math.random()*r}function n(){if(!a){for(a=[],r=0;s>r;++r)a[r]=[];for(r=0;
 		outerThis.update(); // TODO animate
 	});
 	addPaddingTo(footerSpan);
-	addScaleTypeDropDownTo(footerSpan, scaleType, function(newScaleType) {
-		scaleType = newScaleType;
+	addScaleTypeDropDownTo(footerSpan, "Y axis scale: ", scaleType.y, function(newScaleType) {
+		scaleType.y = newScaleType;
+		outerThis.update(); // TODO animate?
+	});
+	addPaddingTo(footerSpan);
+	addScaleTypeDropDownTo(footerSpan, "X axis scale: ", scaleType.x, function(newScaleType) {
+		scaleType.x = newScaleType;
 		outerThis.update(); // TODO animate?
 	});
 	addPaddingTo(footerSpan);
@@ -241,19 +248,28 @@ return Math.random()*r}function n(){if(!a){for(a=[],r=0;s>r;++r)a[r]=[];for(r=0;
 
 		var maxFrequency = flat(d3.max, series, frequency);
 		var maxAmount = flat(d3.max, series, amount) + 1; // +1 to include first "0" in range
-		var barWidth = atLeast(1, (width / maxAmount) - 1); // -1 to have gap if bars are big, but at least width of 1 if bars are small
+		var widthPerValue = atLeast(1, width / maxAmount);
 
-		var x = d3.scale.linear().domain([0, maxAmount]).range([0, width]);
-		var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat).tickValues(range(maxAmount, 10));
-		var y;
-		var yAxis;
-		if (scaleType == "log") {
+		var x, xAxis;
+		var y, yAxis;
+		if (scaleType.y == "log") {
 			y = d3.scale.log().domain([1, maxFrequency]).range([height, 0]);
 			yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(numberFormat).tickValues(logRange(maxFrequency, 10));
-		} else if (scaleType == "linear") {
-			y = d3.scale.linear().domain([1, maxFrequency]).range([height, 0]);
+		} else if (scaleType.y == "linear") {
+			y = d3.scale.linear().domain([0, maxFrequency]).range([height, 0]);
 			yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(numberFormat).tickValues(range(maxFrequency, 10));
 		}
+		if (scaleType.x == "log") {
+			series = series.map(function(list) {
+				return list.filter(function(d) { return amount(d) > 0; });
+			});
+			x = d3.scale.log().domain([1, maxAmount]).range([0, width]);
+			xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat).tickValues(logRange(maxAmount, 10));
+		} else if (scaleType.x == "linear") {
+			x = d3.scale.linear().domain([0, maxAmount]).range([0, width]);
+			xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(numberFormat).tickValues(range(maxAmount, 10));
+		}
+
 
 		var svgGroup = init();
 		addLineCharts();
@@ -273,7 +289,7 @@ return Math.random()*r}function n(){if(!a){for(a=[],r=0;s>r;++r)a[r]=[];for(r=0;
 				.call(xAxis)
 				.call(xAxisLabel(labels.xAxis))
 				.selectAll(".tick").attr("transform", function (d) {
-					return "translate(" + (x(d) + halfOf(barWidth)) + "," + 0 + ")";
+					return "translate(" + (x(d) + halfOf(widthPerValue)) + "," + 0 + ")";
 				});
 			svgGroup.append("g")
 				.attr("class", "y axis")
@@ -284,7 +300,7 @@ return Math.random()*r}function n(){if(!a){for(a=[],r=0;s>r;++r)a[r]=[];for(r=0;
 		function addLineCharts() {
 			var line = d3.svg.line()
 				.interpolate(interpolation)
-				.x(function(d) { return x(amount(d)) + halfOf(barWidth); })
+				.x(function(d) { return x(amount(d)) + halfOf(widthPerValue); })
 				.y(function(d) { return y(frequency(d)); });
 
 			var lineCharts = svgGroup.selectAll(".lineChart")
@@ -303,12 +319,12 @@ return Math.random()*r}function n(){if(!a){for(a=[],r=0;s>r;++r)a[r]=[];for(r=0;
 				.enter().append("circle")
 				.attr("class", "circle")
 				.attr("r", 4)
-				.attr("cx", function(d) { return x(amount(d)) + halfOf(barWidth); })
+				.attr("cx", function(d) { return x(amount(d)) + halfOf(widthPerValue); })
 				.attr("cy", function(d) { return y(frequency(d)); })
 				.call(tooltip.mouseOverHandler(function(d) {
 					var shiftForCursor = 12;
 					return {
-						x: leftOffsetOf(svg) + margin.left + x(amount(d)) + halfOf(barWidth) + shiftForCursor,
+						x: leftOffsetOf(svg) + margin.left + x(amount(d)) + halfOf(widthPerValue) + shiftForCursor,
 						y: topOffsetOf(svg) + y(frequency(d))
 					};
 				}));
@@ -397,8 +413,8 @@ function addInterpolationTypeDropDownTo(element, defaultInterpolation, onChange)
 	dropDown.on("change", function(){ onChange(this.value); });
 }
 
-function addScaleTypeDropDownTo(element, defaultScaleType, onChange) {
-	element.append("label").html("Y axis scale: ");
+function addScaleTypeDropDownTo(element, label, defaultScaleType, onChange) {
+	element.append("label").html(label);
 	var dropDown = element.append("select");
 	["log", "linear"].forEach(function(scaleType) {
 		var option = dropDown.append("option").attr("value", scaleType).html(scaleType);
@@ -529,11 +545,11 @@ function appendBlockElementTo(element, width) {
 		.append("span").style({display: "block", "text-align": "center", width: width + "px"});
 }</script>
 <script>
-    const parametersPerMethod = [[0,5830],[1,2396],[2,993],[3,239],[4,72],[5,17],[6,13],[7,1],[8,8],[9,1],[10,8],[11,1]];
-    const ifsPerMethod = [];
-    const loopsPerMethod = [];
-    const fieldsPerClass = [[0,417],[1,135],[2,98],[3,54],[4,37],[5,21],[6,23],[7,15],[8,5],[9,6],[10,4],[11,5],[12,7],[13,2],[14,2],[15,2],[16,2],[17,1],[20,1],[21,1],[22,2],[27,1],[28,2],[29,3],[31,1],[33,1],[36,1],[41,2]];
-    const methodsPerClass = [[0,97],[1,62],[2,64],[3,99],[4,56],[5,55],[6,47],[7,47],[8,28],[9,22],[10,25],[11,12],[12,16],[13,19],[14,9],[15,14],[16,7],[17,15],[18,15],[19,12],[20,13],[21,4],[22,6],[23,2],[24,7],[25,5],[26,3],[27,9],[28,3],[29,6],[30,3],[31,2],[32,5],[33,4],[34,2],[35,1],[36,1],[37,3],[38,1],[39,2],[41,2],[42,1],[43,1],[44,3],[45,1],[46,4],[47,1],[48,1],[50,2],[51,1],[52,3],[53,1],[54,2],[56,1],[57,1],[62,1],[63,2],[66,1],[67,1],[69,1],[73,1],[78,1],[80,1],[81,1],[85,1],[87,1],[92,1],[98,1],[99,2],[105,2],[110,1],[111,1],[114,1],[148,1],[175,1]];
+    const parametersPerMethod = [[0,3856],[1,1292],[2,555],[3,86],[4,38],[5,14],[6,10],[7,1],[8,8],[9,1],[10,8],[11,1]];
+    const ifsPerMethod = [[0,5152],[1,511],[2,134],[3,41],[4,19],[5,8],[6,4],[9,1]];
+    const loopsPerMethod = [[0,5485],[1,330],[2,33],[3,13],[4,6],[6,2],[8,1]];
+    const fieldsPerClass = [[0,679],[1,172],[2,102],[3,52],[4,14],[5,11],[6,13],[7,1],[8,5],[9,2],[10,2],[11,2],[12,2],[17,1],[22,1],[24,2],[31,1]];
+    const methodsPerClass = [[0,22],[1,408],[2,142],[3,93],[4,63],[5,61],[6,39],[7,34],[8,19],[9,16],[10,12],[11,10],[12,8],[13,10],[14,10],[15,14],[16,8],[17,9],[18,7],[19,6],[20,6],[21,1],[22,7],[23,3],[24,6],[25,2],[26,3],[27,4],[28,3],[29,2],[30,3],[31,3],[32,2],[33,1],[35,1],[36,1],[37,1],[39,1],[40,4],[43,1],[46,2],[48,1],[50,1],[51,1],[55,1],[63,1],[67,1],[75,1],[80,1],[81,2],[83,1],[102,1],[105,1],[175,1]];
 
     var sizes = {
         margin: {top: 20, right: 20, bottom: 50, left: 50},
