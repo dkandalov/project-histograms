@@ -1,5 +1,4 @@
 package histograms
-
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.psi.PsiFileSystemItem
 import com.intellij.psi.PsiJavaFile
@@ -14,19 +13,16 @@ class ProjectHistograms {
 			amountOfMethodsInClasses, amountOfFieldsInClasses, amountOfParametersInMethods,
 			amountOfIfsInMethods, amountOfLoopsInMethods]
 
+	ProjectHistograms process(PsiFileSystemItem item) {
+		if (item == null || !(item instanceof PsiJavaFile)) return this
+		item = (PsiJavaFile) item
 
-	ProjectHistograms process(Iterator<PsiFileSystemItem> items) {
-		for (PsiFileSystemItem item : items) {
-			if (item == null || !(item instanceof PsiJavaFile)) continue
-			item = (PsiJavaFile) item
-
-			new PsiStats(item).with {
-				amountOfMethods.each{ amountOfMethodsInClasses.add(it.value, 1, it.key) }
-				amountOfFields.each{ amountOfFieldsInClasses.add(it.value, 1, it.key) }
-				amountOfParametersPerMethod.each{ amountOfParametersInMethods.addAll(it.value, it.key) }
-				amountOfIfStatementsPerMethod.each{ amountOfIfsInMethods.addAll(it.value, it.key) }
-				amountOfLoopsPerMethod.each{ amountOfLoopsInMethods.addAll(it.value, it.key) }
-			}
+		new PsiStats(item).with {
+			amountOfMethods.each{ amountOfMethodsInClasses.add(it.value, 1, it.key) }
+			amountOfFields.each{ amountOfFieldsInClasses.add(it.value, 1, it.key) }
+			amountOfParametersPerMethod.each{ amountOfParametersInMethods.addAll(it.value, it.key) }
+			amountOfIfStatementsPerMethod.each{ amountOfIfsInMethods.addAll(it.value, it.key) }
+			amountOfLoopsPerMethod.each{ amountOfLoopsInMethods.addAll(it.value, it.key) }
 		}
 		this
 	}
@@ -55,11 +51,11 @@ class ProjectHistograms {
 
 	Map<String, Map> getMaxValueItems() {
 		[
-				"Amount of fields in classes": amountOfFieldsInClasses.maxItemsByValue,
-				"Amount of methods in classes": amountOfMethodsInClasses.maxItemsByValue,
 				"Amount of parameters in methods": amountOfParametersInMethods.maxItemsByValue,
 				"Amount of ifs in methods": amountOfIfsInMethods.maxItemsByValue,
-				"Amount of loops in methods": amountOfLoopsInMethods.maxItemsByValue
+				"Amount of loops in methods": amountOfLoopsInMethods.maxItemsByValue,
+				"Amount of fields in classes": amountOfFieldsInClasses.maxItemsByValue,
+				"Amount of methods in classes": amountOfMethodsInClasses.maxItemsByValue,
 		]
 	}
 

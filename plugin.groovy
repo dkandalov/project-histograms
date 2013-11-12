@@ -16,17 +16,23 @@ registerAction("miscProjectHistograms", "ctrl shift H", TOOLS_MENU, "Project His
   def project = event.project
 
 	doInBackground("Building histograms"){
-		runReadAction{
-			def histograms = new ProjectHistograms()
-					.process(allPsiItemsIn(project))
-					.persistHistogramsTo(pathToDataFor(project.name))
+		def histograms = new ProjectHistograms()
 
-			showInConsole(maxItemsAsString(histograms.maxValueItems), project)
-			new File("${pluginPath()}/data/${project.name}-top.txt").withWriter {
-				it.write(maxItemsAsString(histograms.maxValueItems))
+		def psiItems = allPsiItemsIn(project)
+		while (psiItems.hasNext()) {
+			runReadAction{
+				def item = psiItems.next()
+				log("histograms: " + item)
+				histograms.process(item)
 			}
-			openInBrowser(fillTemplateWith(histograms, project.name))
 		}
+		histograms.persistHistogramsTo(pathToDataFor(project.name))
+
+		showInConsole(maxItemsAsString(histograms.maxValueItems), project)
+		new File("${pluginPath()}/data/${project.name}-top.txt").withWriter {
+			it.write(maxItemsAsString(histograms.maxValueItems))
+		}
+		openInBrowser(fillTemplateWith(histograms, project.name))
 	}
 }
 show("reloaded")
