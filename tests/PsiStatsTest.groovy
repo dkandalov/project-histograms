@@ -27,7 +27,7 @@ class PsiStatsTest {
 				}
 			}
 		""")
-		assert new PsiStats(psiFile).amountOfMethods == [
+		assert read{new PsiStats(psiFile).amountOfMethods} == [
 				"Sample": 5,
 				"Sample.StaticInnerClass": 1,
 				"Sample.java-java.lang.Runnable\$0": 1
@@ -44,7 +44,7 @@ class PsiStatsTest {
 				}
 			}
 		""")
-		assert new PsiStats(javaFile).amountOfFields == ["Sample": 3]
+		assert read{new PsiStats(javaFile).amountOfFields} == ["Sample": 3]
 
 		javaFile = asJavaPsi("Sample.java", """
 			class Sample {
@@ -52,7 +52,7 @@ class PsiStatsTest {
 				enum IgnoreEnums { A, B, C }
 			}
 		""")
-		assert new PsiStats(javaFile).amountOfFields == ["Sample": 1]
+		assert read{new PsiStats(javaFile).amountOfFields} == ["Sample": 1]
 
 		javaFile = asJavaPsi("Sample.java", """
 			class Sample {
@@ -63,12 +63,12 @@ class PsiStatsTest {
 				}
 			}
 		""")
-		assert new PsiStats(javaFile).amountOfFields == ["Sample": 1, "Sample.InnerStatic": 2]
+		assert read{new PsiStats(javaFile).amountOfFields} == ["Sample": 1, "Sample.InnerStatic": 2]
 	}
 
 	@Test void "find amount of parameters per method"() {
 		def javaFile = asJavaPsi("Sample.java", "class Sample {}")
-		assert new PsiStats(javaFile).amountOfParametersPerMethod == ["Sample": []]
+		assert read{new PsiStats(javaFile).amountOfParametersPerMethod} == ["Sample": []]
 
 		javaFile = asJavaPsi("Sample.java", """
 			class Sample {
@@ -80,12 +80,12 @@ class PsiStatsTest {
 				}
 			}
 		""")
-		assert new PsiStats(javaFile).amountOfParametersPerMethod == ["Sample": [0, 1, 2, 3]]
+		assert read{new PsiStats(javaFile).amountOfParametersPerMethod} == ["Sample": [0, 1, 2, 3]]
 	}
 
 	@Test void "find amount of 'if' statements per method"() {
 		def javaFile = asJavaPsi("Sample.java", "class Sample {}")
-		assert new PsiStats(javaFile).amountOfIfStatementsPerMethod == ["Sample": []]
+		assert read{new PsiStats(javaFile).amountOfIfStatementsPerMethod} == ["Sample": []]
 
 		javaFile = asJavaPsi("Sample.java", """
 			class Sample {
@@ -100,7 +100,7 @@ class PsiStatsTest {
 				}
 			}
 		""")
-		assert new PsiStats(javaFile).amountOfIfStatementsPerMethod == ["Sample": [0, 1, 2]]
+		assert read{new PsiStats(javaFile).amountOfIfStatementsPerMethod} == ["Sample": [0, 1, 2]]
 
 		javaFile = asJavaPsi("Sample.java", """
 			class Sample {
@@ -124,7 +124,7 @@ class PsiStatsTest {
 				}
 			}
 		""")
-		assert new PsiStats(javaFile).amountOfIfStatementsPerMethod == ["Sample": [0, 1, 2]]
+		assert read{new PsiStats(javaFile).amountOfIfStatementsPerMethod} == ["Sample": [0, 1, 2]]
 
 		javaFile = asJavaPsi("Sample.java", """
 			class Sample {
@@ -133,12 +133,12 @@ class PsiStatsTest {
 				int nestedConditionalExpressions() { return (true ? (true ? 1 : 2) : 3); }
 			}
 		""")
-		assert new PsiStats(javaFile).amountOfIfStatementsPerMethod == ["Sample": [0, 1, 2]]
+		assert read{new PsiStats(javaFile).amountOfIfStatementsPerMethod} == ["Sample": [0, 1, 2]]
 	}
 
 	@Test void "find amount of loops per method"() {
 		def javaFile = asJavaPsi("Sample.java", "class Sample {}")
-		assert new PsiStats(javaFile).amountOfLoopsPerMethod == ["Sample": []]
+		assert read{new PsiStats(javaFile).amountOfLoopsPerMethod} == ["Sample": []]
 
 		javaFile = asJavaPsi("Sample.java", """
 			class Sample {
@@ -151,7 +151,7 @@ class PsiStatsTest {
 				}
 			}
 		""")
-		assert new PsiStats(javaFile).amountOfLoopsPerMethod == ["Sample": [0, 1, 2]]
+		assert read{new PsiStats(javaFile).amountOfLoopsPerMethod} == ["Sample": [0, 1, 2]]
 
 		javaFile = asJavaPsi("Sample.java", """
 			class Sample {
@@ -160,7 +160,7 @@ class PsiStatsTest {
 				}
 			}
 		""")
-		assert new PsiStats(javaFile).amountOfLoopsPerMethod == ["Sample": [1]]
+		assert read{new PsiStats(javaFile).amountOfLoopsPerMethod} == ["Sample": [1]]
 
 		javaFile = asJavaPsi("Sample.java", """
 			class Sample {
@@ -175,7 +175,7 @@ class PsiStatsTest {
 				}
 			}
 		""")
-		assert new PsiStats(javaFile).amountOfLoopsPerMethod == ["Sample": [0, 1, 2]]
+		assert read{new PsiStats(javaFile).amountOfLoopsPerMethod} == ["Sample": [0, 1, 2]]
 
 		javaFile = asJavaPsi("Sample.java", """
 			class Sample {
@@ -188,7 +188,11 @@ class PsiStatsTest {
 				}
 			}
 		""")
-		assert new PsiStats(javaFile).amountOfLoopsPerMethod == ["Sample": [0, 1, 2]]
+		assert read{new PsiStats(javaFile).amountOfLoopsPerMethod} == ["Sample": [0, 1, 2]]
+	}
+
+	private static <T> T read(Closure closure) {
+		PluginUtil.runReadAction{ closure() }
 	}
 
 	private PsiJavaFile asJavaPsi(String fileName, String javaCode) {
