@@ -5,16 +5,18 @@ package histograms
  * it's a good enough proxy of code complexity.
  */
 class Complexity {
-	static int of(String javaCode, int spacesInTab = 2) {
-		def lines = javaCode.split("\n")
-		def lineIndents = lines.findAll{ !it.trim().empty }.collect{ indentationOf(it, spacesInTab) }
-		// TODO create more detailed method?
-//		PluginUtil.show(lines.findAll{ !it.trim().empty }.collect{ [it, indentationOf(it, spacesInTab)] })
+	static List complexityByLineOf(String javaCode, int spacesInTab = 2) {
+		def linesWithIndent = javaCode
+				.split("\n").findAll{ !it.trim().empty }
+				.collect{ [indentationOf(it, spacesInTab), it] }
 
-		// here the idea is to ignore shift for all field, methods inside class or similar definition
-		// (obviously this is rough approximation)
-		int commonIndent = new ArrayList<Integer>(lineIndents).unique().sort().tail().first()
-		lineIndents.findAll{ it > commonIndent }.sum(0){ it - commonIndent } as int
+		// the idea is to ignore shift for all fields/methods inside class (obviously this is a rough approximation)
+		int commonIndent = linesWithIndent.collect{it[0]}.unique().sort()[1] as int
+		linesWithIndent.collect{ [atLeastZero(it[0] - commonIndent), it[1]] }
+	}
+
+	static int complexityOf(String javaCode, int spacesInTab = 2) {
+		complexityByLineOf(javaCode, spacesInTab).sum(0){ it[0] } as int
 	}
 
 	private static int indentationOf(String line, int spacesInTab) {
@@ -22,5 +24,9 @@ class Complexity {
 		int i = 0
 		while (i < line.length() && line[i] == ' ') i++
 		i
+	}
+
+	private static int atLeastZero(n) {
+		n < 0 ? 0 : n
 	}
 }
