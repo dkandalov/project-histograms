@@ -4,14 +4,10 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiJavaFile
 import histograms.PsiStats
+import liveplugin.PluginUtil
 import org.junit.Test
 
 class PsiStatsTest {
-	private final Project project
-
-	PsiStatsTest(Project project) {
-		this.project = project
-	}
 
 	@Test void "find amount of methods in class"() {
 		def psiFile = asJavaPsi("Sample.java", """
@@ -196,7 +192,15 @@ class PsiStatsTest {
 	}
 
 	private PsiJavaFile asJavaPsi(String fileName, String javaCode) {
-		def fileFactory = PsiFileFactory.getInstance(project)
-		fileFactory.createFileFromText(fileName, JavaFileType.INSTANCE, javaCode) as PsiJavaFile
+		PluginUtil.runReadAction{
+			def fileFactory = PsiFileFactory.getInstance(project)
+			fileFactory.createFileFromText(fileName, JavaFileType.INSTANCE, javaCode) as PsiJavaFile
+		}
 	}
+
+	PsiStatsTest(Map context) {
+		this.project = context.project
+	}
+
+	private final Project project
 }
