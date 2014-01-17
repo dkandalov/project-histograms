@@ -60,7 +60,7 @@
     <br/><br/><br/>
     <span id="methods-per-class-histogram"></span>
     <br/><br/><br/>
-    <span id="class-complexity"></span>
+    <span id="class-indent-depth"></span>
 </span>
 <script src="d3.js"></script>
 <script src="d3.legend.js"></script>
@@ -86,7 +86,7 @@
             }()
     /*fields_per_class_data*/;
     const methodsPerClass = /*methods_per_class_data*/ [ [0, 1], [1, 2], [2, 2], [3, 1], [4, 1], [5, 5] ] /*methods_per_class_data*/;
-    const classComplexity = /*class_complexity*/ [ [0, 1], [1, 2], [2, 2], [3, 1], [4, 1], [5, 5] ] /*class_complexity*/;
+    const classIndentDepth = /*class_indent_depth*/ [ [0, 1], [1, 2], [2, 2], [3, 1], [4, 1], [5, 5] ] /*class_indent_depth*/;
 
     new Histogram(d3.select("#parameters-per-method-histogram"), { title: "Amount of parameters per method", xAxis: "Parameters per method" })
             .addSeries(parametersPerMethod)
@@ -103,7 +103,7 @@
     new Histogram(d3.select("#methods-per-class-histogram"), {title: "Amount of methods per class", xAxis: "Methods per class"})
             .addSeries(methodsPerClass)
             .update();
-    new Histogram(d3.select("#class-complexity"), {title: "Class complexity distribution", xAxis: "Class complexity"})
+    new Histogram(d3.select("#class-indent-depth"), {title: "Class indent depth distribution", xAxis: "Class indent depth"})
             .addSeries(methodsPerClass)
             .update();
 </script>

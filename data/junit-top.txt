@@ -1,5 +1,30 @@
+Amount of parameters in methods
+0 - org.junit.tests.experimental.theories.extendingwithstubs.StringableObject
+1 - org.junit.tests.experimental.theories.extendingwithstubs.StubbedTheoriesTest
+2 - org.junit.tests.experimental.theories.extendingwithstubs.StubbedTheories.StubbedTheoryAnchor
+3 - org.junit.tests.experimental.theories.extendingwithstubs.Guesser.GuessMap
+4 - org.junit.experimental.theories.internal.AllMembersSupplier
+5 - org.junit.experimental.theories.internal.AllMembersSupplier
+6 - org.junit.tests.experimental.theories.runner.WithUnresolvedGenericTypeVariablesOnTheoryParms.TypeVariablesAbound
+
+Amount of ifs in methods
+0 - org.junit.tests.experimental.theories.extendingwithstubs.StubbedTheoriesTest
+1 - org.junit.tests.experimental.theories.extendingwithstubs.StringableObject
+2 - org.junit.tests.experimental.theories.extendingwithstubs.Guesser.GuessMap
+3 - org.junit.experimental.theories.ParameterSignature
+4 - org.junit.experimental.max.MaxCore
+5 - org.junit.internal.runners.JUnit38ClassRunner
+6 - org.junit.internal.runners.MethodValidator
+7 - org.junit.experimental.categories.Categories.CategoryFilter
+
+Amount of loops in methods
+0 - org.junit.tests.experimental.theories.extendingwithstubs.StubbedTheoriesTest
+1 - org.junit.tests.experimental.theories.extendingwithstubs.StubbedTheories.StubbedTheoryAnchor
+2 - org.junit.experimental.theories.Theories
+3 - org.junit.runner.notification.ConcurrentRunNotifierTest
+
 Amount of fields in classes
-0 - org.junit.Assert
+0 - org.junit.tests.experimental.theories.extendingwithstubs.StubbedTheoriesTest
 1 - org.junit.tests.experimental.theories.extendingwithstubs.StringableObject
 2 - org.junit.tests.experimental.theories.extendingwithstubs.GuesserQueue
 3 - org.junit.tests.experimental.theories.runner.SuccessfulWithDataPointFields.BeforeAndAfterEachTime
@@ -11,30 +36,35 @@ Amount of fields in classes
 9 - org.junit.runner.Description
 
 Amount of methods in classes
+20 - org.junit.tests.running.classes.ParameterizedTestTest
+21 - org.junit.runners.Parameterized
+23 - org.junit.tests.experimental.categories.CategoryTest
+24 - org.junit.tests.experimental.rules.TemporaryFolderUsageTest
+25 - org.junit.samples.money.MoneyTest
+26 - org.junit.tests.running.methods.ParameterizedTestMethodTest.EverythingWrong
+27 - org.junit.tests.experimental.rules.TestRuleTest
+28 - org.junit.tests.running.methods.AnnotationTest
+29 - junit.runner.BaseTestRunner
+32 - org.junit.runners.BlockJUnit4ClassRunner
+36 - org.junit.tests.running.core.MainRunner
+39 - junit.framework.Assert
+51 - junit.framework.TestCase
 67 - org.junit.Assert
 78 - org.junit.tests.assertion.AssertionTest
 
-Amount of parameters in methods
-0 - org.junit.Assert
-1 - org.junit.tests.experimental.theories.extendingwithstubs.StubbedTheoriesTest
-2 - org.junit.tests.experimental.theories.extendingwithstubs.StubbedTheories.StubbedTheoryAnchor
-3 - org.junit.tests.experimental.theories.extendingwithstubs.Guesser.GuessMap
-4 - org.junit.experimental.theories.internal.AllMembersSupplier
-5 - org.junit.experimental.theories.internal.AllMembersSupplier
-6 - org.junit.tests.experimental.theories.runner.WithUnresolvedGenericTypeVariablesOnTheoryParms.TypeVariablesAbound
-
-Amount of ifs in methods
-0 - org.junit.Assert
-1 - org.junit.tests.experimental.theories.extendingwithstubs.StringableObject
-2 - org.junit.tests.experimental.theories.extendingwithstubs.Guesser.GuessMap
-3 - org.junit.experimental.theories.ParameterSignature
-4 - org.junit.experimental.max.MaxCore
-5 - org.junit.internal.runners.JUnit38ClassRunner
-6 - org.junit.internal.runners.MethodValidator
-7 - org.junit.experimental.categories.Categories.CategoryFilter
-
-Amount of loops in methods
-0 - org.junit.Assert
-1 - org.junit.tests.experimental.theories.extendingwithstubs.StubbedTheories.StubbedTheoryAnchor
-2 - org.junit.experimental.theories.Theories
-3 - org.junit.runner.notification.ConcurrentRunNotifierTest
+Class complexity
+1348 - PsiJavaFile:ClassRulesTest.java
+1426 - PsiJavaFile:MainRunner.java
+1474 - PsiJavaFile:TestSuite.java
+1797 - PsiJavaFile:BlockJUnit4ClassRunner.java
+1820 - PsiJavaFile:TestCase.java
+1828 - PsiJavaFile:AnnotationTest.java
+1830 - PsiJavaFile:Theories.java
+1893 - PsiJavaFile:BaseTestRunner.java
+1982 - PsiJavaFile:ParentRunner.java
+1992 - PsiJavaFile:ExpectedExceptionTest.java
+2100 - PsiJavaFile:Parameterized.java
+2515 - PsiJavaFile:Categories.java
+3127 - PsiJavaFile:AssertionTest.java
+3972 - PsiJavaFile:Assert.java
+4488 - PsiJavaFile:TestRuleTest.java

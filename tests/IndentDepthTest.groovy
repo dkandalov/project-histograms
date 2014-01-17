@@ -1,13 +1,13 @@
 package tests
 import org.junit.Test
 
-import static histograms.Complexity.complexityByLineOf
+import static histograms.IndentDepth.indentDepthByLineOf
 import static org.hamcrest.CoreMatchers.equalTo
 import static org.junit.Assert.assertThat
 
-class ComplexityTest {
-	@Test void "calculate complexity"() {
-		assertThat(asString(complexityByLineOf("""
+class IndentDepthTest {
+	@Test void "calculate indent depth for simple cases"() {
+		assertThat(asString(indentDepthByLineOf("""
       class Sample {
         Sample() {}
         Sample(int i) {}
@@ -19,7 +19,7 @@ class ComplexityTest {
 0      }
 """))
 
-		assertThat(asString(complexityByLineOf("""
+		assertThat(asString(indentDepthByLineOf("""
       class Sample {
         Sample() {
           int i = 123;
@@ -40,7 +40,7 @@ class ComplexityTest {
 """))
 	}
 
-	private static String asString(List complexityByLine) {
-		"\n" + complexityByLine.collect{ it[0] + it[1] }.join("\n") + "\n"
+	private static String asString(List indentDepthByLine) {
+		"\n" + indentDepthByLine.collect{ it[0] + it[1] }.join("\n") + "\n"
 	}
 }

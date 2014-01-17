@@ -1,5 +1,5 @@
 import liveplugin.testrunner.IntegrationTestsRunner
-import tests.ComplexityTest
+import tests.IndentDepthTest
 import tests.PsiStatsTest
 
-IntegrationTestsRunner.runIntegrationTests([PsiStatsTest, ComplexityTest], project, pluginPath)
+IntegrationTestsRunner.runIntegrationTests([PsiStatsTest, IndentDepthTest], project, pluginPath)
