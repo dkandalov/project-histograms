@@ -58,6 +58,7 @@ File fillTemplateWith(ProjectHistograms histograms, String name,
 			"loops_per_method_data": { histograms.amountOfLoopsInMethods.asJsArray() },
 			"fields_per_class_data": { histograms.amountOfFieldsInClasses.asJsArray() },
 			"methods_per_class_data": { histograms.amountOfMethodsInClasses.asJsArray() },
+			"class_complexity": { histograms.classComplexity.asJsArray() },
 	])
 }
 
