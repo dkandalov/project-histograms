@@ -1,9 +1,11 @@
 package histograms
+
 /**
- * Measures amount of indentation in source code with the assumption that
- * it's a good enough proxy of code complexity.
+ * Calculates Whitespace Integrated over Lines of Text (WILT).
+ * (Idea by Robert Smallshire, as described in these slides http://goo.gl/hF1DeF
+ * and this talk https://vimeo.com/user22258446/review/79099671/d12d153d71)
  */
-class IndentDepth {
+class WiltComplexity {
 	static int indentDepthOf(String javaCode, int spacesInTab = 2) {
 		indentDepthByLineOf(javaCode, spacesInTab).sum(0){ it[0] } as int
 	}
@@ -16,7 +18,7 @@ class IndentDepth {
 		// the idea is to ignore shift for all fields/methods inside class (obviously this is a rough approximation)
 		def indents = linesWithIndent.collect{ it[0] }.unique()
 		int commonIndent = (indents.size() < 2 ? 0 : indents.sort()[1]) as int
-		linesWithIndent.collect{ [atLeastZero(it[0] - commonIndent), it[1]] }
+		linesWithIndent.collect{ [atLeastZero(it[0] - commonIndent) / spacesInTab, it[1]] }
 	}
 
 	private static int indentationOf(String line, int spacesInTab) {

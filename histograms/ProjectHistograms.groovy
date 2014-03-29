@@ -25,7 +25,7 @@ class ProjectHistograms {
 			amountOfIfStatementsPerMethod.each{ amountOfIfsInMethods.addAll(it.value, it.key) }
 			amountOfLoopsPerMethod.each{ amountOfLoopsInMethods.addAll(it.value, it.key) }
 		}
-		classIndentDepth.add(IndentDepth.indentDepthOf(item.text), 1, item)
+		classIndentDepth.add(WiltComplexity.indentDepthOf(item.text), 1, item)
 		this
 	}
 

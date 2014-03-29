@@ -1,7 +1,7 @@
 package tests
 import org.junit.Test
 
-import static histograms.IndentDepth.indentDepthByLineOf
+import static histograms.WiltComplexity.indentDepthByLineOf
 import static org.hamcrest.CoreMatchers.equalTo
 import static org.junit.Assert.assertThat
 
@@ -31,10 +31,10 @@ class IndentDepthTest {
     """)), equalTo("""
 0      class Sample {
 0        Sample() {
-2          int i = 123;
+1          int i = 123;
 0        }
 0        Sample(int i) {
-2          int j = i;
+1          int j = i;
 0        }
 0      }
 """))

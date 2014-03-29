@@ -19,20 +19,20 @@ registerAction("miscProjectHistograms", "ctrl shift H", TOOLS_MENU, "Project His
 		while (psiItems.hasNext()) {
 			runReadAction{
 				def item = psiItems.next()
-				log("histograms: " + item)
+//				log("histograms: " + item)
 				histograms.process(item)
 			}
 		}
 		histograms.persistHistogramsTo(pathToDataFor(project.name))
 
-		showInConsole(maxItemsAsString(histograms.maxValueItems), project)
+//		showInConsole(maxItemsAsString(histograms.maxValueItems), project)
 		new File("${pluginPath()}/data/${project.name}-top.txt").withWriter {
 			it.write(maxItemsAsString(histograms.maxValueItems))
 		}
 		openInBrowser(fillTemplateWith(histograms, project.name))
 	}
 }
-show("reloaded")
+if (!isIdeStartup) show("reloaded project histograms plugin")
 
 
 String maxItemsAsString(Map maxItems) {
