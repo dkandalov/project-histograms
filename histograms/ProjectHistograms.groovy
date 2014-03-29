@@ -10,9 +10,10 @@ class ProjectHistograms {
 	final def amountOfIfsInMethods = new Histogram()
 	final def amountOfLoopsInMethods = new Histogram()
 	final def classIndentDepth = new Histogram()
+	final def classCyclomaticComplexity = new Histogram()
 	final def allHistograms = [
 			amountOfMethodsInClasses, amountOfFieldsInClasses, amountOfParametersInMethods,
-			amountOfIfsInMethods, amountOfLoopsInMethods, classIndentDepth]
+			amountOfIfsInMethods, amountOfLoopsInMethods, classIndentDepth, classCyclomaticComplexity]
 
 	ProjectHistograms process(PsiFileSystemItem item) {
 		if (item == null || !(item instanceof PsiJavaFile)) return this
@@ -26,6 +27,7 @@ class ProjectHistograms {
 			amountOfLoopsPerMethod.each{ amountOfLoopsInMethods.addAll(it.value, it.key) }
 		}
 		classIndentDepth.add(WiltComplexity.indentDepthOf(item.text), 1, item)
+		classCyclomaticComplexity.add(CyclomaticComplexity.calculateFor(item), 1, item)
 		this
 	}
 
@@ -59,6 +61,7 @@ class ProjectHistograms {
 				"Amount of fields in classes": amountOfFieldsInClasses.maxItemsByValue,
 				"Amount of methods in classes": amountOfMethodsInClasses.maxItemsByValue,
 				"Class indent depth": classIndentDepth.maxItemsByValue,
+				"Class cyclomatic complexity": classCyclomaticComplexity.maxItemsByValue,
 		]
 	}
 

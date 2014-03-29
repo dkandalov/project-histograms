@@ -61,6 +61,8 @@
     <span id="methods-per-class-histogram"></span>
     <br/><br/><br/>
     <span id="class-indent-depth"></span>
+    <br/><br/><br/>
+    <span id="class-cyclomatic-complexity"></span>
 </span>
 <script src="d3.js"></script>
 <script src="d3.legend.js"></script>
@@ -87,6 +89,7 @@
     /*fields_per_class_data*/;
     const methodsPerClass = /*methods_per_class_data*/ [ [0, 1], [1, 2], [2, 2], [3, 1], [4, 1], [5, 5] ] /*methods_per_class_data*/;
     const classIndentDepth = /*class_indent_depth*/ [ [0, 1], [1, 2], [2, 2], [3, 1], [4, 1], [5, 5] ] /*class_indent_depth*/;
+    const classCyclomaticComplexity = /*class_cyclomatic_complexity*/ [ [0, 1], [1, 2], [2, 2], [3, 1], [4, 1], [5, 5] ] /*class_cyclomatic_complexity*/;
 
     new Histogram(d3.select("#parameters-per-method-histogram"), { title: "Amount of parameters per method", xAxis: "Parameters per method" })
             .addSeries(parametersPerMethod)
@@ -104,6 +107,9 @@
             .addSeries(methodsPerClass)
             .update();
     new Histogram(d3.select("#class-indent-depth"), {title: "Class indent depth distribution", xAxis: "Class indent depth"})
-            .addSeries(methodsPerClass)
+            .addSeries(classIndentDepth)
+            .update();
+    new Histogram(d3.select("#class-cyclomatic-complexity"), {title: "Class cyclomatic complexity distribution", xAxis: "Cyclomatic complexity"})
+            .addSeries(classCyclomaticComplexity)
             .update();
 </script>
